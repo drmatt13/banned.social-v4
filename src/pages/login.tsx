@@ -26,44 +26,44 @@ const Login: NextPage = () => {
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       console.log(router);
-      // e.preventDefault();
-      // setLoading(true);
-      // const data = await processService("login", {
-      //   username,
-      //   password,
-      // });
-      // const { user, token, success, error } = data;
-      // if (success) {
-      //   if (user && token) {
-      //     Cookie.set("token", token, {
-      //       expires: expires ? undefined : 3600,
-      //     });
-      //     setUser(user);
-      const query = router.query;
-      let path = "";
-      if (query.path) {
-        path = query.path as string;
-      }
-      let queryString = "";
-      for (const key in query) {
-        if (key !== "path") {
-          queryString += `${key}=${query[key]}&`;
+      e.preventDefault();
+      setLoading(true);
+      const data = await processService("login", {
+        username,
+        password,
+      });
+      const { user, token, success, error } = data;
+      if (success) {
+        if (user && token) {
+          Cookie.set("token", token, {
+            expires: expires ? undefined : 3600,
+          });
+          setUser(user);
+          const query = router.query;
+          let path = "";
+          if (query.path) {
+            path = query.path as string;
+          }
+          let queryString = "";
+          for (const key in query) {
+            if (key !== "path") {
+              queryString += `${key}=${query[key]}&`;
+            }
+          }
+          if (queryString.endsWith("&")) {
+            queryString = queryString.slice(0, -1);
+          }
+          console.log(`${path}${queryString ? "?" : ""}${queryString}`);
+          await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
+        } else {
+          alert("invalid credentials");
+          setLoading(false);
         }
+        setLoading(false);
+      } else {
+        if (error) alert(error);
+        setLoading(false);
       }
-      if (queryString.endsWith("&")) {
-        queryString = queryString.slice(0, -1);
-      }
-      console.log(`${path}${queryString ? "?" : ""}${queryString}`);
-      //     await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
-      //   } else {
-      //     alert("invalid credentials");
-      //     setLoading(false);
-      //   }
-      //   setLoading(false);
-      // } else {
-      //   if (error) alert(error);
-      //   setLoading(false);
-      // }
     },
     [username, password, expires, setUser, router]
   );
