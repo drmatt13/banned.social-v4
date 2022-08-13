@@ -1,5 +1,4 @@
 import type { AppType } from "next/dist/shared/lib/utils";
-import type User from "../types/user";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, signOut } from "next-auth/react";
