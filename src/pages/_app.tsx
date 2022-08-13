@@ -20,7 +20,6 @@ const MyApp: AppType = ({
   const router = useRouter();
   const [user, setUser] = useState<any>({});
   const [darkMode, setDarkMode] = useState(false);
-  const [loggingOut, setLoggingOut] = useState(false);
   const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
@@ -71,18 +70,8 @@ const MyApp: AppType = ({
     Cookie.remove("next-auth.callback-url");
     Cookie.remove("next-auth.csrf-token");
     setUser({});
-    setLoggingOut(true);
     signOut({ redirect: false });
-    await router.push(
-      `/login${
-        typeof href === "string"
-          ? href === "/"
-            ? ""
-            : `?redirect=${href}`
-          : ""
-      }`
-    );
-    setLoggingOut(false);
+    router.reload();
   };
 
   return (
@@ -96,8 +85,6 @@ const MyApp: AppType = ({
           toggleDarkMode,
           setUser,
           logout,
-          loggingOut,
-          setLoggingOut,
         }}
       >
         <AppLayout>
