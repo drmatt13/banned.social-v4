@@ -22,6 +22,8 @@ const Login: NextPage = () => {
   const [expires, setExpires] = useState(true);
   const [loading, setLoading] = useState(false);
 
+  console.log(window.location);
+
   const standardLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -54,9 +56,9 @@ const Login: NextPage = () => {
           if (queryString.endsWith("&")) {
             queryString = queryString.slice(0, -1);
           }
-          console.log(`${path}${queryString ? "?" : ""}${queryString}`);
-          // await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
-          await router.push(`/`);
+          window.location.href = `${window.location.origin}${path}${
+            queryString ? "?" : ""
+          }${queryString}`;
         } else {
           alert("invalid credentials");
           setLoading(false);

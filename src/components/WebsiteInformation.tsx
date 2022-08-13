@@ -17,7 +17,7 @@ const WebsiteInformation = () => {
         </div>
       </div>
       <div className="mt-5 mb-1 underline">Git Repository:</div>
-      <Link href="/unprotected">
+      <Link href="https://github.com/drmatt13/social-template---Next.js-NextAuth.js-MongoDB-Tailwind">
         <a className="mb-1 cursor-pointer underline text-pink-500 dark:text-blue-400 hover:text-pink-400 dark:hover:text-purple-500 whitespace-nowrap">
           social template
         </a>

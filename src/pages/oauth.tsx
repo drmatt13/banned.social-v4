@@ -53,7 +53,9 @@ const Login: NextPage = () => {
           if (queryString.endsWith("&")) {
             queryString = queryString.slice(0, -1);
           }
-          await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
+          window.location.href = `${window.location.origin}${path}${
+            queryString ? "?" : ""
+          }${queryString}`;
         } else {
           logout();
         }
