@@ -33,7 +33,9 @@ const Login: NextPage = () => {
         password,
       });
       const { user, token, success, error } = data;
+      console.log(data);
       if (success) {
+        console.log(user && token);
         if (user && token) {
           Cookie.set("token", token, {
             expires: expires ? undefined : 3600,
