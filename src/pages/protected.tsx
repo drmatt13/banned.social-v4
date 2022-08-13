@@ -1,7 +1,17 @@
+import { useEffect } from "react";
 import type { NextPage } from "next";
 import Link from "next/link";
 
+// context
+import { useGlobalContext } from "../context/globalContext";
+
 const Home: NextPage = () => {
+  const { user } = useGlobalContext();
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
   return (
     <>
       <Link href="/">
