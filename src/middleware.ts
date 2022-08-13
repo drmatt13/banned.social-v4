@@ -7,9 +7,12 @@ const protectedRoutes: { [key: string]: boolean } = {
   protected: true,
 };
 
+let credentials: string | undefined;
+let route: string;
+
 export function middleware(request: NextRequest) {
-  const credentials = request.cookies.get("token");
-  const route = request.nextUrl.pathname.split("/")[1] || "/";
+  credentials = request.cookies.get("token");
+  route = request.nextUrl.pathname.split("/")[1] || "/";
 
   if (["login", "signup", "oauth"].includes(route) && credentials) {
     return NextResponse.redirect(new URL("/", request.url));
