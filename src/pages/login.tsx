@@ -39,21 +39,21 @@ const Login: NextPage = () => {
       //       expires: expires ? undefined : 3600,
       //     });
       //     setUser(user);
-      //     const query = router.query;
-      //     let path = "";
-      //     if (query.path) {
-      //       path = query.path as string;
-      //     }
-      //     let queryString = "";
-      //     for (const key in query) {
-      //       if (key !== "path") {
-      //         queryString += `${key}=${query[key]}&`;
-      //       }
-      //     }
-      //     if (queryString.endsWith("&")) {
-      //       queryString = queryString.slice(0, -1);
-      //     }
-      //     console.log(`${path}${queryString ? "?" : ""}${queryString}`);
+      const query = router.query;
+      let path = "";
+      if (query.path) {
+        path = query.path as string;
+      }
+      let queryString = "";
+      for (const key in query) {
+        if (key !== "path") {
+          queryString += `${key}=${query[key]}&`;
+        }
+      }
+      if (queryString.endsWith("&")) {
+        queryString = queryString.slice(0, -1);
+      }
+      console.log(`${path}${queryString ? "?" : ""}${queryString}`);
       //     await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
       //   } else {
       //     alert("invalid credentials");
