@@ -35,7 +35,6 @@ const Login: NextPage = () => {
       const { user, token, success, error } = data;
       console.log(data);
       if (success) {
-        console.log(user && token);
         if (user && token) {
           Cookie.set("token", token, {
             expires: expires ? undefined : 3600,
@@ -56,7 +55,8 @@ const Login: NextPage = () => {
             queryString = queryString.slice(0, -1);
           }
           console.log(`${path}${queryString ? "?" : ""}${queryString}`);
-          await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
+          // await router.push(`${path}${queryString ? "?" : ""}${queryString}`);
+          await router.push(`/`);
         } else {
           alert("invalid credentials");
           setLoading(false);
