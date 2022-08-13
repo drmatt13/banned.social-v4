@@ -18,18 +18,14 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     if (processing.current) return;
-    const query: {
-      provider?: string;
-      expires?: boolean;
-      path?: string;
-    } = router.asPath
+    const query: any = router.asPath
       .replace("/oauth?", "")
       .split("&")
       .reduce((acc, curr) => {
         const [key, value] = curr.split("=");
-        acc[key] = value;
+        if (key) acc[key] = value;
         return acc;
-      }, {});
+      }, {} as any);
     const oAuthLogin = async () => {
       processing.current = true;
       const res = await processService("oauth", {

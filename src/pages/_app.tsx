@@ -19,7 +19,7 @@ const MyApp: AppType = ({
   pageProps: { session, ...pageProps },
 }) => {
   const router = useRouter();
-  const [user, setUser] = useState<User | {}>({});
+  const [user, setUser] = useState<any>({});
   const [darkMode, setDarkMode] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [mobile, setMobile] = useState(false);
