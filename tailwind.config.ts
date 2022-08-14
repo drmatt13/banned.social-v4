@@ -1,5 +1,4 @@
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: "class",
   theme: {
@@ -11,7 +10,7 @@ module.exports = {
         "fade-in-fast": "fade-in .1s ease-in forwards",
         "spin-slow": "spin 5s linear infinite",
         "wiggle-slow": "wiggle 2s linear infinite",
-        'wiggle': "wiggle 1s linear infinite",
+        wiggle: "wiggle 1s linear infinite",
         "wiggle-fast": "wiggle .5s linear infinite",
       },
       colors: {
@@ -20,7 +19,7 @@ module.exports = {
         "light-accent": "var(--color-light-accent)",
         "light-form": "var(--color-light-form)",
         "light-border": "var(--color-light-border)",
-        
+
         "dark-primary": "var(--color-dark-primary)",
         "dark-secondary": "var(--color-dark-secondary)",
         "dark-accent": "var(--color-dark-accent)",
@@ -53,3 +52,5 @@ module.exports = {
   },
   plugins: [],
 };
+
+export default config;
