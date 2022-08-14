@@ -1,9 +1,7 @@
-const config = {
+module.exports = {
   experimental: {
     images: {
       allowFutureImage: true,
     },
   },
 };
-
-export default config;
