@@ -63,7 +63,6 @@ const Login: NextPage = () => {
           alert("invalid credentials");
           setLoading(false);
         }
-        setLoading(false);
       } else {
         if (error) alert(error);
         setLoading(false);

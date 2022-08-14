@@ -1,3 +1,4 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -5,7 +6,7 @@ import bcrypt from "bcrypt";
 import connectDB from "../../../utils/connectDB";
 import User from "../../../models/User";
 
-export default connectDB(async (req, res) => {
+export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   // check for username, email and password
   if (!req.body.username || !req.body.email || !req.body.password) {
     return res.status(200).json({
@@ -31,8 +32,10 @@ export default connectDB(async (req, res) => {
     }
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
-    let newUser = await User.create(req.body);
-    const token = jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET);
+    let newUser: any = await User.create(req.body);
+    const token = process.env.TOKEN_SECRET
+      ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)
+      : undefined;
     newUser = newUser.toObject();
     delete newUser.password;
     delete newUser.email;
@@ -44,7 +47,6 @@ export default connectDB(async (req, res) => {
       user: newUser,
     });
   } catch (error) {
-    console.log(`${error}`.bold.red);
-    res.status(200).json({ success: false });
+    res.status(200).json({ error, success: false });
   }
 });

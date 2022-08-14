@@ -1,11 +1,7 @@
 import { useState, useCallback } from "react";
 import type { NextPage } from "next";
-import { useRouter } from "next/router";
 import Link from "next/link";
 import Cookie from "js-cookie";
-
-// context
-import { useGlobalContext } from "../context/globalContext";
 
 // utils
 import processService from "../utils/processService";
@@ -17,9 +13,6 @@ const Signup: NextPage = () => {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
 
-  const { mobile, setUser } = useGlobalContext();
-  const router = useRouter();
-
   const register = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
@@ -29,15 +22,14 @@ const Signup: NextPage = () => {
         email,
         password,
       });
-      const { user, token, success, error } = res;
-      if (user && token) {
+      const { token, error } = res;
+      if (token) {
         Cookie.set("token", token, { expires: 1 });
-        setUser(user);
-        router.push("/");
+        window.location.href = `${window.location.origin}`;
       } else alert(error);
       setLoading(false);
     },
-    [username, email, password, router, setUser]
+    [username, email, password]
   );
 
   return (

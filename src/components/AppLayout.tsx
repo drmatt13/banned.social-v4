@@ -18,7 +18,7 @@ interface ChildProps {
 
 const AppLayout = ({ children }: ChildProps) => {
   const router = useRouter();
-  const { user, setUser } = useGlobalContext();
+  const { user, setUser, loggingOut } = useGlobalContext();
   const loading = useUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(false);
 
@@ -40,7 +40,9 @@ const AppLayout = ({ children }: ChildProps) => {
       </Head>
       <div>
         <ToggleDarkModeButton />
-        {!loading && (
+        {loading || loggingOut ? (
+          <div>loading</div>
+        ) : (
           <div>
             {showNavbar && <>{user._id ? <Navbar /> : <UnprotectedNavbar />}</>}
             <div>{children}</div>

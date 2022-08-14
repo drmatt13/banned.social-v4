@@ -11,6 +11,8 @@ export type GlobalContext = {
   logout: (
     href?: string | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
+  loggingOut: boolean;
+  setLoggingOut: (loggingOut: boolean) => void;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -21,6 +23,8 @@ export const globalContext = createContext<GlobalContext>({
   darkMode: false,
   setDarkMode: () => {},
   toggleDarkMode: () => {},
+  loggingOut: false,
+  setLoggingOut: () => {},
 });
 
 export const useGlobalContext = () => useContext(globalContext);

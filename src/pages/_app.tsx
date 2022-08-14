@@ -21,6 +21,7 @@ const MyApp: AppType = ({
   const [user, setUser] = useState<any>({});
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     if (
@@ -65,6 +66,7 @@ const MyApp: AppType = ({
   const logout = async (
     href: string | undefined | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ): Promise<void> => {
+    setLoggingOut(true);
     Cookie.remove("token");
     Cookie.remove("next-auth.session-token");
     Cookie.remove("next-auth.callback-url");
@@ -85,6 +87,8 @@ const MyApp: AppType = ({
           toggleDarkMode,
           setUser,
           logout,
+          loggingOut,
+          setLoggingOut,
         }}
       >
         <AppLayout>

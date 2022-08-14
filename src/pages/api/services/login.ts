@@ -1,4 +1,4 @@
-import colors from "colors";
+import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -6,11 +6,11 @@ import bcrypt from "bcrypt";
 import connectDB from "../../../utils/connectDB";
 import User from "../../../models/User";
 
-export default connectDB(async (req, res) => {
+export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   const { username, password } = req.body;
 
   try {
-    let user = await User.findOne({
+    let user: any = await User.findOne({
       $or: [{ username }, { email: username.toLowerCase() }],
     }).select("+password +avatar +username +admin +bio");
     if (!user) {
@@ -26,7 +26,7 @@ export default connectDB(async (req, res) => {
         error: "Invalid Credentials",
       });
     }
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || "");
     user = user.toObject();
     delete user.password;
     return res.json({
@@ -34,8 +34,7 @@ export default connectDB(async (req, res) => {
       token,
       user,
     });
-  } catch (err) {
-    console.error(err.message);
-    return res.status(500).send("Server Error");
+  } catch (error: any) {
+    res.status(200).json({ error, success: false });
   }
 });

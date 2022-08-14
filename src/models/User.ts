@@ -1,7 +1,25 @@
-const mongoose = require("mongoose");
+import { Document, Schema, model } from "mongoose";
 
-// create mongoose schema object
-const Schema = new mongoose.Schema({
+// Create the interface
+export interface User extends Document {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  verified: boolean;
+  username: string;
+  email: string;
+  password: string;
+  authProvider: string;
+  providerEmail: string;
+  avatar: number;
+  bio: string;
+  admin: boolean;
+  createdAt: Date;
+  lastLogin: Date;
+}
+
+// Create the schema
+const UserSchema = new Schema<User>({
   firstName: {
     type: String,
     trim: true,
@@ -77,26 +95,27 @@ const Schema = new mongoose.Schema({
   },
 });
 
-Schema.pre("save", function (next) {
-  if (this.email) {
-    this.email = this.email.toLowerCase();
-  }
-  if (this.firstName) {
-    this.firstName = this.firstName.toLowerCase();
-  }
-  if (this.lastName) {
-    this.lastName = this.lastName.toLowerCase();
-  }
-  next();
-});
+// Schema.pre("save", function (next) {
+//   if (this.email) {
+//     this.email = this.email.toLowerCase();
+//   }
+//   if (this.firstName) {
+//     this.firstName = this.firstName.toLowerCase();
+//   }
+//   if (this.lastName) {
+//     this.lastName = this.lastName.toLowerCase();
+//   }
+//   next();
+// });
 
-Schema.pre("remove", function (next) {
-  // 'this' is the client being removed. Provide callbacks here if you want
-  // to be notified of the calls' result.
-  // Sweepstakes.remove({user_id: this._id}).exec();
-  // Submission.remove({client_id: this._id}).exec();
-  next();
-});
+// Schema.pre("remove", function (next) {
+//   // 'this' is the client being removed. Provide callbacks here if you want
+//   // to be notified of the calls' result.
+//   // Sweepstakes.remove({user_id: this._id}).exec();
+//   // Submission.remove({client_id: this._id}).exec();
+//   next();
+// });
 
-// The collection name for this DB is defined in the export
-module.exports = mongoose.models.User || mongoose.model("User", Schema);
+// Create and export user model
+const User = model<User>("User", UserSchema);
+export default User;

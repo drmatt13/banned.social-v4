@@ -1,10 +1,10 @@
-import colors from "colors";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 // mongoose
 import connectDB from "../../../utils/connectDB";
 import User from "../../../models/User";
 
-export default connectDB(async (req, res) => {
+export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   let { _id, profile_id } = req.body;
 
   // return username, profile_id, and profileAvatar
@@ -19,7 +19,6 @@ export default connectDB(async (req, res) => {
       res.json({ success: false, error: "User not found" });
     }
   } catch (error) {
-    console.log("user not found".bold.red);
-    res.json({ success: false });
+    res.status(200).json({ error, success: false });
   }
 });
