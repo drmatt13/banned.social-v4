@@ -3,6 +3,7 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
+import Head from "next/head";
 
 // context
 import { useGlobalContext } from "../context/globalContext";
@@ -75,7 +76,14 @@ const Login: NextPage = () => {
     }
   }, [processing, session, router, logout, setUser]);
 
-  return <div>loading</div>;
+  return (
+    <>
+      <Head>
+        <title>Login | Social</title>
+      </Head>
+      <div>loading</div>
+    </>
+  );
 };
 
 export default Login;

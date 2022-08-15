@@ -1,7 +1,8 @@
 import { useState, useCallback } from "react";
 import type { NextPage } from "next";
-import Link from "next/link";
 import Cookie from "js-cookie";
+import Head from "next/head";
+import Link from "next/link";
 
 // utils
 import processService from "../utils/processService";
@@ -34,6 +35,9 @@ const Signup: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Signup | Social</title>
+      </Head>
       {loading ? (
         <div className="w-full text-center">
           <div className="text-black dark:text-white">loading</div>
