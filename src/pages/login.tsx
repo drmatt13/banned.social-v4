@@ -22,12 +22,9 @@ const Login: NextPage = () => {
   const [expires, setExpires] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  console.log(window.location);
-
   const standardLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      console.log(router);
       e.preventDefault();
       setLoading(true);
       const data = await processService("login", {
@@ -35,7 +32,6 @@ const Login: NextPage = () => {
         password,
       });
       const { user, token, success, error } = data;
-      console.log(data);
       if (success) {
         if (user && token) {
           Cookie.set("token", token, {
@@ -95,7 +91,7 @@ const Login: NextPage = () => {
   return (
     <div className="flex flex-col-reverse items-center">
       {loading ? (
-        <div>loading</div>
+        <div className="text-black dark:text-white">loading</div>
       ) : (
         <>
           <WebsiteInformation />

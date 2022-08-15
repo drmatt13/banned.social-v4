@@ -41,7 +41,9 @@ const AppLayout = ({ children }: ChildProps) => {
       <div>
         <ToggleDarkModeButton />
         {loading || loggingOut ? (
-          <div>loading</div>
+          <div className="w-full text-center">
+            <div className="text-black dark:text-white">loading</div>
+          </div>
         ) : (
           <div>
             {showNavbar && <>{user._id ? <Navbar /> : <UnprotectedNavbar />}</>}

@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt, { JwtPayload } from "jsonwebtoken";
-// import colors from "colors";
+import chalk from "chalk";
 import axios from "axios";
+
+// colors.enable(true);
 
 const url = process.env.NEXTAUTH_URL;
 
@@ -36,12 +38,16 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse) => {
   }
 
   // log request
-  // let token_id = body._id
-  //   ? body._id
-  //   : cookies.token
-  //   ? "Invalid Token"
-  //   : "No Token";
-  // console.log(`${token_id}`.yellow, "->".red, `${body.service}`.green);
+  let token_id = body._id
+    ? body._id
+    : cookies.token
+    ? "Invalid Token"
+    : "No Token";
+  console.log(
+    chalk.yellow.bold(`${token_id}`),
+    chalk.red.bold("->"),
+    chalk.green.bold(`${body.service}`)
+  );
 
   const protectedRoute = () => {
     if (!body._id) {
@@ -54,6 +60,15 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse) => {
 
   try {
     switch (body.service) {
+      // *****************************
+      // *******  NO DB  *************
+      // *****************************
+
+      // case "protected service":
+      // protectedRoute();
+      // req = await axios.post(`${url}/api/services/protected_service`, body);
+      // break;
+
       // *****************************
       // *******  USER DB  ***********
       // *****************************
@@ -71,7 +86,6 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse) => {
       // returns jwt
       // { email, password }
       case "login":
-        console.log(`${url}/api/services/login`);
         req = await axios.post(`${url}/api/services/login`, body);
         break;
 

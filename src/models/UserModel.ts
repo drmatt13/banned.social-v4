@@ -1,25 +1,12 @@
-import { Document, Schema, model } from "mongoose";
+import { Document, Schema, model, models } from "mongoose";
+import type User from "../types/user";
 
-// Create the interface
-export interface User extends Document {
+export interface IUserModel extends User, Document {
   _id: string;
-  firstName: string;
-  lastName: string;
-  verified: boolean;
-  username: string;
-  email: string;
-  password: string;
-  authProvider: string;
-  providerEmail: string;
-  avatar: number;
-  bio: string;
-  admin: boolean;
-  createdAt: Date;
-  lastLogin: Date;
 }
 
 // Create the schema
-const UserSchema = new Schema<User>({
+const UserSchema = new Schema<IUserModel>({
   firstName: {
     type: String,
     trim: true,
@@ -95,27 +82,27 @@ const UserSchema = new Schema<User>({
   },
 });
 
-// Schema.pre("save", function (next) {
-//   if (this.email) {
-//     this.email = this.email.toLowerCase();
-//   }
-//   if (this.firstName) {
-//     this.firstName = this.firstName.toLowerCase();
-//   }
-//   if (this.lastName) {
-//     this.lastName = this.lastName.toLowerCase();
-//   }
-//   next();
-// });
+UserSchema.pre("save", function (next) {
+  if (this.email) {
+    this.email = this.email.toLowerCase();
+  }
+  if (this.firstName) {
+    this.firstName = this.firstName.toLowerCase();
+  }
+  if (this.lastName) {
+    this.lastName = this.lastName.toLowerCase();
+  }
+  next();
+});
 
-// Schema.pre("remove", function (next) {
-//   // 'this' is the client being removed. Provide callbacks here if you want
-//   // to be notified of the calls' result.
-//   // Sweepstakes.remove({user_id: this._id}).exec();
-//   // Submission.remove({client_id: this._id}).exec();
-//   next();
-// });
+UserSchema.pre("remove", function (next) {
+  // 'this' is the client being removed. Provide callbacks here if you want
+  // to be notified of the calls' result.
+  // Sweepstakes.remove({user_id: this._id}).exec();
+  // Submission.remove({client_id: this._id}).exec();
+  next();
+});
 
 // Create and export user model
-const User = model<User>("User", UserSchema);
-export default User;
+const getModel = () => model("User", UserSchema);
+export default (models.User || getModel()) as ReturnType<typeof getModel>;

@@ -1,15 +1,16 @@
 export default interface User {
   _id: string;
   username: string;
-  bio?: string;
-  role?: string;
-  profileAvatar?: number | undefined;
-  verified?: boolean;
   firstName?: string;
   lastName?: string;
+  verified?: boolean;
   email?: string;
+  password?: string;
   authProvider?: string;
   providerEmail?: string;
-  lastLogin?: Date;
+  avatar?: number;
+  bio?: string;
+  admin?: boolean;
   createdAt?: Date;
+  lastLogin?: Date;
 }

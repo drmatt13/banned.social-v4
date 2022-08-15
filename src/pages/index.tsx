@@ -1,7 +1,6 @@
 import type { NextPage } from "next";
 import type { GlobalContext } from "../context/globalContext";
 import Link from "next/link";
-// import Head from "next/head";
 
 // context
 import { useGlobalContext } from "../context/globalContext";

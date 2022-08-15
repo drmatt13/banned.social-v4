@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 // mongoose
 import connectDB from "../../../utils/connectDB";
-import User from "../../../models/User";
+import UserModel, { IUserModel } from "../../../models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   // check for username, email and password
@@ -21,7 +21,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     // check if user exists
-    const user = await User.findOne({
+    const user: IUserModel | null = await UserModel.findOne({
       $or: [{ username: req.body.username }, { email: req.body.email }],
     }).select("+password");
     if (user) {
@@ -32,7 +32,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
-    let newUser: any = await User.create(req.body);
+    let newUser: IUserModel = await UserModel.create(req.body);
     const token = process.env.TOKEN_SECRET
       ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)
       : undefined;
@@ -47,6 +47,6 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       user: newUser,
     });
   } catch (error) {
-    res.status(200).json({ error, success: false });
+    res.status(500).json({ error, success: false });
   }
 });

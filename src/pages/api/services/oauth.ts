@@ -4,7 +4,7 @@ import { decode } from "next-auth/jwt";
 
 // mongoose
 import connectDB from "../../../utils/connectDB";
-import User from "../../../models/User";
+import UserModel, { IUserModel } from "../../../models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -13,12 +13,12 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       secret: process.env.NEXTAUTH_SECRET || "",
     });
     // check if providerEmail exists in database
-    let user: any = await User.findOne({
+    let user: IUserModel | null = await UserModel.findOne({
       providerEmail: decodedSessionToken.email,
     });
     if (!user) {
       // if providerEmail does not exist, create user
-      user = await User.create({
+      user = await UserModel.create({
         authProvider: req.body.provider,
         providerEmail: decodedSessionToken.email,
       });
@@ -33,7 +33,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       token,
       user,
     });
-  } catch (error: any) {
-    res.status(200).json({ error, success: false });
+  } catch (error) {
+    res.status(500).json({ error, success: false });
   }
 });

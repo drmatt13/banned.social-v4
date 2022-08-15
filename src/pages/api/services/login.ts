@@ -1,16 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import chalk from "chalk";
 
 // mongoose
 import connectDB from "../../../utils/connectDB";
-import User from "../../../models/User";
+import UserModel, { IUserModel } from "../../../models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   const { username, password } = req.body;
 
   try {
-    let user: any = await User.findOne({
+    let user: IUserModel | null = await UserModel.findOne({
       $or: [{ username }, { email: username.toLowerCase() }],
     }).select("+password +avatar +username +admin +bio");
     if (!user) {
@@ -19,7 +20,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
         error: "Invalid Credentials",
       });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password || "");
     if (!isMatch) {
       return res.status(200).json({
         success: false,
@@ -34,7 +35,8 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       token,
       user,
     });
-  } catch (error: any) {
-    res.status(200).json({ error, success: false });
+  } catch (error) {
+    console.log(chalk.red.bold(error));
+    res.status(500).json({ error, success: false });
   }
 });

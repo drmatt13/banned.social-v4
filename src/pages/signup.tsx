@@ -35,7 +35,9 @@ const Signup: NextPage = () => {
   return (
     <>
       {loading ? (
-        <div>loading</div>
+        <div className="w-full text-center">
+          <div className="text-black dark:text-white">loading</div>
+        </div>
       ) : (
         <div className="mt-32 flex flex-col items-center">
           <form
