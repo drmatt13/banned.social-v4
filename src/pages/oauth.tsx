@@ -19,7 +19,7 @@ const Login: NextPage = () => {
 
   useEffect(() => {
     if (processing.current) return;
-    const query: any = router.asPath
+    const query = router.asPath
       .replace("/oauth?", "")
       .split("&")
       .reduce((acc, curr) => {

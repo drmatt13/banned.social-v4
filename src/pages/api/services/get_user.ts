@@ -13,7 +13,6 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       profile_id || _id
     ).select("+username +avatar");
     if (user) {
-      // console.log(user);
       res.json({ success: true, user });
     } else {
       res.json({ success: false, error: "User not found" });

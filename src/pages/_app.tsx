@@ -63,9 +63,7 @@ const MyApp: AppType = ({
     }
   };
 
-  const logout = async (
-    href: string | undefined | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): Promise<void> => {
+  const logout = async (): Promise<void> => {
     setLoggingOut(true);
     Cookie.remove("token");
     Cookie.remove("next-auth.session-token");
