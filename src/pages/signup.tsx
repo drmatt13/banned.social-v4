@@ -180,9 +180,16 @@ const Signup: NextPage = () => {
                 onChange={(e) =>
                   setPassword((password) => {
                     setPasswordRing(
-                      e.target.value.length === 0
+                      Number(passwordRef.current?.value.length) === 0
                         ? 0
-                        : e.target.value.length < 8
+                        : Number(passwordRef.current?.value.length) < 8
+                        ? 1
+                        : 2
+                    );
+                    setPassword2Ring(
+                      Number(password2Ref.current?.value.length) === 0
+                        ? 0
+                        : Number(password2Ref.current?.value.length) < 8
                         ? 1
                         : 2
                     );
@@ -218,10 +225,17 @@ const Signup: NextPage = () => {
                 value={password2}
                 onChange={(e) =>
                   setPassword2((password) => {
-                    setPassword2Ring(
-                      e.target.value.length === 0
+                    setPasswordRing(
+                      Number(passwordRef.current?.value.length) === 0
                         ? 0
-                        : e.target.value.length < 8
+                        : Number(passwordRef.current?.value.length) < 8
+                        ? 1
+                        : 2
+                    );
+                    setPassword2Ring(
+                      Number(password2Ref.current?.value.length) === 0
+                        ? 0
+                        : Number(password2Ref.current?.value.length) < 8
                         ? 1
                         : 2
                     );
