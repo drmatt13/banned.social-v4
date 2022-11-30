@@ -36,6 +36,8 @@ const Signup: NextPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const password2Ref = useRef<HTMLInputElement>(null);
 
+  const [originalViewportHeight] = useState(window.innerHeight + "px");
+
   const validateEmail = useCallback((email: string) => {
     return String(email)
       .toLowerCase()
@@ -102,6 +104,8 @@ const Signup: NextPage = () => {
         -webkit-box-shadow: 0 0 0px 1000px #3b4148 inset;
         box-shadow: 0 0 0px 1000px #3b4148 inset;
         color: rgba(255, 255, 255, 0.9);
+        font-size: auto;
+        line-height: auto;
       }`
           : `input:-webkit-autofill,
       input:-webkit-autofill:focus {
@@ -109,7 +113,8 @@ const Signup: NextPage = () => {
         -webkit-text-fill-color: black;
         -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
         box-shadow: 0 0 0px 1000px #ffffff inset;
-        color: black;;
+        color: black;
+        font-size: .9rem;
       }`
       } 
       `}</style>
@@ -117,6 +122,9 @@ const Signup: NextPage = () => {
         className={`${
           darkMode ? darkStatic.container : lightStatic.container
         } flex flex-col items-center`}
+        style={{
+          height: originalViewportHeight,
+        }}
       >
         <LoginLogo />
         <div className="mt-14 md:mt-16 lg:mt-20 flex flex-col items-center z-50 animate-fade-in text-black">
@@ -132,7 +140,7 @@ const Signup: NextPage = () => {
                     : ""
                 } ${
                   usernameRing === 2 ? "ring-1 ring-green-500" : ""
-                } border border-light-border dark:border-dark-border shadow-lg w-full flex rounded overflow-hidden`}
+                } h-10 border border-light-border dark:border-dark-border shadow-lg w-full flex rounded overflow-hidden`}
               >
                 <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
                   <i className="text-xs fa-solid fa-user dark:text-gray-500" />
@@ -168,7 +176,7 @@ const Signup: NextPage = () => {
                   emailRing === 1 ? "ring-1 ring-red-500 dark:ring-red-500" : ""
                 } ${
                   emailRing === 2 ? "ring-1 ring-green-500" : ""
-                } border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
+                } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
               >
                 <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
                   <i className="text-xs fa-solid fa-envelope dark:text-gray-500" />
@@ -206,7 +214,7 @@ const Signup: NextPage = () => {
                     : ""
                 } ${
                   passwordRing === 2 ? "ring-1 ring-green-500" : ""
-                } border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
+                } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
               >
                 <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
                   <i className="text-xs fa-solid fa-lock dark:text-gray-500" />
@@ -252,7 +260,7 @@ const Signup: NextPage = () => {
                     : ""
                 } ${
                   password2Ring === 2 ? "ring-1 ring-green-500" : ""
-                } border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
+                } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
               >
                 <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
                   <i className="text-xs fa-solid fa-lock dark:text-gray-500" />

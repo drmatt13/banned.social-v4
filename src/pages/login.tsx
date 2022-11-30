@@ -27,6 +27,7 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState("");
   const [expires, setExpires] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [originalViewportHeight] = useState(window.innerHeight + "px");
 
   const standardLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -132,6 +133,9 @@ const Login: NextPage = () => {
         className={`${
           darkMode ? darkStatic.container : lightStatic.container
         } flex flex-col items-center`}
+        style={{
+          height: originalViewportHeight,
+        }}
       >
         <LoginLogo />
         <div className="mt-14 md:mt-16 lg:mt-20 flex flex-col items-center z-50 animate-fade-in text-black">
@@ -147,7 +151,7 @@ const Login: NextPage = () => {
                 <input
                   className={`${
                     loading ? "text-gray-400" : "dark:text-gray-200"
-                  } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                  } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
                   type="text"
                   placeholder="Email or Username"
                   value={username}
@@ -164,7 +168,7 @@ const Login: NextPage = () => {
                 <input
                   className={`${
                     loading ? "text-gray-400" : "dark:text-gray-200"
-                  } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                  } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
                   type="password"
                   placeholder="Password"
                   value={password}
