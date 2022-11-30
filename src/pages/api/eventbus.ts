@@ -3,7 +3,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import chalk from "chalk";
 import axios from "axios";
 
-const URL = process.env.NEXTAUTH_URL + "/api/services";
+const URL = process.env.BASE_URL + "/api/services";
 
 interface EventbusApiRequest extends NextApiRequest {
   body: {
@@ -42,7 +42,7 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
       try {
         verifiedToken = jwt.verify(
           cookies.token || "",
-          process.env.TOKEN_SECRET || ""
+          process.env.NEXTAUTH_SECRET || ""
         );
         req.body._id =
           typeof verifiedToken === "object" ? verifiedToken._id : undefined;

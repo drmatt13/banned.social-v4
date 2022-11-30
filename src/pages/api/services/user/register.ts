@@ -7,19 +7,19 @@ import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
-  // check for username, email and password
-  if (!req.body.username || !req.body.email || !req.body.password) {
-    return res.status(200).json({
-      success: false,
-      error: "Please fill in all fields",
-    });
-  }
-
-  if (req.body._id === null) {
-    delete req.body._id;
-  }
-
   try {
+    // check for username, email and password
+    if (!req.body.username || !req.body.email || !req.body.password) {
+      return res.status(200).json({
+        success: false,
+        error: "Please fill in all fields",
+      });
+    }
+
+    if (req.body._id) {
+      delete req.body._id;
+    }
+
     // check if user exists
     const user: IUserModel | null = await UserModel.findOne({
       $or: [{ username: req.body.username }, { email: req.body.email }],
@@ -40,8 +40,8 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
     let newUser: IUserModel = await UserModel.create(req.body);
-    const token = process.env.TOKEN_SECRET
-      ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)
+    const token = process.env.NEXTAUTH_SECRET
+      ? jwt.sign({ _id: newUser._id }, process.env.NEXTAUTH_SECRET)
       : undefined;
     newUser = newUser.toObject();
     delete newUser.password;

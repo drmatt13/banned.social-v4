@@ -7,9 +7,8 @@ import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
-  const { username, password } = req.body;
-
   try {
+    const { username, password } = req.body;
     let user: IUserModel | null = await UserModel.findOne({
       $or: [{ username }, { email: username.toLowerCase() }],
     }).select("+password +avatar +username +admin +bio");
@@ -29,7 +28,10 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
     await UserModel.findByIdAndUpdate(user._id, {
       lastLogin: new Date(),
     });
-    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || "");
+    const token = jwt.sign(
+      { _id: user._id },
+      process.env.NEXTAUTH_SECRET || ""
+    );
     user = user.toObject();
     delete user.password;
     return res.json({
