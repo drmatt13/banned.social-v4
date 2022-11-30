@@ -246,7 +246,13 @@ const Signup: NextPage = () => {
               } border shadow-lg flex-1 text-center py-1.5 sm:px-4 sm:py-3 rounded`}
               type="button"
               value="SIGN IN"
-              onClick={() => router.replace("/login")}
+              onClick={() => {
+                setPassword("");
+                setPassword2("");
+                setUsername("");
+                setEmail("");
+                router.replace("/login");
+              }}
               disabled={loading}
             />
             {/*  */}

@@ -146,21 +146,21 @@ const Login: NextPage = () => {
                 </div>
               </div>
               <div className="mt-3 flex text-[.6rem] sm:text-xs">
-                <Link href="/signup" legacyBehavior={true}>
-                  <button
-                    className={`${
-                      loading
-                        ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
-                        : "border-black bg-black dark:bg-black/75 hover:bg-black/80 dark:hover:bg-black text-white cursor-pointer"
-                    } border shadow-lg flex-1 text-center py-1.5 sm:px-4 sm:py-3 rounded`}
-                    type="button"
-                    value="REGISTER"
-                    // onClick={() => router.replace("/signup")}
-                    disabled={loading}
-                  >
-                    REGISTER
-                  </button>
-                </Link>
+                <input
+                  className={`${
+                    loading
+                      ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                      : "border-black bg-black dark:bg-black/75 hover:bg-black/80 dark:hover:bg-black text-white cursor-pointer"
+                  } border shadow-lg flex-1 text-center py-1.5 sm:px-4 sm:py-3 rounded`}
+                  type="button"
+                  value="REGISTER"
+                  onClick={() => {
+                    setPassword("");
+                    setUsername("");
+                    router.replace("/signup");
+                  }}
+                  disabled={loading}
+                />
 
                 <div className="flex-[.1]" />
                 <input
