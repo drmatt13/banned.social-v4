@@ -39,7 +39,7 @@ const AppLayout = ({ children }: ChildProps) => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
       <div>
-        <ToggleDarkModeButton />
+        {!showNavbar && <ToggleDarkModeButton />}
         {loading || loggingOut ? (
           <div className="w-full text-center">
             <div className="text-black dark:text-white">loading</div>
