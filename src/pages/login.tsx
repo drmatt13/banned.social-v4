@@ -54,7 +54,11 @@ const Login: NextPage = () => {
             if (queryString.endsWith("&")) {
               queryString = queryString.slice(0, -1);
             }
-            router.replace(`/${path}${queryString ? "?" : ""}${queryString}`);
+            window.location.replace(
+              `${window.location.origin}${path}${
+                queryString ? "?" : ""
+              }${queryString}`
+            );
           } else {
             alert("invalid credentials");
             setLoading(false);

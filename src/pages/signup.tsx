@@ -54,7 +54,7 @@ const Signup: NextPage = () => {
         const { token, error } = res;
         if (token) {
           Cookie.set("token", token, { expires: 1 });
-          router.replace("/");
+          window.location.replace(`${window.location.origin}`);
         }
         if (error) {
           if (error === "Username already exists") {
