@@ -74,8 +74,32 @@ const MyApp: AppType<{
     router.reload();
   };
 
-  return (
-    <SessionProvider session={session}>
+  const route = router.pathname.split("/")[1] || "/";
+
+  return !["login", "signup"].includes(route) ? (
+    <>
+      <SessionProvider session={session}>
+        <globalContext.Provider
+          value={{
+            mobile,
+            user,
+            darkMode,
+            setDarkMode,
+            toggleDarkMode,
+            setUser,
+            logout,
+            loggingOut,
+            setLoggingOut,
+          }}
+        >
+          <AppLayout>
+            <Component {...pageProps} />
+          </AppLayout>
+        </globalContext.Provider>
+      </SessionProvider>
+    </>
+  ) : (
+    <>
       <globalContext.Provider
         value={{
           mobile,
@@ -93,7 +117,7 @@ const MyApp: AppType<{
           <Component {...pageProps} />
         </AppLayout>
       </globalContext.Provider>
-    </SessionProvider>
+    </>
   );
 };
 
