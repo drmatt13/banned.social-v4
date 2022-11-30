@@ -40,8 +40,8 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
     let newUser: IUserModel = await UserModel.create(req.body);
-    const token = process.env.NEXTAUTH_SECRET
-      ? jwt.sign({ _id: newUser._id }, process.env.NEXTAUTH_SECRET)
+    const token = process.env.TOKEN_SECRET
+      ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)
       : undefined;
     newUser = newUser.toObject();
     delete newUser.password;

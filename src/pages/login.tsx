@@ -77,6 +77,9 @@ const Login: NextPage = () => {
 
   const oAuth = useCallback(
     (provider: string) => {
+      setUsername("");
+      setPassword("");
+      setLoading(true);
       const query = router.query;
       let queryString = "";
       for (const key in query) {
@@ -93,7 +96,7 @@ const Login: NextPage = () => {
         }${queryString ? "&" : ""}${queryString}`,
       });
     },
-    [router, expires]
+    [router, expires, setPassword, setUsername, setLoading]
   );
 
   return (

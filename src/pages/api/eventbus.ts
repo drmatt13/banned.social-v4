@@ -42,7 +42,7 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
       try {
         verifiedToken = jwt.verify(
           cookies.token || "",
-          process.env.NEXTAUTH_SECRET || ""
+          process.env.TOKEN_SECRET || ""
         );
         req.body._id =
           typeof verifiedToken === "object" ? verifiedToken._id : undefined;

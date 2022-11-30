@@ -24,8 +24,8 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
         verified: true,
       });
     }
-    const token = process.env.NEXTAUTH_SECRET
-      ? jwt.sign({ _id: user._id }, process.env.NEXTAUTH_SECRET)
+    const token = process.env.TOKEN_SECRET
+      ? jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
       : undefined;
     user = user.toObject();
     delete user.password;

@@ -28,10 +28,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
     await UserModel.findByIdAndUpdate(user._id, {
       lastLogin: new Date(),
     });
-    const token = jwt.sign(
-      { _id: user._id },
-      process.env.NEXTAUTH_SECRET || ""
-    );
+    const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || "");
     user = user.toObject();
     delete user.password;
     return res.json({
