@@ -15,7 +15,19 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/lib/*": ["lib/*"],
+      "@/styles/*": ["styles/*"],
+      "@/components/*": ["components/*"],
+      "@/context/*": ["context/*"],
+      "@/types/*": ["types/*"],
+      "@/hooks/*": ["hooks/*"],
+      "@/models/*": ["models/*"],
+      "@/layouts/*": ["layouts/*"],
+    },
   },
+  
   "include": [
     "next-env.d.ts",
     "next-auth.d.ts",

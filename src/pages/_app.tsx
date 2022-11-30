@@ -1,24 +1,25 @@
 import type { AppType } from "next/dist/shared/lib/utils";
+import type { Session } from "next-auth";
+import type User from "@/types/user";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, signOut } from "next-auth/react";
 import Cookie from "js-cookie";
 
 // components
-import AppLayout from "../components/AppLayout";
+import AppLayout from "@/layouts/AppLayout";
 
 // global context
-import globalContext from "../context/globalContext";
+import globalContext from "@/context/globalContext";
 
 // global styles
-import "../styles/globals.scss";
+import "@/styles/globals.scss";
 
-const MyApp: AppType = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType<{
+  session: Session;
+}> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
-  const [user, setUser] = useState<any>({});
+  const [user, setUser] = useState<User>(undefined);
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
@@ -69,7 +70,6 @@ const MyApp: AppType = ({
     Cookie.remove("next-auth.session-token");
     Cookie.remove("next-auth.callback-url");
     Cookie.remove("next-auth.csrf-token");
-    setUser({});
     signOut({ redirect: false });
     router.reload();
   };

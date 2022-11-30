@@ -1,8 +1,7 @@
 import axios from "axios";
-import { CookiesStatic } from "js-cookie";
 import type User from "../types/user";
 
-interface ProcessService {
+interface ServiceResults {
   user?: User;
   token?: string;
   success?: boolean;
@@ -12,7 +11,7 @@ interface ProcessService {
 const processService = async (
   service: string,
   data: object = {}
-): Promise<ProcessService> => {
+): Promise<ServiceResults> => {
   try {
     const res = await axios.post(
       `/api/eventbus`,

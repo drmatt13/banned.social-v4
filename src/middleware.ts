@@ -1,13 +1,14 @@
 // middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import type { RequestCookie } from "next/dist/server/web/spec-extension/cookies";
 
 const protectedRoutes: { [key: string]: boolean } = {
   "/": true,
   protected: true,
 };
 
-let credentials: string | undefined;
+let credentials: RequestCookie | undefined;
 let route: string;
 
 export function middleware(request: NextRequest) {

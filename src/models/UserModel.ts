@@ -1,8 +1,21 @@
 import { Document, Schema, model, models } from "mongoose";
 import type User from "../types/user";
 
-export interface IUserModel extends User, Document {
+export interface IUserModel extends Document {
   _id: string;
+  username: string;
+  firstName?: string;
+  lastName?: string;
+  verified?: boolean;
+  email?: string;
+  password?: string;
+  authProvider?: string;
+  providerEmail?: string;
+  avatar?: number;
+  bio?: string;
+  admin?: boolean;
+  createdAt?: Date;
+  lastLogin?: Date;
 }
 
 // Create the schema

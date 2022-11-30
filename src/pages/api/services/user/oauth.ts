@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import { decode } from "next-auth/jwt";
 
 // mongoose
-import connectDB from "../../../utils/connectDB";
-import UserModel, { IUserModel } from "../../../models/UserModel";
+import connectDB from "@/lib/connectDB";
+import UserModel, { IUserModel } from "@/models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -21,6 +21,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       user = await UserModel.create({
         authProvider: req.body.provider,
         providerEmail: decodedSessionToken.email,
+        verified: true,
       });
     }
     const token = process.env.TOKEN_SECRET
@@ -34,6 +35,6 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       user,
     });
   } catch (error) {
-    res.status(500).json({ error, success: false });
+    res.json({ error: (error as any).message, success: false });
   }
 });

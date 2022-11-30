@@ -7,7 +7,7 @@ export type GlobalContext = {
   darkMode: boolean;
   setDarkMode: (darkMode: boolean) => void;
   toggleDarkMode: () => void;
-  setUser: (user: User | {}) => void;
+  setUser: (user: User) => void;
   logout: (
     href?: string | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
@@ -17,7 +17,7 @@ export type GlobalContext = {
 
 export const globalContext = createContext<GlobalContext>({
   mobile: false,
-  user: {} as User,
+  user: undefined,
   setUser: () => {},
   logout: () => Promise.resolve(),
   darkMode: false,

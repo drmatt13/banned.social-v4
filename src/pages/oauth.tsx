@@ -9,7 +9,7 @@ import Head from "next/head";
 import { useGlobalContext } from "../context/globalContext";
 
 // utils
-import processService from "../utils/processService";
+import processService from "../lib/processService";
 
 const Login: NextPage = () => {
   const { data: session } = useSession();
@@ -54,9 +54,11 @@ const Login: NextPage = () => {
           if (queryString.endsWith("&")) {
             queryString = queryString.slice(0, -1);
           }
-          window.location.href = `${window.location.origin}${path}${
-            queryString ? "?" : ""
-          }${queryString}`;
+          window.location.replace(
+            `${window.location.origin}${path}${
+              queryString ? "?" : ""
+            }${queryString}`
+          );
         } else {
           logout();
         }

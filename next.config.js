@@ -1,7 +1,7 @@
 module.exports = {
   experimental: {
-    images: {
-      allowFutureImage: true,
-    },
+    // images: {
+    //   allowFutureImage: true,
+    // },
   },
 };

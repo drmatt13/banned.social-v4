@@ -1,10 +1,9 @@
 import type { NextPage } from "next";
-import type { GlobalContext } from "../context/globalContext";
 import Head from "next/head";
 import Link from "next/link";
 
 // context
-import { useGlobalContext } from "../context/globalContext";
+import { useGlobalContext, GlobalContext } from "@/context/globalContext";
 
 const Home: NextPage = () => {
   const { logout }: GlobalContext = useGlobalContext();
@@ -20,12 +19,12 @@ const Home: NextPage = () => {
       >
         logout
       </button>
-      <Link href="/protected">
+      <Link href="/protected" passHref legacyBehavior={true}>
         <button className="p-4 mr-3 border border-light-border dark:border-dark-border hover:bg-gray-100 dark:hover:bg-gray-200 bg-gray-200 dark:bg-white text-black">
           protected page
         </button>
       </Link>
-      <Link href="/unprotected">
+      <Link href="/unprotected" passHref legacyBehavior={true}>
         <button className="p-4 mr-3 border border-light-border dark:border-dark-border hover:bg-gray-100 dark:hover:bg-gray-200 bg-gray-200 dark:bg-white text-black">
           unprotected page
         </button>

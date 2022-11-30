@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import type User from "../types/user";
+import type User from "@/types/user";
+
+// context
+import { useGlobalContext, GlobalContext } from "@/context/globalContext";
 
 // utils
-import processService from "../utils/processService";
+import processService from "../lib/processService";
 
-const useUser = (
-  user: User | {},
-  setUser: (user: User | {}) => void
-): boolean => {
+const useUser = (user: User, setUser: (user: User) => void): boolean => {
+  const { logout }: GlobalContext = useGlobalContext();
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const checkCredentials = async () => {
@@ -26,15 +29,25 @@ const useUser = (
           Cookies.remove("next-auth.session-token");
           Cookies.remove("next-auth.callback-url");
           Cookies.remove("next-auth.csrf-token");
-          setUser({});
-          window.location.href = "/login";
+          window.location.replace("/login");
         }
       } catch (error) {
-        console.log("invalid token");
+        alert("something went wrong");
+        Cookies.remove("token");
+        Cookies.remove("next-auth.session-token");
+        Cookies.remove("next-auth.callback-url");
+        Cookies.remove("next-auth.csrf-token");
+        window.location.replace("/login");
       }
     };
-    checkCredentials();
-  }, [setUser]);
+
+    const route = router.pathname.split("/")[1] || "/";
+    if (!user && !["login", "signup", "oauth"].includes(route)) {
+      checkCredentials();
+    } else {
+      setLoading(false);
+    }
+  }, [router.pathname, setUser, user]);
 
   return loading;
 };

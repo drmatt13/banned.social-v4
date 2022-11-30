@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 
 // components
-import Navbar from "./Navbar";
-import UnprotectedNavbar from "./UnprotectedNavbar";
+import Navbar from "../components/Navbar";
+import UnprotectedNavbar from "../components/UnprotectedNavbar";
 
 // context
 import { useGlobalContext } from "../context/globalContext";
@@ -46,7 +46,11 @@ const AppLayout = ({ children }: ChildProps) => {
           </div>
         ) : (
           <div>
-            {showNavbar && <>{user._id ? <Navbar /> : <UnprotectedNavbar />}</>}
+            {user?._id && !user.username ? <></> : <></>}
+            {user?._id && !user.avatar ? <></> : <></>}
+            {showNavbar && (
+              <>{user?._id ? <Navbar /> : <UnprotectedNavbar />}</>
+            )}
             <div>{children}</div>
           </div>
         )}

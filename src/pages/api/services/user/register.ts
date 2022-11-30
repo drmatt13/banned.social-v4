@@ -3,8 +3,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 // mongoose
-import connectDB from "../../../utils/connectDB";
-import UserModel, { IUserModel } from "../../../models/UserModel";
+import connectDB from "@/lib/connectDB";
+import UserModel, { IUserModel } from "@/models/UserModel";
 
 export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
   // check for username, email and password
@@ -25,10 +25,17 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       $or: [{ username: req.body.username }, { email: req.body.email }],
     }).select("+password");
     if (user) {
-      return res.status(200).json({
-        success: false,
-        error: "User already exists",
-      });
+      if (req.body.username === user.username) {
+        return res.json({
+          success: false,
+          error: "Username already exists",
+        });
+      } else {
+        return res.status(200).json({
+          success: false,
+          error: "Email already exists",
+        });
+      }
     }
 
     req.body.password = await bcrypt.hash(req.body.password, 10);
@@ -47,6 +54,6 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       user: newUser,
     });
   } catch (error) {
-    res.status(500).json({ error, success: false });
+    res.json({ error: (error as any).message, success: false });
   }
 });
