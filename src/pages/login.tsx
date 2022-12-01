@@ -21,7 +21,7 @@ import darkStatic from "@/styles/darkStatic.module.scss";
 import lightStatic from "@/styles/lightStatic.module.scss";
 
 const Login: NextPage = () => {
-  const { darkMode } = useGlobalContext();
+  const { darkMode, mobile } = useGlobalContext();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -143,8 +143,12 @@ const Login: NextPage = () => {
           style={{
             minHeight: originalViewportHeight,
             background: darkMode
-              ? "radial-gradient(at center center, rgba(51, 51, 51, 0.5) 0%, rgba(0, 0, 0, 0.6) 100%)"
-              : "radial-gradient(at center center, rgba(29, 29, 29, 0.5) 0%, rgba(5, 5, 5, 0.7) 100%)",
+              ? mobile
+                ? "radial-gradient(at center center, rgba(51, 51, 51, 0.80) 0%, rgba(0, 0, 0, 0.6) 100%)"
+                : "radial-gradient(at center center, rgba(51, 51, 51, 0.60) 0%, rgba(0, 0, 0, 0.6) 100%)"
+              : mobile
+              ? "radial-gradient(at center center, rgba(29, 29, 29, 0.35) 0%, rgba(5, 5, 5, 0.6) 100%)"
+              : "radial-gradient(at center center, rgba(29, 29, 29, 0.50) 0%, rgba(5, 5, 5, 0.7) 100%)",
           }}
         />
 
