@@ -144,10 +144,10 @@ const Login: NextPage = () => {
             minHeight: originalViewportHeight,
             background: darkMode
               ? mobile
-                ? "radial-gradient(at center center, rgba(51, 51, 51, 0.80) 0%, rgba(0, 0, 0, 0.6) 100%)"
-                : "radial-gradient(at center center, rgba(51, 51, 51, 0.60) 0%, rgba(0, 0, 0, 0.6) 100%)"
+                ? "radial-gradient(at center center, rgba(51, 51, 51, 0.80) 0%, rgba(0, 0, 0, 0.9) 100%)"
+                : "radial-gradient(at center center, rgba(51, 51, 51, 0.50) 0%, rgba(0, 0, 0, 0.6) 100%)"
               : mobile
-              ? "radial-gradient(at center center, rgba(29, 29, 29, 0.35) 0%, rgba(5, 5, 5, 0.6) 100%)"
+              ? "radial-gradient(at center center, rgba(29, 29, 29, 0.40) 0%, rgba(5, 5, 5, 0.65) 100%)"
               : "radial-gradient(at center center, rgba(29, 29, 29, 0.50) 0%, rgba(5, 5, 5, 0.7) 100%)",
           }}
         />
