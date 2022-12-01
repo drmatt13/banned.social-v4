@@ -74,6 +74,8 @@ const MyApp: AppType<{
     router.reload();
   };
 
+  // logout();
+
   const route = router.pathname.split("/")[1] || "/";
 
   return !["login", "signup"].includes(route) ? (

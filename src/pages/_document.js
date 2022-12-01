@@ -31,7 +31,7 @@ export default function Document() {
         {/* URL color */}
         <meta name="theme-color" content="#3c374a" />
       </Head>
-      <body className="bg-light-primary dark:bg-dark-primary">
+      <body className="bg-light-primary dark:bg-dark-primary text-black dark:text-white">
         <Main />
         <NextScript />
       </body>
