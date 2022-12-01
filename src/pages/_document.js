@@ -20,6 +20,16 @@ export default function Document() {
           crossOrigin="anonymous"
           referrerPolicy="no-referrer"
         />
+        {/* open graph */}
+        <meta property="og:site_name" content="Banned.Social" />
+        <meta
+          property="og:title"
+          content="The most banned social media platform on earth."
+        />
+        {/* <meta property="og:description" content="" /> */}
+        <meta property="og:image" content="/images/og-image.jpeg" />
+        {/* URL color */}
+        <meta name="theme-color" content="#3c374a" />
       </Head>
       <body className="bg-light-primary dark:bg-dark-primary">
         <Main />

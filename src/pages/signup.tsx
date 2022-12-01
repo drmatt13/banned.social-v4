@@ -94,7 +94,7 @@ const Signup: NextPage = () => {
       <Head>
         <title>Signup | Social</title>
       </Head>
-      <style global>{`
+      <style>{`
       ${
         darkMode
           ? `input:-webkit-autofill,
@@ -104,8 +104,8 @@ const Signup: NextPage = () => {
         -webkit-box-shadow: 0 0 0px 1000px #3b4148 inset;
         box-shadow: 0 0 0px 1000px #3b4148 inset;
         color: rgba(255, 255, 255, 0.9);
-        font-size: auto;
-        line-height: auto;
+        transition: background-color 5000s ease-in-out 0s;
+        caret-color: #fff;
       }`
           : `input:-webkit-autofill,
       input:-webkit-autofill:focus {
@@ -114,18 +114,27 @@ const Signup: NextPage = () => {
         -webkit-box-shadow: 0 0 0px 1000px #ffffff inset;
         box-shadow: 0 0 0px 1000px #ffffff inset;
         color: black;
-        font-size: .9rem;
+        transition: background-color 5000s ease-in-out 0s;
       }`
       } 
       `}</style>
       <div
         className={`${
           darkMode ? darkStatic.container : lightStatic.container
-        } flex flex-col items-center`}
+        } relative flex flex-col items-center`}
         style={{
-          height: originalViewportHeight,
+          minHeight: originalViewportHeight,
         }}
       >
+        <div
+          className="absolute top-0 left-0 w-full h-[700px] md:h-[850px] xl:h-[1100px] invert dark:invert-0"
+          style={{
+            minHeight: originalViewportHeight,
+            background: darkMode
+              ? "radial-gradient(at center center, rgba(51, 51, 51, 0.5) 0%, rgba(0, 0, 0, 0.6) 100%)"
+              : "radial-gradient(at center center, rgba(29, 29, 29, 0.5) 0%, rgba(5, 5, 5, 0.7) 100%)",
+          }}
+        />
         <LoginLogo />
         <div className="mt-14 md:mt-16 lg:mt-20 flex flex-col items-center z-50 animate-fade-in text-black">
           <form
