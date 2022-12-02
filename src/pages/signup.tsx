@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import type { NextPage } from "next";
 import Cookie from "js-cookie";
 import Head from "next/head";
@@ -11,7 +11,9 @@ import LoginLogo from "@/components/LoginLogo";
 import { useGlobalContext } from "@/context/globalContext";
 
 // libaries
-import processService from "../lib/processService";
+import processService from "@/lib/processService";
+import validateUsername from "@/lib/validateUsername";
+import validateEmail from "@/lib/validateEmail";
 
 const Signup: NextPage = () => {
   const { darkMode } = useGlobalContext();
@@ -32,32 +34,27 @@ const Signup: NextPage = () => {
   const passwordRef = useRef<HTMLInputElement>(null);
   const password2Ref = useRef<HTMLInputElement>(null);
 
-  const validateEmail = useCallback((email: string) => {
-    return String(email)
-      .toLowerCase()
-      .match(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-  }, []);
+  const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
 
   const register = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       try {
         e.preventDefault();
         if (password !== password2) {
-          alert("passwords do not match");
+          passwordRef.current?.setCustomValidity("Passwords do not match");
+          passwordRef.current?.reportValidity();
+          passwordRef.current?.focus();
           setPasswordRing(1);
           setPassword2Ring(1);
           return;
         }
-        e.preventDefault();
         setLoading(true);
         const res = await processService("register", {
           username,
           email,
           password,
         });
-        console.log(res);
         const { token, error } = res;
         if (token) {
           Cookie.set("token", token, { expires: 1 });
@@ -65,23 +62,41 @@ const Signup: NextPage = () => {
         }
         if (error) {
           if (error === "Username already exists") {
-            alert("Username already exists");
-            usernameRef.current?.focus();
+            setUsernameError(error);
             setUsernameRing(1);
           } else if (error === "Email already exists") {
-            alert("Email already exists");
-            emailRef.current?.focus();
+            setEmailError(error);
             setEmailRing(1);
           }
           setLoading(false);
         }
       } catch (error) {
-        console.log(error);
+        alert("Server error");
         setLoading(false);
       }
     },
     [username, email, password, password2]
   );
+
+  useEffect(() => {
+    if (usernameError) {
+      usernameRef.current?.setCustomValidity(
+        "Account with username already exists"
+      );
+      usernameRef.current?.reportValidity();
+      usernameRef.current?.focus();
+      setUsernameError("");
+    }
+  }, [usernameError]);
+
+  useEffect(() => {
+    if (emailError) {
+      emailRef.current?.setCustomValidity("Account with email already exists");
+      emailRef.current?.reportValidity();
+      emailRef.current?.focus();
+      setEmailError("");
+    }
+  }, [emailError]);
 
   return (
     <>
@@ -140,9 +155,9 @@ const Signup: NextPage = () => {
                     setUsernameRing(
                       e.target.value.length === 0
                         ? 0
-                        : e.target.value.length <= 2
-                        ? 1
-                        : 2
+                        : validateUsername(e.target.value)
+                        ? 2
+                        : 1
                     );
                     return e.target.value;
                   })
@@ -151,6 +166,8 @@ const Signup: NextPage = () => {
                 required={true}
                 ref={usernameRef}
                 disabled={loading}
+                maxLength={20}
+                onInput={() => usernameRef.current?.setCustomValidity("")}
               />
             </div>
             {/*  */}
@@ -187,6 +204,7 @@ const Signup: NextPage = () => {
                 autoComplete="email"
                 ref={emailRef}
                 disabled={loading}
+                onInput={() => emailRef.current?.setCustomValidity("")}
               />
             </div>
             {/*  */}
@@ -229,6 +247,7 @@ const Signup: NextPage = () => {
                   })
                 }
                 required={true}
+                onInput={() => passwordRef.current?.setCustomValidity("")}
                 minLength={8}
                 autoComplete="current-password"
                 ref={passwordRef}
@@ -274,6 +293,7 @@ const Signup: NextPage = () => {
                     return e.target.value;
                   })
                 }
+                onInput={() => passwordRef.current?.setCustomValidity("")}
                 minLength={8}
                 required={true}
                 autoComplete="new-password"

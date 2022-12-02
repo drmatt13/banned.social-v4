@@ -1,5 +1,5 @@
 // context
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useGlobalContext } from "../context/globalContext";
 import type User from "@/types/user";
 
@@ -15,7 +15,17 @@ interface Props {
 
 const StaticBackground = ({ children, showNavbar, user }: Props) => {
   const { darkMode, mobile } = useGlobalContext();
-  const [viewportHeight] = useState(window.innerHeight + 150 + "px");
+  const [viewportHeight, setViewportHeight] = useState(
+    window.innerHeight + 150 + "px"
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportHeight(window.innerHeight + 150 + "px");
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return !showNavbar || !user?.avatar || !user.username ? (
     <div

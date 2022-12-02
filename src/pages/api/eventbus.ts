@@ -103,6 +103,14 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
         req = await axios.post(`${URL}/user/login`, req.body);
         break;
 
+      // Register user
+      // Unprotected
+      // returns user
+      // { firstName, lastName, email, password }
+      case "register":
+        req = await axios.post(`${URL}/user/register`, body);
+        break;
+
       // Login with Oauth
       // Unprotected
       // returns jwt
@@ -116,12 +124,13 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
         });
         break;
 
-      // Register user
-      // Unprotected
+      // Add username to user
+      // Protected
       // returns user
-      // { firstName, lastName, email, password }
-      case "register":
-        req = await axios.post(`${URL}/user/register`, body);
+      // { username }
+      case "add username":
+        protectedRoute();
+        req = await axios.post(`${URL}/user/add_username`, body);
         break;
 
       // *****************************

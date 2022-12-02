@@ -38,7 +38,7 @@ const UserSchema = new Schema<IUserModel>({
     type: String,
     unique: true,
     trim: true,
-    maxlength: [25, "Username can not be more then 25 characters"],
+    maxlength: [20, "Username can not be more then 24 characters"],
     minlength: [3, "Username can not be less then 3 characters"],
   },
   email: {
