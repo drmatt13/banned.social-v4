@@ -4,13 +4,13 @@ import Cookies from "js-cookie";
 import type User from "@/types/user";
 
 // context
-import { useGlobalContext, GlobalContext } from "@/context/globalContext";
+import { useGlobalContext } from "@/context/globalContext";
 
 // utils
-import processService from "../lib/processService";
+import processService from "@/lib/processService";
 
 const useUser = (user: User, setUser: (user: User) => void): boolean => {
-  const { logout }: GlobalContext = useGlobalContext();
+  const { logout } = useGlobalContext();
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
