@@ -1,0 +1,70 @@
+$red: #F44336;
+$pink: #E91E63;
+$purple: #9C27B0;
+$deep-purple: #673AB7;
+$indigo: #3F51B5;
+$blue: #2196F3;
+$light-blue: #03A9F4;
+$cyan: #00BCD4;
+$teal: #009688;
+$green: #4CAF50;
+$light-green: #8BC34A;
+$lime: #FFEB3B;
+$yellow: #FFEB3B;
+$amber: #FFC107;
+$orange: #FF9800;
+$deep-orange: #FF5722;
+$brown: #795548;
+$grey: #9E9E9E;
+$blue-grey: #607D8B;
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+
+@mixin position-center() {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+  @include position-center;
+}
+
+.spinner {
+  border: 5px solid $green;
+  border-top: 5px solid transparent;
+  display: block;
+  padding: 15px;
+  border-radius: 25px;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    border-color: $red;
+    border-top-color: transparent;
+    transform: rotate(0deg);
+  }
+
+  25% {
+    border-color: $green;
+    border-top-color: transparent;
+  }
+
+  50% {
+    border-color: $blue;
+    border-top-color: transparent;
+  }
+
+  100% {
+    border-color: $red;
+    border-top-color: transparent;
+    transform: rotate(359deg);
+  }
+}

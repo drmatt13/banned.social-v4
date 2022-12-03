@@ -19,6 +19,10 @@ const OAuthSetUsername = () => {
     async (e: React.FormEvent<HTMLFormElement>) => {
       try {
         e.preventDefault();
+        if (!validateUsername(username)) {
+          setUsernameError("Invalid username");
+          return;
+        }
         setLoading(true);
         const res = await processService("add username", {
           username,
@@ -29,7 +33,7 @@ const OAuthSetUsername = () => {
           setUser(user);
         }
         if (error) {
-          setUsernameError(error);
+          setUsernameError("Account with username already exists");
           setUsernameRing(1);
         }
         setLoading(false);
@@ -43,9 +47,7 @@ const OAuthSetUsername = () => {
 
   useEffect(() => {
     if (usernameError) {
-      usernameRef.current?.setCustomValidity(
-        "Account with username already exists"
-      );
+      usernameRef.current?.setCustomValidity(usernameError);
       usernameRef.current?.reportValidity();
       usernameRef.current?.focus();
       setUsernameError("");
@@ -115,7 +117,7 @@ const OAuthSetUsername = () => {
             } border flex-1 text-center sm:px-4 sm:py-3 rounded`}
             type="submit"
             value="CONTINUE"
-            disabled={loading}
+            disabled={loading || Boolean(usernameError)}
           />
         </div>
       </form>

@@ -22,7 +22,10 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
 
     // check if user exists
     const user: IUserModel | null = await UserModel.findOne({
-      $or: [{ username: req.body.username }, { email: req.body.email }],
+      $or: [
+        { username: req.body.username },
+        { email: req.body.email.toLowerCase() },
+      ],
     }).select("+password");
     if (user) {
       if (req.body.username === user.username) {

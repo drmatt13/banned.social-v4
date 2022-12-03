@@ -41,6 +41,14 @@ const Signup: NextPage = () => {
     async (e: React.FormEvent<HTMLFormElement>) => {
       try {
         e.preventDefault();
+        if (!validateUsername(username)) {
+          setUsernameError("Invalid username");
+          return;
+        }
+        if (!validateEmail(email)) {
+          setEmailError("Invalid email");
+          return;
+        }
         if (password !== password2) {
           passwordRef.current?.setCustomValidity("Passwords do not match");
           passwordRef.current?.reportValidity();
@@ -62,10 +70,10 @@ const Signup: NextPage = () => {
         }
         if (error) {
           if (error === "Username already exists") {
-            setUsernameError(error);
+            setUsernameError("Account with username already exists");
             setUsernameRing(1);
           } else if (error === "Email already exists") {
-            setEmailError(error);
+            setEmailError("Account with email already exists");
             setEmailRing(1);
           }
           setLoading(false);
@@ -80,9 +88,7 @@ const Signup: NextPage = () => {
 
   useEffect(() => {
     if (usernameError) {
-      usernameRef.current?.setCustomValidity(
-        "Account with username already exists"
-      );
+      usernameRef.current?.setCustomValidity(usernameError);
       usernameRef.current?.reportValidity();
       usernameRef.current?.focus();
       setUsernameError("");
@@ -91,7 +97,7 @@ const Signup: NextPage = () => {
 
   useEffect(() => {
     if (emailError) {
-      emailRef.current?.setCustomValidity("Account with email already exists");
+      emailRef.current?.setCustomValidity(emailError);
       emailRef.current?.reportValidity();
       emailRef.current?.focus();
       setEmailError("");
@@ -333,11 +339,7 @@ const Signup: NextPage = () => {
               type="submit"
               value="REGISTER"
               disabled={
-                loading ||
-                usernameRing === 1 ||
-                emailRing === 1 ||
-                passwordRing === 1 ||
-                password2Ring === 1
+                loading || Boolean(usernameError) || Boolean(emailError)
               }
             />
             {/*  */}

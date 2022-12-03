@@ -1,7 +1,11 @@
 import { createContext, useContext } from "react";
 import type User from "../types/user";
 
-export type GlobalContext = {
+type GlobalContext = {
+  modal: "" | "update avatar" | "create post" | "update post";
+  setModal: (
+    modal: "" | "update avatar" | "create post" | "update post"
+  ) => void;
   mobile: boolean | undefined;
   user: User;
   darkMode: boolean;
@@ -15,7 +19,9 @@ export type GlobalContext = {
   setLoggingOut: (loggingOut: boolean) => void;
 };
 
-export const globalContext = createContext<GlobalContext>({
+const globalContext = createContext<GlobalContext>({
+  modal: "",
+  setModal: () => {},
   mobile: false,
   user: undefined,
   setUser: () => {},

@@ -1,5 +1,4 @@
 import { Document, Schema, model, models } from "mongoose";
-import type User from "../types/user";
 
 export interface IUserModel extends Document {
   _id: string;

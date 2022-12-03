@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 import Cookie from "js-cookie";
 import Head from "next/head";
 
+// components
+import Loading from "@/components/Loading";
+
 // context
 import { useGlobalContext } from "../context/globalContext";
 
@@ -79,7 +82,7 @@ const Login: NextPage = () => {
       <Head>
         <title>Login | Social</title>
       </Head>
-      <div>loading</div>
+      <Loading />
     </>
   );
 };

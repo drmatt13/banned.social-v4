@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
 
 // components
+import Loading from "@/components/Loading";
 import Navbar from "@/components/Navbar";
 import UnprotectedNavbar from "@/components/UnprotectedNavbar";
 import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import OAuthSetUsername from "@/components/OAuthSetUsername";
-import SignupSetAvatar from "@/components/SignupSetAvatar";
+import Modal from "@/components/Modal";
 
 // context
 import { useGlobalContext } from "@/context/globalContext";
@@ -24,7 +24,7 @@ interface Props {
 
 const AppLayout = ({ children }: Props) => {
   const router = useRouter();
-  const { user, setUser, loggingOut } = useGlobalContext();
+  const { loggingOut, modal, setModal, user, setUser } = useGlobalContext();
   const loading = useUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(false);
 
@@ -39,40 +39,40 @@ const AppLayout = ({ children }: Props) => {
     }
   }, [router.pathname, loading]);
 
+  useEffect(() => {
+    if (user && user.username && !user.avatar) {
+      setModal("update avatar");
+    }
+  }, [setModal, user]);
+
   return (
     <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-      <>
-        {!showNavbar && !loading && !user && <ToggleDarkModeButton />}
-        {loading || loggingOut ? (
-          <div className="w-full text-center">
-            <div>loading</div>
-          </div>
-        ) : (
-          <>
-            {showNavbar && !loading && (
-              <>
-                {user ? (
-                  user.username && user.avatar && <Navbar />
-                ) : (
-                  <UnprotectedNavbar />
-                )}
-              </>
-            )}
-            <StaticBackground showNavbar={showNavbar} user={user}>
-              {user && !user.username ? (
-                <OAuthSetUsername />
-              ) : user && !user.avatar ? (
-                <SignupSetAvatar />
+      {!loading && !user?.avatar && <ToggleDarkModeButton />}
+      {loading || loggingOut ? (
+        <div className="h-screen w-screen">
+          <Loading />
+        </div>
+      ) : (
+        <>
+          {showNavbar && !loading && (
+            <>
+              {user ? (
+                user.username && user.avatar && <Navbar />
               ) : (
-                children
+                <UnprotectedNavbar />
               )}
-            </StaticBackground>
-          </>
-        )}
-      </>
+            </>
+          )}
+          <StaticBackground showNavbar={showNavbar} user={user}>
+            {modal && <Modal />}
+            {user && !user.username ? (
+              <OAuthSetUsername />
+            ) : (
+              (!user || (user && user.avatar)) && children
+            )}
+          </StaticBackground>
+        </>
+      )}
     </>
   );
 };

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, signOut } from "next-auth/react";
 import Cookie from "js-cookie";
+import Head from "next/head";
 
 // components
 import AppLayout from "@/layouts/AppLayout";
@@ -19,6 +20,9 @@ const MyApp: AppType<{
   session: Session;
 }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
+  const [modal, setModal] = useState<
+    "" | "update avatar" | "create post" | "update post"
+  >("");
   const [user, setUser] = useState<User>(undefined);
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -74,15 +78,18 @@ const MyApp: AppType<{
     router.reload();
   };
 
-  // logout();
-
   const route = router.pathname.split("/")[1] || "/";
 
   return !["login", "signup"].includes(route) ? (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <SessionProvider session={session}>
         <globalContext.Provider
           value={{
+            modal,
+            setModal,
             mobile,
             user,
             darkMode,
@@ -104,6 +111,8 @@ const MyApp: AppType<{
     <>
       <globalContext.Provider
         value={{
+          modal,
+          setModal,
           mobile,
           user,
           darkMode,
