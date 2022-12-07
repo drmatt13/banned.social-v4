@@ -3,7 +3,7 @@ import { useGlobalContext } from "@/context/globalContext";
 const ToggleDarkModeButton = () => {
   const { darkMode, toggleDarkMode, mobile } = useGlobalContext();
   return (
-    <div className="z-10 top-0 h-28 w-full absolute py-8 pr-8 flex flex-row-reverse noselect pointer-events-none select-none">
+    <div className="z-50 top-0 h-28 w-full absolute py-8 pr-8 flex flex-row-reverse noselect pointer-events-none select-none">
       <div className="w-10 h-10">
         <i
           onClick={toggleDarkMode}
