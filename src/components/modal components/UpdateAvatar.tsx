@@ -4,11 +4,15 @@ import { useCallback, useState } from "react";
 import SelectAvatar from "@/components/modal components/SelectAvatar";
 import UploadImage from "@/components/modal components/UploadImage";
 
+// context
+import { useGlobalContext } from "@/context/globalContext";
+
 const UpdateAvatar = () => {
+  const { user } = useGlobalContext();
   const [tab, setTab] = useState<"select avatar" | "upload image">(
     "select avatar"
   );
-  const [avatar, setAvatar] = useState(1);
+  const [avatar, setAvatar] = useState(user?.avatar);
   const [image, setImage] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
 

@@ -9,7 +9,7 @@ type User =
       password?: string;
       authProvider?: string;
       providerEmail?: string;
-      avatar?: number;
+      avatar?: string;
       bio?: string;
       admin?: boolean;
       createdAt?: Date;

@@ -25,6 +25,7 @@
       "@/hooks/*": ["hooks/*"],
       "@/models/*": ["models/*"],
       "@/layouts/*": ["layouts/*"],
+      "@/data/*": ["data/*"],
     },
   },
   
