@@ -49,7 +49,7 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
                       height={80}
                       className={`${
                         img === avatar &&
-                        "ring-[6px] ring-blue-500 dark:ring-blue-600"
+                        "ring-[6px] ring-blue-500 dark:ring-blue-600 /rounded-full"
                       } object-cover aspect-square bg-white rounded-lg`}
                       style={{
                         boxShadow:
