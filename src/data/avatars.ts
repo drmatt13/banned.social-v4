@@ -36,21 +36,22 @@ export const avatarOrder = [
   "putin.png",
   "charles_schwab.jpg",
   "jones1.jpg",
+  "bill_gates.jpg",
   "kim1.jpg",
   "kim3.jpg",
   "king_charles.jpg",
   "tate.jpg",
   "elon.jpg",
-  "bill_gates.jpg",
   "mao.jpg",
   "stalin.jpg",
   "xi.jpg",
 
   "democrat.jpg",
   "republican.jpg",
-  "fbi.jpg",
-  "antifa.png",
+
+  "rainbow_fist.jpg",
   "blm.jpg",
+  "antifa.png",
   "equity_flag.webp",
   "lgbt_wolf.png",
   "pride_head.jpg",
@@ -60,8 +61,8 @@ export const avatarOrder = [
   "stop_transphobia.png",
   "trans_girl.jpg",
   "trans_fist.jpg",
-  "rainbow_fist.jpg",
 
+  "isaac_newton.jpg",
   "god.jpg",
   "jesus.jpg",
   "cross.jpg",
@@ -69,7 +70,7 @@ export const avatarOrder = [
   "enlightened.jpg",
   "milky_way.webp",
   "david.webp",
-  "isaac_newton.jpg",
+  "black.png",
   "buddha.jpg",
   "mosses.jpg",
   "quran.jpg",
@@ -87,18 +88,18 @@ export const avatarOrder = [
   "death.jpg",
   "gigachad.jpg",
 
-  "cia.jpg",
-  "censored.webp",
   "ye_infowars_cartoon.jpg",
+  "black2.png",
+  "censored.webp",
   "gun1.jpg",
-  "black.png",
+  "shogun.jpg",
   "anon2.jpg",
   "anon1.jpg",
 
-  "black.png",
-  "black.png",
+  "cia.jpg",
+  "fbi.jpg",
 
-  "black.png",
+  "black3.png",
   "doge.jpg",
   "btc.jpg",
 
@@ -108,8 +109,6 @@ export const avatarOrder = [
   "isreal_flag.png",
   "china.jpg",
   "ukraine.webp",
-
-  // "shogun.jpg",
 ];
 
 export default avatars;
