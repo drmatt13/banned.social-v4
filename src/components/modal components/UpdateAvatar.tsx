@@ -17,7 +17,7 @@ const UpdateAvatar = () => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="/h-[350px] h-[600px] flex flex-col text-sm">
+    <div className="h-[350px] flex flex-col text-sm">
       <div className="flex h-10 border-b border-black/25 select-none">
         <div
           className={`${
