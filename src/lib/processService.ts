@@ -5,7 +5,7 @@ import type Service from "@/types/service";
 
 const processService = async (
   service: Service,
-  body: ServiceBody
+  body?: ServiceBody
 ): Promise<ServiceResults> => {
   try {
     const res = await axios.post(
