@@ -1,4 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type ServiceRequest from "@/types/serviceRequest";
+import type { NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -6,29 +7,29 @@ import bcrypt from "bcrypt";
 import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
-export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
+export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
+    let { username, email, password, eventbusSecret } = req.body;
+    if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
+      return res.json({
+        success: false,
+        error: "Unauthorized",
+      });
+    }
     // check for username, email and password
-    if (!req.body.username || !req.body.email || !req.body.password) {
+    if (!username || !email || !password) {
       return res.status(200).json({
         success: false,
         error: "Please fill in all fields",
       });
     }
 
-    if (req.body._id) {
-      delete req.body._id;
-    }
-
     // check if user exists
     const user: IUserModel | null = await UserModel.findOne({
-      $or: [
-        { username: req.body.username },
-        { email: req.body.email.toLowerCase() },
-      ],
+      $or: [{ username: username }, { email: email.toLowerCase() }],
     }).select("+password");
     if (user) {
-      if (req.body.username === user.username) {
+      if (username === user.username) {
         return res.json({
           success: false,
           error: "Username already exists",
@@ -41,7 +42,7 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
 
-    req.body.password = await bcrypt.hash(req.body.password, 10);
+    password = await bcrypt.hash(password, 10);
     let newUser: IUserModel = await UserModel.create(req.body);
     const token = process.env.TOKEN_SECRET
       ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)

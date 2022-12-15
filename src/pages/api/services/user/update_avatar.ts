@@ -5,23 +5,19 @@ import type { NextApiResponse } from "next";
 import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
-// return username, profile_id, and profileAvatar
 export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
-    let { _id, profile_id, eventbusSecret } = req.body;
+    let { _id, avatar, eventbusSecret } = req.body;
     if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
       return res.json({
         success: false,
         error: "Unauthorized",
       });
     }
-    if (!_id && !profile_id) {
-      throw new Error("No _id or profile_id");
-    }
-
-    const user: IUserModel | null = await UserModel.findById(
-      profile_id || _id
-    ).select("+username +avatar");
+    const user: IUserModel | null = await UserModel.findOneAndUpdate(
+      { _id },
+      { avatar }
+    ).select("+avatar +username +admin");
     if (user) {
       return res.json({ success: true, user });
     } else {

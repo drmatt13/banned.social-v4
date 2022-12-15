@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import type User from "@/types/user";
 import Head from "next/head";
 import Link from "next/link";
 
@@ -6,7 +7,11 @@ import Link from "next/link";
 import { useGlobalContext, GlobalContext } from "@/context/globalContext";
 
 const Home: NextPage = () => {
-  const { logout }: GlobalContext = useGlobalContext();
+  const { logout, setUser, user }: GlobalContext = useGlobalContext();
+
+  const testDeleteAvatar = () => {
+    setUser({ ...user, avatar: undefined } as User);
+  };
 
   return (
     <>
@@ -29,6 +34,12 @@ const Home: NextPage = () => {
           unprotected page
         </button>
       </Link>
+      <button
+        className="p-4 mr-3 border border-light-border dark:border-dark-border hover:bg-gray-100 dark:hover:bg-gray-200 bg-gray-200 dark:bg-white text-black"
+        onClick={testDeleteAvatar}
+      >
+        Test Delete Avatar
+      </button>
     </>
   );
 };

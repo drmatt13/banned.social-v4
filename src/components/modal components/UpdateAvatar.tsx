@@ -19,27 +19,36 @@ const UpdateAvatar = () => {
   return (
     <div className="h-[350px] flex flex-col text-sm">
       <div className="flex h-10 border-b border-black/25 select-none">
-        <div
+        <button
           className={`${
             tab === "select avatar"
-              ? "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500"
-              : "bg-light-secondary dark:bg-white/40 hover:bg-neutral-300 dark:hover:bg-white/60"
-          } flex-1 flex justify-center items-center cursor-pointer`}
+              ? loading
+                ? "border-light-border dark:border-dark-border bg-gray-500/40 dark:bg-dark-form text-gray-600 dark:text-gray-300 cursor-not-allowed"
+                : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
+              : loading
+              ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
+              : "bg-light-secondary dark:bg-white/40 hover:bg-neutral-300 dark:hover:bg-white/60 cursor-pointer"
+          } flex-1 flex justify-center items-center`}
           onClick={() => setTab("select avatar")}
+          disabled={loading}
         >
           Select Avatar
-        </div>
-        {/* <div className="h-full w-[1px] bg-black"></div> */}
-        <div
+        </button>
+        <button
           className={`${
             tab === "upload image"
-              ? "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500"
-              : "bg-light-secondary dark:bg-white/40 hover:bg-neutral-300 dark:hover:bg-white/60"
-          } flex-1 flex justify-center items-center cursor-pointer`}
+              ? loading
+                ? "border-light-border dark:border-dark-border bg-gray-500/40 dark:bg-dark-form text-gray-600 dark:text-gray-300 cursor-not-allowed"
+                : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
+              : loading
+              ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
+              : "bg-light-secondary dark:bg-white/40 hover:bg-neutral-300 dark:hover:bg-white/60 cursor-pointer"
+          } flex-1 flex justify-center items-center`}
           onClick={() => setTab("upload image")}
+          disabled={loading}
         >
           Upload Image
-        </div>
+        </button>
       </div>
       <div className="flex-1">
         {tab === "select avatar" && (

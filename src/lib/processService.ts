@@ -1,23 +1,18 @@
 import axios from "axios";
-import type User from "../types/user";
-
-interface ServiceResults {
-  user?: User;
-  token?: string;
-  success?: boolean;
-  error?: string;
-}
+import type ServiceBody from "@/types/serviceBody";
+import type ServiceResults from "@/types/serviceResults";
+import type Service from "@/types/service";
 
 const processService = async (
-  service: string,
-  data: object = {}
+  service: Service,
+  body: ServiceBody
 ): Promise<ServiceResults> => {
   try {
     const res = await axios.post(
       `/api/eventbus`,
       {
         service,
-        ...data,
+        ...body,
       },
       { withCredentials: true }
     );

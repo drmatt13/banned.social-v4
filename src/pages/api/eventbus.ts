@@ -1,4 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import type ServiceResults from "@/types/serviceResults";
+import type ServiceBody from "@/types/serviceBody";
+import type Service from "@/types/service";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import chalk from "chalk";
 import axios from "axios";
@@ -6,21 +9,20 @@ import axios from "axios";
 const URL = process.env.BASE_URL + "/api/services";
 
 interface EventbusApiRequest extends NextApiRequest {
-  body: {
-    _id?: string;
-    [key: string]: any;
-    service: string;
-  };
+  body: ServiceBody & { service: Service };
   cookies: {
     token?: string;
     "next-auth.session-token"?: string;
     "__Secure-next-auth.session-token"?: string;
   };
-  data: any;
+  data: ServiceResults;
   method: "POST";
 }
 
-const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
+const eventbus = async (
+  req: EventbusApiRequest,
+  res: NextApiResponse<ServiceResults>
+) => {
   let verifiedToken: string | JwtPayload = "";
 
   const { body, cookies, method } = req;
@@ -35,6 +37,7 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
     }
 
     body._id = undefined;
+    body.eventbusSecret = process.env.TOKEN_SECRET;
 
     // verify validity of the token in the cookie and return the users _id
 
@@ -44,7 +47,7 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
           cookies.token || "",
           process.env.TOKEN_SECRET || ""
         );
-        req.body._id =
+        body._id =
           typeof verifiedToken === "object" ? verifiedToken._id : undefined;
       } catch (error) {
         console.log(chalk.red.bold(`Invalad Token -> ${req.body.service}`));
@@ -78,33 +81,25 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
       // *******  NO DB  *************
       // *****************************
 
-      // case "protected service":
-      // protectedRoute();
-      // req = await axios.post(`${url}/user/protected_service`, body);
-      // break;
-
       // *****************************
       // *******  USER DB  ***********
       // *****************************
 
       // Get user
-      // Unprotected
       // returns myself or profile_id
       // { profile_id <optional> }
       case "get user":
-        req = await axios.post(`${URL}/user/get_user`, req.body);
+        req = await axios.post(`${URL}/user/get_user`, body);
         break;
 
       // Login
-      // Unprotected
       // returns jwt
       // { email, password }
       case "login":
-        req = await axios.post(`${URL}/user/login`, req.body);
+        req = await axios.post(`${URL}/user/login`, body);
         break;
 
       // Register user
-      // Unprotected
       // returns user
       // { firstName, lastName, email, password }
       case "register":
@@ -112,7 +107,6 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
         break;
 
       // Login with Oauth
-      // Unprotected
       // returns jwt
       // { email, password, csrfToken }
       case "oauth":
@@ -125,12 +119,19 @@ const eventbus = async (req: EventbusApiRequest, res: NextApiResponse<any>) => {
         break;
 
       // Add username to user
-      // Protected
       // returns user
       // { username }
       case "add username":
         protectedRoute();
         req = await axios.post(`${URL}/user/add_username`, body);
+        break;
+
+      // Update user avatar
+      // returns user
+      // { username, avatar }
+      case "update avatar":
+        protectedRoute();
+        req = await axios.post(`${URL}/user/update_avatar`, body);
         break;
 
       // *****************************

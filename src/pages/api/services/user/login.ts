@@ -1,4 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import type ServiceRequest from "@/types/serviceRequest";
+import type { NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
@@ -6,11 +7,17 @@ import bcrypt from "bcrypt";
 import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
-export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
+export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, eventbusSecret } = req.body;
+    if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
+      return res.json({
+        success: false,
+        error: "Unauthorized",
+      });
+    }
     let user: IUserModel | null = await UserModel.findOne({
-      $or: [{ username }, { email: username.toLowerCase() }],
+      $or: [{ username }, { email: username?.toLowerCase() }],
     }).select("+password +avatar +username +admin +bio");
     if (!user) {
       return res.json({
@@ -18,7 +25,10 @@ export default connectDB(async (req: NextApiRequest, res: NextApiResponse) => {
         error: "Invalid Credentials",
       });
     }
-    const isMatch = await bcrypt.compare(password, user.password || "");
+    const isMatch = await bcrypt.compare(
+      password ? password : "",
+      user.password || ""
+    );
     if (!isMatch) {
       return res.json({
         success: false,

@@ -10,7 +10,7 @@ export interface IUserModel extends Document {
   password?: string;
   authProvider?: string;
   providerEmail?: string;
-  avatar?: number;
+  avatar?: string;
   bio?: string;
   admin?: boolean;
   createdAt?: Date;
@@ -68,8 +68,7 @@ const UserSchema = new Schema<IUserModel>({
     select: false,
   },
   avatar: {
-    type: Number,
-    // default: 0,
+    type: String,
   },
   bio: {
     type: String,
