@@ -1,6 +1,4 @@
-const avatars: { [id: string]: string } = {};
-
-export const avatarOrder = [
+const avatarOrder = [
   "based1.jpg",
   "based2.jpg",
   "based3.png",
@@ -56,8 +54,8 @@ export const avatarOrder = [
 
   "socrates.webp",
   "buddha.jpg",
-  "shiva.webp",
-  "enlightened.jpg",
+  "enlightened1.jpg",
+  "enlightened2.jpg",
   "milky_way.webp",
   "vango.webp",
   "david.webp",
@@ -89,24 +87,24 @@ export const avatarOrder = [
 
   "btc.jpg",
   "eth.png",
-  "camera.jpg",
   "doge.jpg",
   "gun1.jpg",
-  "cia.jpg",
-
-  "blm.jpg",
-  "eye_of_providence.jpg",
-  "fbi.jpg",
-  "rainbow_fist.jpg",
   "ye_infowars_cartoon.jpg",
   "alien.png",
 
-  "african_usa.png",
+  "camera.jpg",
+  "cia.jpg",
+  "blm.jpg",
+  "fbi.jpg",
+  "eye_of_providence.jpg",
+  "rainbow_fist.jpg",
+
+  "china.jpg",
   "usa.png",
+  "african_usa.png",
   "cop_flag.png",
   "isreal_flag.png",
-  "china.jpg",
   "ukraine.webp",
 ];
 
-export default avatars;
+export default avatarOrder;
