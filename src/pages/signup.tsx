@@ -65,24 +65,22 @@ const Signup: NextPage = () => {
           password,
         });
         const { success, token, error } = res;
-        if (success) {
-          if (token) {
-            Cookie.set("token", token, { expires: 1 });
-            window.location.replace(`${window.location.origin}`);
-          } else if (error) {
-            if (error === serviceError.UsernameAlreadyExists) {
-              setUsernameError(serviceError.UsernameAlreadyExists);
-              setUsernameRing(1);
-            } else if (error === serviceError.EmailAlreadyExists) {
-              setEmailError(serviceError.EmailAlreadyExists);
-              setEmailRing(1);
-            } else if (error === serviceError.Unauthorized) {
-              throw new Error(serviceError.Unauthorized);
-            } else if (error === serviceError.InvalidForm) {
-              throw new Error(serviceError.InvalidForm);
-            } else {
-              throw new Error(error);
-            }
+        if (success && token) {
+          Cookie.set("token", token, { expires: 1 });
+          window.location.replace(`${window.location.origin}`);
+        } else if (error) {
+          if (error === serviceError.UsernameAlreadyExists) {
+            setUsernameError(serviceError.UsernameAlreadyExists);
+            setUsernameRing(1);
+          } else if (error === serviceError.EmailAlreadyExists) {
+            setEmailError(serviceError.EmailAlreadyExists);
+            setEmailRing(1);
+          } else if (error === serviceError.Unauthorized) {
+            throw new Error(serviceError.Unauthorized);
+          } else if (error === serviceError.InvalidForm) {
+            throw new Error(serviceError.InvalidForm);
+          } else {
+            throw new Error(error);
           }
         } else {
           throw new Error("processService error");

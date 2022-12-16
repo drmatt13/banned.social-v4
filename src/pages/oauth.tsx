@@ -59,14 +59,14 @@ const Login: NextPage = () => {
               queryString = queryString.slice(0, -1);
             }
             router.replace(`/${path}${queryString ? "?" : ""}${queryString}`);
-          } else if (error) {
-            if (error === serviceError.Unauthorized) {
-              throw new Error(serviceError.Unauthorized);
-            } else if (error === serviceError.FailedToCreateUser) {
-              throw new Error(serviceError.FailedToCreateUser);
-            } else {
-              throw new Error(error);
-            }
+          }
+        } else if (error) {
+          if (error === serviceError.Unauthorized) {
+            throw new Error(serviceError.Unauthorized);
+          } else if (error === serviceError.FailedToCreateUser) {
+            throw new Error(serviceError.FailedToCreateUser);
+          } else {
+            throw new Error(error);
           }
         } else {
           throw new Error("processService error");

@@ -22,19 +22,16 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
         avatar,
       });
       const { user, success, error } = data;
-
-      if (success) {
-        if (user) {
-          setUser(user);
-          setModal(undefined);
-        } else if (error) {
-          if (error === serviceError.Unauthorized) {
-            throw new Error(serviceError.Unauthorized);
-          } else if (error === serviceError.FailedToUpdateUser) {
-            throw new Error(serviceError.FailedToUpdateUser);
-          } else {
-            throw new Error(error);
-          }
+      if (success && user) {
+        setUser(user);
+        setModal(undefined);
+      } else if (error) {
+        if (error === serviceError.Unauthorized) {
+          throw new Error(serviceError.Unauthorized);
+        } else if (error === serviceError.FailedToUpdateUser) {
+          throw new Error(serviceError.FailedToUpdateUser);
+        } else {
+          throw new Error(error);
         }
       } else {
         throw new Error("processService error");

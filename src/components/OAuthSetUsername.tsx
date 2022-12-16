@@ -29,20 +29,18 @@ const OAuthSetUsername = () => {
           username,
         });
         const { success, user, error } = res;
-        if (success) {
-          if (user) {
-            setUser(user);
-          } else if (error) {
-            if (error === serviceError.UsernameAlreadyExists) {
-              setUsernameError(serviceError.UsernameAlreadyExists);
-              setUsernameRing(1);
-            } else if (error === serviceError.Unauthorized) {
-              throw new Error(serviceError.Unauthorized);
-            } else if (error === serviceError.FailedToUpdateUser) {
-              throw new Error(serviceError.FailedToUpdateUser);
-            } else {
-              throw new Error(error);
-            }
+        if (success && user) {
+          setUser(user);
+        } else if (error) {
+          if (error === serviceError.UsernameAlreadyExists) {
+            setUsernameError(serviceError.UsernameAlreadyExists);
+            setUsernameRing(1);
+          } else if (error === serviceError.Unauthorized) {
+            throw new Error(serviceError.Unauthorized);
+          } else if (error === serviceError.FailedToUpdateUser) {
+            throw new Error(serviceError.FailedToUpdateUser);
+          } else {
+            throw new Error(error);
           }
         } else {
           throw new Error("processService error");
