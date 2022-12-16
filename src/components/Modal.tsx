@@ -30,7 +30,7 @@ const Modal = () => {
         <div className="relative max-h-[700px] h-[70vh] min-h-[420px] mt-20 flex justify-center items-center">
           <div
             className="absolute h-full w-full"
-            onClick={() => user?.avatar && setModal("")}
+            onClick={() => user?.avatar && setModal(undefined)}
           />
           <div className="z-10 w-full flex justify-center">
             <Suspense fallback={<Loading />}>
