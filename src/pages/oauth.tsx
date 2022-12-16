@@ -64,6 +64,8 @@ const Login: NextPage = () => {
               throw new Error(serviceError.Unauthorized);
             } else if (error === serviceError.FailedToCreateUser) {
               throw new Error(serviceError.FailedToCreateUser);
+            } else {
+              throw new Error(error);
             }
           }
         } else {

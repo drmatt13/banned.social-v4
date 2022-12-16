@@ -40,8 +40,9 @@ const OAuthSetUsername = () => {
               throw new Error(serviceError.Unauthorized);
             } else if (error === serviceError.FailedToUpdateUser) {
               throw new Error(serviceError.FailedToUpdateUser);
+            } else {
+              throw new Error(error);
             }
-            throw new Error(error);
           }
         } else {
           throw new Error("processService error");
