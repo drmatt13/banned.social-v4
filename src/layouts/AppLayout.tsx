@@ -40,6 +40,7 @@ const AppLayout = ({ children }: Props) => {
   }, [router.pathname, loading]);
 
   useEffect(() => {
+    console.log(user);
     if (user && user.username && !user.avatar) {
       setModal("update avatar");
     }

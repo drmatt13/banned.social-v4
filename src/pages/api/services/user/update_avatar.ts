@@ -14,7 +14,8 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
     }
     const user: IUserModel | null = await UserModel.findOneAndUpdate(
       { _id },
-      { avatar }
+      { avatar },
+      { new: true }
     ).select("+avatar +username +admin");
     if (user) {
       return res.json({ success: true, user });
