@@ -2,9 +2,9 @@ import { createContext, useContext } from "react";
 import type User from "../types/user";
 
 export type GlobalContext = {
-  modal: "" | "update avatar" | "create post" | "update post";
+  modal: undefined | "update avatar" | "create post" | "update post";
   setModal: (
-    modal: "" | "update avatar" | "create post" | "update post"
+    modal: undefined | "update avatar" | "create post" | "update post"
   ) => void;
   mobile: boolean | undefined;
   user: User;
@@ -20,7 +20,7 @@ export type GlobalContext = {
 };
 
 export const globalContext = createContext<GlobalContext>({
-  modal: "",
+  modal: undefined,
   setModal: () => {},
   mobile: false,
   user: undefined,

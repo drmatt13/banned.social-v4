@@ -1,3 +1,4 @@
+import serviceError from "@/types/serviceError";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
@@ -11,10 +12,7 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
     const { provider, sessionToken, eventbusSecret } = req.body;
     if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
-      return res.json({
-        success: false,
-        error: "Unauthorized",
-      });
+      throw new Error(serviceError.Unauthorized);
     }
     const decodedSessionToken: any = await decode({
       token: sessionToken,
@@ -31,6 +29,9 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
         providerEmail: decodedSessionToken.email,
         verified: true,
       });
+    }
+    if (!user) {
+      throw new Error(serviceError.FailedToCreateUser);
     }
     const token = process.env.TOKEN_SECRET
       ? jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)

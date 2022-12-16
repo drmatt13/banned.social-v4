@@ -1,3 +1,4 @@
+import serviceError from "@/types/serviceError";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
@@ -11,33 +12,27 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
     const { username, password, eventbusSecret } = req.body;
     if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
-      return res.json({
-        success: false,
-        error: "Unauthorized",
-      });
+      throw new Error(serviceError.Unauthorized);
     }
     let user: IUserModel | null = await UserModel.findOne({
       $or: [{ username }, { email: username?.toLowerCase() }],
     }).select("+password +avatar +username +admin +bio");
     if (!user) {
-      return res.json({
-        success: false,
-        error: "Invalid Credentials",
-      });
+      throw new Error(serviceError.InvalidCredentials);
     }
     const isMatch = await bcrypt.compare(
       password ? password : "",
       user.password || ""
     );
     if (!isMatch) {
-      return res.json({
-        success: false,
-        error: "Invalid Credentials",
-      });
+      throw new Error(serviceError.InvalidCredentials);
     }
-    await UserModel.findByIdAndUpdate(user._id, {
+    const updatedUser = await UserModel.findByIdAndUpdate(user._id, {
       lastLogin: new Date(),
     });
+    if (!updatedUser) {
+      throw new Error(serviceError.FailedToUpdateUser);
+    }
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || "");
     user = user.toObject();
     delete user.password;

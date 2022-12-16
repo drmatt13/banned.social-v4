@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import serviceError from "@/types/serviceError";
 import type { NextPage } from "next";
 import Cookie from "js-cookie";
 import Head from "next/head";
@@ -16,7 +17,7 @@ import validateUsername from "@/lib/validateUsername";
 import validateEmail from "@/lib/validateEmail";
 
 const Signup: NextPage = () => {
-  const { darkMode } = useGlobalContext();
+  const { darkMode, logout } = useGlobalContext();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
@@ -63,27 +64,36 @@ const Signup: NextPage = () => {
           email,
           password,
         });
-        const { token, error } = res;
-        if (token) {
-          Cookie.set("token", token, { expires: 1 });
-          window.location.replace(`${window.location.origin}`);
-        }
-        if (error) {
-          if (error === "Username already exists") {
-            setUsernameError("Account with username already exists");
-            setUsernameRing(1);
-          } else if (error === "Email already exists") {
-            setEmailError("Account with email already exists");
-            setEmailRing(1);
+        const { success, token, error } = res;
+        if (success) {
+          if (token) {
+            Cookie.set("token", token, { expires: 1 });
+            window.location.replace(`${window.location.origin}`);
+          } else if (error) {
+            if (error === serviceError.UsernameAlreadyExists) {
+              setUsernameError(serviceError.UsernameAlreadyExists);
+              setUsernameRing(1);
+            } else if (error === serviceError.EmailAlreadyExists) {
+              setEmailError(serviceError.EmailAlreadyExists);
+              setEmailRing(1);
+            } else if (error === serviceError.Unauthorized) {
+              throw new Error(serviceError.Unauthorized);
+            } else if (error === serviceError.InvalidForm) {
+              throw new Error(serviceError.InvalidForm);
+            }
+            throw new Error(error);
           }
-          setLoading(false);
+        } else {
+          throw new Error("processService error");
         }
+        setLoading(false);
       } catch (error) {
         alert("Server error");
         setLoading(false);
+        logout();
       }
     },
-    [username, email, password, password2]
+    [username, email, password, password2, logout]
   );
 
   useEffect(() => {

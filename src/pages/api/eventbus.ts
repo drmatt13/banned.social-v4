@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type ServiceResults from "@/types/serviceResults";
 import type ServiceBody from "@/types/serviceBody";
 import type Service from "@/types/service";
+import serviceError from "@/types/serviceError";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import chalk from "chalk";
 import axios from "axios";
@@ -54,18 +55,6 @@ const eventbus = async (
         return res.status(401).json({ success: false, error: "Invalad Token" });
       }
     }
-
-    // log request
-    let token_id = body._id
-      ? body._id
-      : cookies.token
-      ? "Invalid Token"
-      : "No Token";
-    console.log(
-      chalk.yellow.bold(`${token_id}`),
-      chalk.red.bold("->"),
-      chalk.green.bold(`${body.service}`)
-    );
 
     const protectedRoute = () => {
       if (!body._id) {
@@ -146,24 +135,33 @@ const eventbus = async (
       throw new Error(req.data.error);
     }
 
+    // log request
+    console.log(
+      chalk.yellow.bold(
+        body._id ? body._id : cookies.token ? "Invalid Token" : "No Token"
+      ),
+      chalk.red.bold("->"),
+      chalk.green.bold(`${body.service}`)
+    );
+
     res.status(200).json({ ...req.data });
   } catch (error) {
     console.log(
       chalk.red.bold(`Error:`),
       chalk.red.bold((error as any).message),
       chalk.red.bold(`->`),
-      chalk.yellow.bold(`${verifiedToken ? verifiedToken : "No Token"}`),
+      chalk.yellow.bold(
+        body._id ? body._id : cookies.token ? "Invalid Token" : "No Token"
+      ),
       chalk.red.bold(`->`),
       chalk.green.bold(service ? service : "No Service")
     );
 
-    const unprotectedErrors: any = {
-      "Username already exists": true,
-      "Email already exists": true,
-    };
-
-    if (unprotectedErrors[(error as any).message]) {
-      return res.json({ success: false, error: (error as any).message });
+    if (Object.values(serviceError).includes((error as any).message)) {
+      return res.json({
+        success: false,
+        error: (error as any).message,
+      });
     }
 
     return res.status(500).json({ success: false, error: "Server Error" });

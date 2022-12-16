@@ -1,4 +1,5 @@
 import { useCallback, useState, useRef, useEffect } from "react";
+import serviceError from "@/types/serviceError";
 
 // context
 import { useGlobalContext } from "@/context/globalContext";
@@ -8,7 +9,7 @@ import processService from "@/lib/processService";
 import validateUsername from "@/lib/validateUsername";
 
 const OAuthSetUsername = () => {
-  const { user, setUser } = useGlobalContext();
+  const { setUser, logout } = useGlobalContext();
   const [username, setUsername] = useState("");
   const [usernameRing, setUsernameRing] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -27,22 +28,32 @@ const OAuthSetUsername = () => {
         const res = await processService("add username", {
           username,
         });
-        const { user, error } = res;
-        console.log(res);
-        if (user) {
-          setUser(user);
-        }
-        if (error) {
-          setUsernameError("Account with username already exists");
-          setUsernameRing(1);
+        const { success, user, error } = res;
+        if (success) {
+          if (user) {
+            setUser(user);
+          } else if (error) {
+            if (error === serviceError.UsernameAlreadyExists) {
+              setUsernameError(serviceError.UsernameAlreadyExists);
+              setUsernameRing(1);
+            } else if (error === serviceError.Unauthorized) {
+              throw new Error(serviceError.Unauthorized);
+            } else if (error === serviceError.FailedToUpdateUser) {
+              throw new Error(serviceError.FailedToUpdateUser);
+            }
+            throw new Error(error);
+          }
+        } else {
+          throw new Error("processService error");
         }
         setLoading(false);
       } catch (error) {
         alert("Server error");
         setLoading(false);
+        logout();
       }
     },
-    [setUser, username]
+    [logout, setUser, username]
   );
 
   useEffect(() => {

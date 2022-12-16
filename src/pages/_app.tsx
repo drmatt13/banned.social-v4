@@ -21,8 +21,8 @@ const MyApp: AppType<{
 }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
   const [modal, setModal] = useState<
-    "" | "update avatar" | "create post" | "update post"
-  >("");
+    undefined | "update avatar" | "create post" | "update post"
+  >(undefined);
   const [user, setUser] = useState<User>(undefined);
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);

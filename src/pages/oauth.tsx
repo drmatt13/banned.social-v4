@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import type { NextPage } from "next";
+import serviceError from "@/types/serviceError";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
@@ -31,38 +32,46 @@ const Login: NextPage = () => {
         return acc;
       }, {} as any);
     const oAuthLogin = async () => {
-      processing.current = true;
-      const res = await processService("oauth", {
-        provider: query.provider,
-      });
-      delete query.provider;
-      const { user, token, success, error } = res;
-      if (success) {
-        if (user && token) {
-          Cookie.set("token", token, {
-            expires: query.expires ? undefined : 3600,
-          });
-          delete query.expires;
-          setUser(user);
-          let path = "";
-          if (query.path) {
-            path = query.path;
-          }
-          let queryString = "";
-          for (const key in query) {
-            if (key !== "path") {
-              queryString += `${key}=${query[key]}&`;
+      try {
+        processing.current = true;
+        const res = await processService("oauth", {
+          provider: query.provider,
+        });
+        const { user, token, success, error } = res;
+        if (success) {
+          if (user && token) {
+            Cookie.set("token", token, {
+              expires: query.expires ? undefined : 3600,
+            });
+            delete query.expires;
+            setUser(user);
+            let path = "";
+            if (query.path) {
+              path = query.path;
+            }
+            let queryString = "";
+            for (const key in query) {
+              if (key !== "path") {
+                queryString += `${key}=${query[key]}&`;
+              }
+            }
+            if (queryString.endsWith("&")) {
+              queryString = queryString.slice(0, -1);
+            }
+            router.replace(`/${path}${queryString ? "?" : ""}${queryString}`);
+          } else if (error) {
+            if (error === serviceError.Unauthorized) {
+              throw new Error(serviceError.Unauthorized);
+            } else if (error === serviceError.FailedToCreateUser) {
+              throw new Error(serviceError.FailedToCreateUser);
             }
           }
-          if (queryString.endsWith("&")) {
-            queryString = queryString.slice(0, -1);
-          }
-          router.replace(`/${path}${queryString ? "?" : ""}${queryString}`);
         } else {
-          logout();
+          throw new Error("processService error");
         }
-      } else {
-        alert(error);
+      } catch (error) {
+        alert("Server error");
+        logout();
       }
     };
     if (!processing.current) {

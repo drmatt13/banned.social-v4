@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import serviceError from "@/types/serviceError";
 import Image from "next/image";
 
 // context
@@ -12,7 +13,7 @@ import avatarList from "@/data/avatarList";
 import processService from "@/lib/processService";
 
 const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
-  const { user, setUser, setModal } = useGlobalContext();
+  const { user, setUser, setModal, logout } = useGlobalContext();
 
   const updateAvatar = useCallback(async () => {
     try {
@@ -21,17 +22,28 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
         avatar,
       });
       const { user, success, error } = data;
+
       if (success) {
-        setUser(user);
-        setModal("");
+        if (user) {
+          setUser(user);
+          setModal(undefined);
+        } else if (error) {
+          if (error === serviceError.Unauthorized) {
+            throw new Error(serviceError.Unauthorized);
+          } else if (error === serviceError.FailedToUpdateUser) {
+            throw new Error(serviceError.FailedToUpdateUser);
+          }
+          throw new Error(error);
+        }
       } else {
-        alert(error);
-        setLoading(false);
+        throw new Error("processService error");
       }
     } catch (error) {
-      alert(error);
+      alert("Server error");
+      setLoading(false);
+      logout();
     }
-  }, [avatar, setLoading, setModal, setUser]);
+  }, [avatar, logout, setLoading, setModal, setUser]);
 
   useEffect(() => {
     setAvatar(avatar ? avatar : user?.avatar ? user.avatar : undefined);

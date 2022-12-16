@@ -1,4 +1,5 @@
 import axios from "axios";
+import serviceError from "@/types/serviceError";
 import type ServiceBody from "@/types/serviceBody";
 import type ServiceResults from "@/types/serviceResults";
 import type Service from "@/types/service";
@@ -18,7 +19,7 @@ const processService = async (
     );
     return res.data;
   } catch (error) {
-    return { error: "Server Error", success: false };
+    return { error: serviceError.ServerError, success: false };
   }
 };
 

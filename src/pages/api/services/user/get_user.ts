@@ -1,4 +1,5 @@
 import type ServiceRequest from "@/types/serviceRequest";
+import serviceError from "@/types/serviceError";
 import type { NextApiResponse } from "next";
 
 // mongoose
@@ -10,13 +11,10 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
     let { _id, profile_id, eventbusSecret } = req.body;
     if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
-      return res.json({
-        success: false,
-        error: "Unauthorized",
-      });
+      throw new Error(serviceError.Unauthorized);
     }
     if (!_id && !profile_id) {
-      throw new Error("No _id or profile_id");
+      throw new Error(serviceError.InvalidUserId);
     }
 
     const user: IUserModel | null = await UserModel.findById(
@@ -25,7 +23,7 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
     if (user) {
       return res.json({ success: true, user });
     } else {
-      return res.json({ success: false, error: "User not found" });
+      throw new Error(serviceError.UserNotFound);
     }
   } catch (error) {
     res.json({ error: (error as any).message, success: false });

@@ -23,6 +23,7 @@ const Login: NextPage = () => {
   const [password, setPassword] = useState("");
   const [expires, setExpires] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const standardLogin = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
@@ -59,16 +60,15 @@ const Login: NextPage = () => {
               }${queryString}`
             );
           } else {
-            alert("invalid credentials");
-            setLoading(false);
+            throw new Error("invalid credentials");
           }
         } else {
-          alert("invalid credentials");
-          setLoading(false);
+          throw new Error("invalid credentials");
         }
       } catch (error) {
-        console.log(error);
+        alert("invalid credentials");
         setLoading(false);
+        setError(true);
       }
     },
     [username, password, expires, router]
@@ -143,7 +143,12 @@ const Login: NextPage = () => {
                 type="text"
                 placeholder="Email or Username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) =>
+                  setUsername((username) => {
+                    setError(false);
+                    return e.target.value;
+                  })
+                }
                 required={true}
                 autoComplete="email"
                 disabled={loading}
@@ -160,7 +165,12 @@ const Login: NextPage = () => {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) =>
+                  setPassword((password) => {
+                    setError(false);
+                    return e.target.value;
+                  })
+                }
                 required={true}
                 autoComplete="current-password"
                 disabled={loading}
@@ -187,7 +197,7 @@ const Login: NextPage = () => {
             <div className="flex-[.1]" />
             <input
               className={`${
-                loading
+                loading || error
                   ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
                   : "border-black/50 bg-blue-500 hover:bg-blue-400 dark:bg-pink-500 dark:hover:bg-pink-400 text-white cursor-pointer"
               } border flex-1 text-center sm:px-4 sm:py-3 rounded`}
