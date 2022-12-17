@@ -28,37 +28,34 @@ const Login: NextPage = () => {
         const res = await processService("oauth", {
           provider: query.provider,
         });
-        const { user, token, success, error } = res;
-        if (success) {
-          if (user && token) {
-            Cookie.set("token", token, {
-              expires: query.expires ? undefined : 3600,
-            });
-            delete query.expires;
-            setUser(user);
-            let path = "";
-            if (query.path) {
-              path = query.path;
-            }
-            let queryString = "";
-            for (const key in query) {
-              if (key !== "path") {
-                queryString += `${key}=${(query as any)[key]}&`;
-              }
-            }
-            if (queryString.endsWith("&")) {
-              queryString = queryString.slice(0, -1);
-            }
-            router.replace(
-              `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
-            );
+        const { token, success, error } = res;
+        if (success && token) {
+          Cookie.set("token", token, {
+            expires: query.expires ? undefined : 3600,
+          });
+          delete query.expires;
+          let path = "";
+          if (query.path) {
+            path = query.path;
           }
+          let queryString = "";
+          for (const key in query) {
+            if (key !== "path") {
+              queryString += `${key}=${(query as any)[key]}&`;
+            }
+          }
+          if (queryString.endsWith("&")) {
+            queryString = queryString.slice(0, -1);
+          }
+          router.replace(
+            `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
+          );
         } else if (error) {
           if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);
           } else if (error === serviceError.FailedToCreateUser) {
             throw new Error(serviceError.FailedToCreateUser);
-          } else if (error === serviceError.ServerError) {
+          } else {
             throw new Error(serviceError.ServerError);
           }
         }
@@ -67,7 +64,7 @@ const Login: NextPage = () => {
         logout();
       }
     },
-    [logout, router, setUser]
+    [logout, router]
   );
 
   useEffect(() => {
@@ -90,7 +87,7 @@ const Login: NextPage = () => {
         logout();
       }
     }
-  }, [processing, session, router, logout, setUser, oAuthLogin]);
+  }, [processing, session, router, logout, oAuthLogin]);
 
   return (
     <>

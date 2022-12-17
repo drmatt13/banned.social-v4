@@ -31,10 +31,8 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
         } else if (error === serviceError.FailedToUpdateUser) {
           throw new Error(serviceError.FailedToUpdateUser);
         } else {
-          throw new Error(error);
+          throw new Error(serviceError.ServerError);
         }
-      } else {
-        throw new Error("processService error");
       }
     } catch (error) {
       alert("Server error");

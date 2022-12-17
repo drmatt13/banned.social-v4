@@ -35,16 +35,11 @@ const Login: NextPage = () => {
           username,
           password,
         });
-        const { user, token, success, error } = data;
-        if (success) {
-          if (!user || !token) {
-            throw new Error(serviceError.ServerError);
-          }
-          if (token) {
-            Cookie.set("token", token, {
-              expires: expires ? undefined : 3600,
-            });
-          }
+        const { token, success, error } = data;
+        if (success && token) {
+          Cookie.set("token", token, {
+            expires: expires ? undefined : 3600,
+          });
           const query = router.query;
           let path = "";
           if (query.path) {
@@ -71,7 +66,7 @@ const Login: NextPage = () => {
             alert("invalid credentials");
             setLoading(false);
             setError(true);
-          } else if (error === serviceError.ServerError) {
+          } else {
             throw new Error(serviceError.ServerError);
           }
         }

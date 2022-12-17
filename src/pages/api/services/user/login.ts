@@ -34,12 +34,10 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
       throw new Error(serviceError.FailedToUpdateUser);
     }
     const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET || "");
-    user = user.toObject();
     delete user.password;
     return res.json({
       success: true,
       token,
-      user,
     });
   } catch (error) {
     res.json({ error: (error as any).message, success: false });

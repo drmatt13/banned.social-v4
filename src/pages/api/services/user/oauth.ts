@@ -36,12 +36,9 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
     const token = process.env.TOKEN_SECRET
       ? jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET)
       : undefined;
-    user = user.toObject();
-    delete user.password;
     return res.json({
       success: true,
       token,
-      user,
     });
   } catch (error) {
     res.json({ error: (error as any).message, success: false });
