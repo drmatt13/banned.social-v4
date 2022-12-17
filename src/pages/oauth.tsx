@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import type { NextPage } from "next";
 import serviceError from "@/types/serviceError";
 import { useSession } from "next-auth/react";
@@ -21,17 +21,8 @@ const Login: NextPage = () => {
   const processing = useRef(false);
   const router = useRouter();
 
-  useEffect(() => {
-    if (processing.current) return;
-    const query = router.asPath
-      .replace("/oauth?", "")
-      .split("&")
-      .reduce((acc, curr) => {
-        const [key, value] = curr.split("=");
-        if (key) acc[key] = value;
-        return acc;
-      }, {} as any);
-    const oAuthLogin = async () => {
+  const oAuthLogin = useCallback(
+    async (query: { provider: string; expires?: string; path: string }) => {
       try {
         processing.current = true;
         const res = await processService("oauth", {
@@ -52,41 +43,54 @@ const Login: NextPage = () => {
             let queryString = "";
             for (const key in query) {
               if (key !== "path") {
-                queryString += `${key}=${query[key]}&`;
+                queryString += `${key}=${(query as any)[key]}&`;
               }
             }
             if (queryString.endsWith("&")) {
               queryString = queryString.slice(0, -1);
             }
-            router.replace(`/${path}${queryString ? "?" : ""}${queryString}`);
+            router.replace(
+              `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
+            );
           }
         } else if (error) {
           if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);
           } else if (error === serviceError.FailedToCreateUser) {
             throw new Error(serviceError.FailedToCreateUser);
-          } else {
-            throw new Error(error);
+          } else if (error === serviceError.ServerError) {
+            throw new Error(serviceError.ServerError);
           }
-        } else {
-          throw new Error("processService error");
         }
       } catch (error) {
         alert("Server error");
         logout();
       }
-    };
+    },
+    [logout, router, setUser]
+  );
+
+  useEffect(() => {
+    if (processing.current) return;
+    const query = router.asPath
+      .replace("/oauth?", "")
+      .split("&")
+      .reduce((acc, curr) => {
+        const [key, value] = curr.split("=");
+        if (key) acc[key] = value;
+        return acc;
+      }, {} as any);
     if (!processing.current) {
-      oAuthLogin();
+      oAuthLogin(query);
     }
     if (typeof session !== "undefined") {
       if (session !== null) {
-        oAuthLogin();
+        oAuthLogin(query);
       } else if (session === null) {
         logout();
       }
     }
-  }, [processing, session, router, logout, setUser]);
+  }, [processing, session, router, logout, setUser, oAuthLogin]);
 
   return (
     <>

@@ -31,7 +31,7 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
       }
     }
 
-    password = await bcrypt.hash(password, 10);
+    req.body.password = await bcrypt.hash(password, 10);
     let newUser: IUserModel = await UserModel.create(req.body);
     const token = process.env.TOKEN_SECRET
       ? jwt.sign({ _id: newUser._id }, process.env.TOKEN_SECRET)

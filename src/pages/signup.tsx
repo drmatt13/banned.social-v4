@@ -79,11 +79,9 @@ const Signup: NextPage = () => {
             throw new Error(serviceError.Unauthorized);
           } else if (error === serviceError.InvalidForm) {
             throw new Error(serviceError.InvalidForm);
-          } else {
-            throw new Error(error);
+          } else if (error === serviceError.ServerError) {
+            throw new Error(serviceError.ServerError);
           }
-        } else {
-          throw new Error("processService error");
         }
         setLoading(false);
       } catch (error) {

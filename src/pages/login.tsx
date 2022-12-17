@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import serviceError from "@/types/serviceError";
 import { signIn } from "next-auth/react";
 import Cookie from "js-cookie";
 import Head from "next/head";
@@ -34,41 +35,49 @@ const Login: NextPage = () => {
           username,
           password,
         });
-        const { user, token, success } = data;
+        const { user, token, success, error } = data;
         if (success) {
-          if (user && token) {
+          if (!user || !token) {
+            throw new Error(serviceError.ServerError);
+          }
+          if (token) {
             Cookie.set("token", token, {
               expires: expires ? undefined : 3600,
             });
-            const query = router.query;
-            let path = "";
-            if (query.path) {
-              path = query.path as string;
-            }
-            let queryString = "";
-            for (const key in query) {
-              if (key !== "path") {
-                queryString += `${key}=${query[key]}&`;
-              }
-            }
-            if (queryString.endsWith("&")) {
-              queryString = queryString.slice(0, -1);
-            }
-            window.location.replace(
-              `${window.location.origin}${path}${
-                queryString ? "?" : ""
-              }${queryString}`
-            );
-          } else {
-            throw new Error("invalid credentials");
           }
+          const query = router.query;
+          let path = "";
+          if (query.path) {
+            path = query.path as string;
+          }
+          let queryString = "";
+          for (const key in query) {
+            if (key !== "path") {
+              queryString += `${key}=${query[key]}&`;
+            }
+          }
+          if (queryString.endsWith("&")) {
+            queryString = queryString.slice(0, -1);
+          }
+          window.location.replace(
+            `${window.location.origin}${path}${
+              queryString ? "?" : ""
+            }${queryString}`
+          );
         } else {
-          throw new Error("invalid credentials");
+          if (error === serviceError.Unauthorized) {
+            alert("Unauthorized");
+          } else if (error === serviceError.InvalidCredentials) {
+            alert("invalid credentials");
+            setLoading(false);
+            setError(true);
+          } else if (error === serviceError.ServerError) {
+            throw new Error(serviceError.ServerError);
+          }
         }
       } catch (error) {
-        alert("invalid credentials");
-        setLoading(false);
-        setError(true);
+        alert("Server error");
+        logout();
       }
     },
     [username, password, expires, router]
@@ -144,7 +153,7 @@ const Login: NextPage = () => {
                 placeholder="Email or Username"
                 value={username}
                 onChange={(e) =>
-                  setUsername((username) => {
+                  setUsername(() => {
                     setError(false);
                     return e.target.value;
                   })
@@ -166,7 +175,7 @@ const Login: NextPage = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) =>
-                  setPassword((password) => {
+                  setPassword(() => {
                     setError(false);
                     return e.target.value;
                   })
@@ -311,3 +320,6 @@ const Login: NextPage = () => {
 };
 
 export default Login;
+function logout() {
+  throw new Error("Function not implemented.");
+}

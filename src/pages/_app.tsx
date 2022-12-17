@@ -75,7 +75,7 @@ const MyApp: AppType<{
     Cookie.remove("next-auth.callback-url");
     Cookie.remove("next-auth.csrf-token");
     signOut({ redirect: false });
-    router.reload();
+    window.location.replace(`${window.location.origin}/login`);
   };
 
   const route = router.pathname.split("/")[1] || "/";
