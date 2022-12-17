@@ -50,7 +50,7 @@ const Login: NextPage = () => {
           router.replace(
             `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
           );
-        } else if (error) {
+        } else {
           if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);
           } else if (error === serviceError.FailedToCreateUser) {

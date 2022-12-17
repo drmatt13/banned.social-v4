@@ -25,7 +25,7 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
       if (success && user) {
         setUser(user);
         setModal(undefined);
-      } else if (error) {
+      } else {
         if (error === serviceError.Unauthorized) {
           throw new Error(serviceError.Unauthorized);
         } else if (error === serviceError.FailedToUpdateUser) {

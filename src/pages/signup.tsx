@@ -68,7 +68,7 @@ const Signup: NextPage = () => {
         if (success && token) {
           Cookie.set("token", token, { expires: 1 });
           window.location.replace(`${window.location.origin}`);
-        } else if (error) {
+        } else {
           if (error === serviceError.UsernameAlreadyExists) {
             setUsernameError(serviceError.UsernameAlreadyExists);
             setUsernameRing(1);
