@@ -20,8 +20,8 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
       AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
       const s3 = new AWS.S3({
-        accessKeyId: process.env.AWS_ACCESS_KEY,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+        accessKeyId: process.env.AWS_USER,
+        secretAccessKey: process.env.AWS_USER_SECRET,
       });
 
       const params = {
