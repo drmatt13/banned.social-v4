@@ -8,6 +8,9 @@ import {
   ImgHTMLAttributes,
 } from "react";
 
+// context
+// import { useGlobalContext } from "@/context/globalContext";
+
 const UploadImage = ({
   image,
   setImage,
@@ -19,6 +22,8 @@ const UploadImage = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
+  // const { mobile } = useGlobalContext();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const [preview, setPreview] = useState<string | undefined>(undefined);
@@ -94,6 +99,7 @@ const UploadImage = ({
                 ? "flex-1 items-end"
                 : "justify-evenly items-center border-dashed border-2 aspect-video bg-gray-200 dark:bg-white/30"
             } flex flex-col max-w-full h-full border-blue-400 dark:border-blue-600 rounded-lg`}
+            onTouchEnd={() => !preview && inputRef.current?.click()}
           >
             {preview ? (
               <div className="bg-blue-500 dark:bg-blue-600 p-1 rounded-lg mx-2 aspect-square">
@@ -111,8 +117,8 @@ const UploadImage = ({
             ) : (
               <>
                 <i className="fa-regular fa-images text-5xl text-blue-500 dark:text-blue-600" />
-                <div className="text-xs text-gray-700">
-                  Drag & Drop your image here
+                <div className="text-xs text-gray-700 select-none">
+                  drag & drop your image here
                 </div>
               </>
             )}
@@ -133,7 +139,7 @@ const UploadImage = ({
                       : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
                   } ${
                     preview ? "rounded-full flex-1" : "rounded-lg translate-x-1"
-                  } px-4 py-2 text-center`}
+                  } px-4 py-2 text-center select-none`}
                   onClick={() => inputRef.current?.click()}
                 >
                   Select Image
@@ -145,7 +151,7 @@ const UploadImage = ({
                       : "bg-red-700/90 dark:bg-red-800/75 text-white hover:bg-red-600/90 dark:hover:bg-red-600/80 cursor-pointer"
                   } ${
                     preview ? "rounded-full flex-1" : " hidden"
-                  } px-4 py-2 text-center mt-2`}
+                  } px-4 py-2 text-center mt-2 select-none`}
                   onClick={() => setImage(undefined)}
                 >
                   Remove Image
@@ -160,7 +166,7 @@ const UploadImage = ({
           loading || !image
             ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
             : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
-        }  mx-2 mb-2 py-2 rounded-full`}
+        }  mx-2 mb-2 py-2 rounded-full select-none`}
         // onClick={() => inputRef.current?.click()}
         disabled={loading || !image}
       >

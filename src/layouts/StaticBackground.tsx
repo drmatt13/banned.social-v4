@@ -33,30 +33,32 @@ const StaticBackground = ({ children, showNavbar, user }: Props) => {
         darkMode ? darkStatic.container : lightStatic.container
       } relative flex flex-col items-center h-screen overflow-hidden animate-fade-in`}
     >
-      <div className="absolute top-0 left-0 h-200vh w-full hidden dark:inline">
-        <video
-          style={
-            mobile
-              ? {
-                  minHeight: viewportHeight,
-                  minWidth: viewportHeight,
-                  objectPosition: "right",
-                  rotate: "90deg",
-                  scale: "2",
-                  opacity: "0.6",
-                }
-              : {
-                  minHeight: viewportHeight,
-                  opacity: "0.75",
-                }
-          }
-          className="h-200vh w-full object-cover"
-          src="videos/prism-background.mp4"
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        ></video>
-      </div>
+      {!mobile && (
+        <div className="absolute top-0 left-0 h-200vh w-full hidden dark:inline">
+          <video
+            style={
+              mobile
+                ? {
+                    minHeight: viewportHeight,
+                    minWidth: viewportHeight,
+                    objectPosition: "right",
+                    rotate: "90deg",
+                    scale: "2",
+                    opacity: "0.6",
+                  }
+                : {
+                    minHeight: viewportHeight,
+                    opacity: "0.75",
+                  }
+            }
+            className="h-200vh w-full object-cover"
+            src="videos/prism-background.mp4"
+            autoPlay={true}
+            muted={true}
+            loop={true}
+          ></video>
+        </div>
+      )}
       <div
         className="absolute top-0 left-0 w-full h-[700px] md:h-[850px] xl:h-[1100px] invert dark:invert-0"
         style={{
@@ -70,30 +72,6 @@ const StaticBackground = ({ children, showNavbar, user }: Props) => {
             : "radial-gradient(at center center, rgba(29, 29, 29, 0.75) 0%, rgba(5, 5, 5, 0.7) 100%)",
         }}
       />
-      {/* <div className="absolute top-0 left-0 h-200vh w-full dark:hidden inline mix-blend-difference">
-        <video
-          style={
-            mobile
-              ? {
-                  minHeight: viewportHeight,
-                  minWidth: viewportHeight,
-                  objectPosition: "right",
-                  rotate: "90deg",
-                  scale: "2",
-                  opacity: "0.6",
-                }
-              : {
-                  minHeight: viewportHeight,
-                  opacity: "0.75",
-                }
-          }
-          className="h-200vh w-full object-cover mix-blend-plus-lighter"
-          src="videos/prism-background.mp4"
-          autoPlay={true}
-          muted={true}
-          loop={true}
-        ></video>
-      </div> */}
       <div className="z-10">{children}</div>
     </div>
   ) : (

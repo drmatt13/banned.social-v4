@@ -109,7 +109,7 @@ const SelectAvatar = ({
           loading || !avatar
             ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
             : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
-        }  mx-2 mb-2 py-2 rounded-full`}
+        }  mx-2 mb-2 py-2 rounded-full select-none`}
         onClick={updateAvatar}
         disabled={loading || !avatar}
       >
