@@ -1,11 +1,10 @@
 import { useCallback, useState, useRef, useEffect } from "react";
-import serviceError from "@/types/serviceError";
 
 // context
 import { useGlobalContext } from "@/context/globalContext";
 
 // libaries
-import processService from "@/lib/processService";
+import { processService, serviceError } from "@/lib/processService";
 import validateUsername from "@/lib/validateUsername";
 
 const OAuthSetUsername = () => {

@@ -1,5 +1,4 @@
 import { useCallback, useEffect } from "react";
-import serviceError from "@/types/serviceError";
 import Image from "next/image";
 
 // context
@@ -10,9 +9,19 @@ import avatarOrder from "@/data/avatarOrder";
 import avatarList from "@/data/avatarList";
 
 // libaries
-import processService from "@/lib/processService";
+import { processService, serviceError } from "@/lib/processService";
 
-const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
+const SelectAvatar = ({
+  avatar,
+  setAvatar,
+  loading,
+  setLoading,
+}: {
+  avatar: string | undefined;
+  setAvatar: (avatar: string | undefined) => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+}) => {
   const { user, setUser, setModal, logout } = useGlobalContext();
 
   const updateAvatar = useCallback(async () => {
@@ -73,9 +82,7 @@ const SelectAvatar = ({ avatar, setAvatar, loading, setLoading }: any) => {
                     />
                     <Image
                       alt={img!}
-                      src={`/images/avatars-mini/${img}.jpg`}
-                      blurDataURL={`data:image/jpg;base64, ${avatarList[img!]}`}
-                      placeholder="blur"
+                      src={`data:image/jpg;base64, ${avatarList[img!]}`}
                       width={80}
                       height={80}
                       className={`${

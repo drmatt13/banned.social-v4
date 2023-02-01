@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type ServiceResults from "@/types/serviceResults";
 import type ServiceBody from "@/types/serviceBody";
 import type Service from "@/types/service";
-import serviceError from "@/types/serviceError";
+import { serviceError } from "@/lib/processService";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import chalk from "chalk";
 import axios from "axios";

@@ -1,4 +1,4 @@
-import serviceError from "@/types/serviceError";
+import { serviceError } from "@/lib/processService";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
 

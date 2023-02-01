@@ -2,7 +2,6 @@ import React, { useState, useCallback } from "react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import serviceError from "@/types/serviceError";
 import { signIn } from "next-auth/react";
 import Cookie from "js-cookie";
 import Head from "next/head";
@@ -14,7 +13,7 @@ import LoginLogo from "@/components/LoginLogo";
 import { useGlobalContext } from "@/context/globalContext";
 
 // libaries
-import processService from "@/lib/processService";
+import { processService, serviceError } from "@/lib/processService";
 import Link from "next/link";
 
 const Login: NextPage = () => {

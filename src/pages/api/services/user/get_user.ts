@@ -1,5 +1,5 @@
 import type ServiceRequest from "@/types/serviceRequest";
-import serviceError from "@/types/serviceError";
+import { serviceError } from "@/lib/processService";
 import type { NextApiResponse } from "next";
 
 // mongoose

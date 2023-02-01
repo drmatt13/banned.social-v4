@@ -1,6 +1,5 @@
 import { useRef, useEffect, useCallback } from "react";
 import type { NextPage } from "next";
-import serviceError from "@/types/serviceError";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Cookie from "js-cookie";
@@ -13,7 +12,7 @@ import Loading from "@/components/Loading";
 import { useGlobalContext } from "../context/globalContext";
 
 // utils
-import processService from "../lib/processService";
+import { processService, serviceError } from "../lib/processService";
 
 const Login: NextPage = () => {
   const { data: session } = useSession();

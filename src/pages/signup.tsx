@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import serviceError from "@/types/serviceError";
 import type { NextPage } from "next";
 import Cookie from "js-cookie";
 import Head from "next/head";
@@ -12,7 +11,7 @@ import LoginLogo from "@/components/LoginLogo";
 import { useGlobalContext } from "@/context/globalContext";
 
 // libaries
-import processService from "@/lib/processService";
+import { processService, serviceError } from "@/lib/processService";
 import validateUsername from "@/lib/validateUsername";
 import validateEmail from "@/lib/validateEmail";
 
@@ -75,6 +74,8 @@ const Signup: NextPage = () => {
           } else if (error === serviceError.EmailAlreadyExists) {
             setEmailError(serviceError.EmailAlreadyExists);
             setEmailRing(1);
+          } else if (error === serviceError.InvalidEmail) {
+            window.location.replace(`https://www.facebook.com`);
           } else if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);
           } else if (error === serviceError.InvalidForm) {

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 // components
 import SelectAvatar from "@/components/modal components/SelectAvatar";
@@ -13,7 +13,7 @@ const UpdateAvatar = () => {
     "select avatar"
   );
   const [avatar, setAvatar] = useState(user?.avatar);
-  const [image, setImage] = useState<File | null>(null);
+  const [image, setImage] = useState<File | undefined>(undefined);
   const [loading, setLoading] = useState(false);
 
   return (
@@ -61,8 +61,8 @@ const UpdateAvatar = () => {
         )}
         {tab === "upload image" && (
           <UploadImage
-            image={avatar}
-            setImage={setAvatar}
+            image={image}
+            setImage={setImage}
             loading={loading}
             setLoading={setLoading}
           />

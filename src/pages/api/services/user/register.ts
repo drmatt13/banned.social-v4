@@ -1,4 +1,4 @@
-import serviceError from "@/types/serviceError";
+import { serviceError } from "@/lib/processService";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
@@ -7,6 +7,9 @@ import bcrypt from "bcrypt";
 // mongoose
 import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
+
+// libraries
+import validateEmail from "@/lib/validateEmail";
 
 export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
   try {
@@ -18,7 +21,10 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
     if (!username || !email || !password) {
       throw new Error(serviceError.InvalidForm);
     }
-
+    // check for valid email
+    if (!validateEmail(email)) {
+      throw new Error(serviceError.InvalidEmail);
+    }
     // check if user exists
     const user: IUserModel | null = await UserModel.findOne({
       $or: [{ username: username }, { email: email.toLowerCase() }],
