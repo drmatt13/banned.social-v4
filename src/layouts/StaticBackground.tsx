@@ -26,8 +26,8 @@ const StaticBackground = ({ children, showNavbar, user }: Props) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   return !showNavbar || !user?.avatar || !user.username ? (
+    // return true ? (
     <div
       className={`${
         darkMode ? darkStatic.container : lightStatic.container

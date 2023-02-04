@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import {
   useState,
-  useLayoutEffect,
   useCallback,
   useEffect,
   useRef,
@@ -29,7 +28,7 @@ const UploadImage = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { user, setUser, setModal, logout } = useGlobalContext();
+  const { setUser, setModal, logout } = useGlobalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -108,8 +107,8 @@ const UploadImage = ({
   const processImage = useCallback(
     (image: File) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        setPreview(e.target?.result as string);
+      reader.onloadend = (e: any) => {
+        setPreview(e.target.result);
       };
       reader.onerror = (e) => {
         setPreview(undefined);
@@ -165,7 +164,7 @@ const UploadImage = ({
     };
   }, [assessFile, loading]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (initialLoad) {
       setInitialLoad(false);
     }
@@ -184,9 +183,10 @@ const UploadImage = ({
             className={`${
               preview
                 ? "flex-1 items-end"
-                : "justify-evenly items-center border-dashed border-2 aspect-video bg-gray-200 dark:bg-white/30 "
+                : "justify-evenly items-center border-dashed border-2 aspect-video bg-gray-200 dark:bg-white/30 cursor-pointer"
             } flex flex-col max-w-full h-full border-blue-400 dark:border-blue-600 rounded-lg`}
             onTouchEnd={() => !preview && inputRef.current?.click()}
+            onClick={() => !preview && inputRef.current?.click()}
           >
             {preview ? (
               <div

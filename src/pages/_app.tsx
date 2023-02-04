@@ -27,6 +27,7 @@ const MyApp: AppType<{
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [navVisable, setNavVisable] = useState(true);
 
   useEffect(() => {
     if (
@@ -99,6 +100,8 @@ const MyApp: AppType<{
             logout,
             loggingOut,
             setLoggingOut,
+            navVisable,
+            setNavVisable,
           }}
         >
           <AppLayout>
@@ -122,6 +125,8 @@ const MyApp: AppType<{
           logout,
           loggingOut,
           setLoggingOut,
+          navVisable,
+          setNavVisable,
         }}
       >
         <AppLayout>

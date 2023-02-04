@@ -17,6 +17,8 @@ export type GlobalContext = {
   ) => Promise<void>;
   loggingOut: boolean;
   setLoggingOut: (loggingOut: boolean) => void;
+  navVisable: boolean;
+  setNavVisable: (navVisable: boolean) => void;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -31,6 +33,8 @@ export const globalContext = createContext<GlobalContext>({
   toggleDarkMode: () => {},
   loggingOut: false,
   setLoggingOut: () => {},
+  navVisable: false,
+  setNavVisable: () => {},
 });
 
 export const useGlobalContext = () => useContext(globalContext);

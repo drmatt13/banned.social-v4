@@ -25,7 +25,7 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
       });
 
       const params = {
-        Bucket: "social-media-8434-1348-6435",
+        Bucket: process.env.AWS_AVATAR_BUCKET!,
         Key: `${_id}`,
         Body: Buffer.from(
           avatar!.replace(/^data:image\/\w+;base64,/, ""),
@@ -37,7 +37,6 @@ export default connectDB(async (req: ServiceRequest, res: NextApiResponse) => {
 
       const upload = await s3.upload(params).promise();
       avatar = upload.Location;
-      console.log("upload", upload);
     }
     const user: IUserModel | null = await UserModel.findOneAndUpdate(
       { _id },

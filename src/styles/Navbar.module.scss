@@ -1,0 +1,86 @@
+@use 'sass:math';
+$frames: 100 / 30;
+@for $i from 1 through 6 {
+  @keyframes close-right#{$i} {
+    @for $j from 1 through 30 {
+      #{100% - $j * $frames * 1%} {
+        opacity: $j * 1 / 30;
+        margin-top: $j * 150% / 30 * ($i - 1) + 175% * $j / 30;
+        margin-right: math.sin(math.cos(math.$pi * $i) * math.$pi * $j * 1 / 30) * 100%;
+      }
+    }
+  }
+  @keyframes open-right#{$i} {
+    @for $j from 1 through 30 {
+      #{$j * $frames * 1%} {
+        opacity: $j * 1 / 30;
+        margin-top: $j * 150% / 30 * ($i - 1) + 175% * $j / 30;
+        margin-right: math.sin(math.cos(math.$pi * $i) * math.$pi * $j * 1 / 30) * 100%;
+      }
+    }
+  }
+  @keyframes close-left#{$i} {
+    @for $j from 1 through 30 {
+      #{100% - $j * $frames * 1%} {
+        opacity: $j * 1 / 30;
+        margin-top: $j * 150% / 30 * ($i - 1) + 175% * $j / 30;
+        margin-left: math.sin(math.cos(math.$pi * $i) * math.$pi * $j * 1 / 30) * 100%;
+      }
+    }
+  }
+  @keyframes open-left#{$i} {
+    @for $j from 1 through 30 {
+      #{$j * $frames * 1%} {
+        opacity: $j * 1 / 30;
+        margin-top: $j * 150% / 30 * ($i - 1) + 175% * $j / 30;
+        margin-left: math.sin(math.cos(math.$pi * $i) * math.$pi * $j * 1 / 30) * 100%;
+      }
+    }
+  }
+}
+.openLeft {
+  @for $i from 1 through 6 {
+    > div:nth-child(#{$i}) {
+      animation-name: open-left#{$i};
+      animation-timing-function: ease-out;
+      animation-fill-mode: forwards;
+      animation-duration: .25s;
+      z-index: -1 * $i;
+    }
+  }
+}
+.openRight {
+  @for $i from 1 through 6 {
+    > div:nth-child(#{$i}) {
+      animation-name: open-right#{$i};
+      animation-timing-function: ease-out;
+      animation-fill-mode: forwards;
+      animation-duration: .25s;
+      z-index: -1 * $i;
+    }
+  }
+}
+.closeLeft {
+  @for $i from 1 through 6 {
+    > div:nth-child(#{$i}) {
+      animation-name: close-left#{$i};
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+      z-index: -1 * $i;
+      animation-duration: .25s;
+      opacity: 0;
+    }
+  }
+}
+.closeRight {
+  @for $i from 1 through 6 {
+    > div:nth-child(#{$i}) {
+      animation-name: close-right#{$i};
+      animation-timing-function: ease-in;
+      animation-fill-mode: forwards;
+      z-index: -1 * $i;
+      animation-duration: .25s;
+      opacity: 0;
+    }
+  }
+}

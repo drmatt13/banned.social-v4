@@ -16,7 +16,7 @@ import { processService, serviceError } from "../lib/processService";
 
 const Login: NextPage = () => {
   const { data: session } = useSession();
-  const { setUser, logout } = useGlobalContext();
+  const { logout } = useGlobalContext();
   const processing = useRef(false);
   const router = useRouter();
 
@@ -46,9 +46,12 @@ const Login: NextPage = () => {
           if (queryString.endsWith("&")) {
             queryString = queryString.slice(0, -1);
           }
-          router.replace(
+          window.location.replace(
             `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
           );
+          // router.replace(
+          //   `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
+          // );
         } else {
           if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);
