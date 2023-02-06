@@ -154,13 +154,13 @@ const Signup: NextPage = () => {
                 usernameRing === 2 ? "ring-1 ring-green-500" : ""
               } h-10 border border-light-border dark:border-dark-border shadow-lg w-full flex rounded overflow-hidden`}
             >
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="text-xs fa-solid fa-user dark:text-gray-500" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="text"
                 placeholder="Username"
                 value={username}
@@ -192,13 +192,13 @@ const Signup: NextPage = () => {
                 emailRing === 2 ? "ring-1 ring-green-500" : ""
               } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
             >
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="text-xs fa-solid fa-envelope dark:text-gray-500" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -231,13 +231,13 @@ const Signup: NextPage = () => {
                 passwordRing === 2 ? "ring-1 ring-green-500" : ""
               } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
             >
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="text-xs fa-solid fa-lock dark:text-gray-500" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -278,13 +278,13 @@ const Signup: NextPage = () => {
                 password2Ring === 2 ? "ring-1 ring-green-500" : ""
               } h-10 border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden`}
             >
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="text-xs fa-solid fa-lock dark:text-gray-500" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="password"
                 placeholder="Confirm Password"
                 value={password2}
@@ -321,7 +321,7 @@ const Signup: NextPage = () => {
             <input
               className={`${
                 loading
-                  ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                  ? "border-light-border dark:border-dark-border bg-[#e1e1e1] dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
                   : "border-black bg-black dark:bg-black/75 hover:bg-black/80 dark:hover:bg-black text-white cursor-pointer"
               } border shadow-lg flex-1 text-center py-1.5 sm:px-4 sm:py-3 rounded`}
               type="button"
@@ -341,7 +341,7 @@ const Signup: NextPage = () => {
             <input
               className={`${
                 loading
-                  ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
+                  ? "border-light-border dark:border-dark-border bg-[#e1e1e1] dark:bg-dark-secondary text-gray-600 dark:text-gray-400 cursor-not-allowed"
                   : "border-black/50 bg-blue-500 hover:bg-blue-400 dark:bg-pink-500 dark:hover:bg-pink-400 text-white cursor-pointer"
               } border flex-1 text-center sm:px-4 sm:py-3 rounded`}
               type="submit"

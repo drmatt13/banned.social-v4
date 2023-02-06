@@ -24,7 +24,8 @@ interface Props {
 
 const AppLayout = ({ children }: Props) => {
   const router = useRouter();
-  const { loggingOut, modal, setModal, user, setUser } = useGlobalContext();
+  const { loggingOut, modal, setModal, user, setUser, setNavButtonsVisable } =
+    useGlobalContext();
   const loading = useUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(false);
 
@@ -47,6 +48,13 @@ const AppLayout = ({ children }: Props) => {
 
   return (
     <>
+      <style jsx>{`
+        @media (min-width: 2024px) {
+          div > div {
+            width: 1600px;
+          }
+        }
+      `}</style>
       {!loading && !user?.avatar && <ToggleDarkModeButton />}
       {loading || loggingOut ? (
         <div className="h-screen w-screen">
@@ -54,21 +62,30 @@ const AppLayout = ({ children }: Props) => {
         </div>
       ) : (
         <>
-          {showNavbar && !loading && (
-            <>
-              {user ? (
-                user.username && user.avatar && <Navbar />
-              ) : (
-                <UnprotectedNavbar />
-              )}
-            </>
-          )}
           <StaticBackground showNavbar={showNavbar} user={user}>
             {modal && <Modal />}
             {user && !user.username ? (
               <OAuthSetUsername />
             ) : (
-              (!user || (user && user.avatar)) && children
+              (!user || (user && user.avatar)) && (
+                <div
+                  className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto"
+                  onClick={() => setNavButtonsVisable(false)}
+                >
+                  {showNavbar && !loading && (
+                    <>
+                      {user ? (
+                        user.username && user.avatar && <Navbar />
+                      ) : (
+                        <UnprotectedNavbar />
+                      )}
+                    </>
+                  )}
+                  <div className="absolute top-0 w-full min-h-screen max-h-screen">
+                    {children}
+                  </div>
+                </div>
+              )
             )}
           </StaticBackground>
         </>

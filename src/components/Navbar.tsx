@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 // components
 import NavButton from "./NavButton";
+import SearchBar from "./SearchBar";
 
 // context
 import { useGlobalContext } from "@/context/globalContext";
@@ -10,8 +11,15 @@ import { useGlobalContext } from "@/context/globalContext";
 import styles from "@/styles/Navbar.module.scss";
 
 const Navbar = () => {
-  const { mobile, logout, navVisable, setNavVisable, toggleDarkMode } =
-    useGlobalContext();
+  const {
+    mobile,
+    logout,
+    navContainerVisable,
+    setNavContainerVisable,
+    navButtonsVisable,
+    setNavButtonsVisable,
+    toggleDarkMode,
+  } = useGlobalContext();
 
   const navContainerRef = useRef<HTMLElement | null>(null);
   const diamondRef = useRef<HTMLDivElement | null>(null);
@@ -20,11 +28,9 @@ const Navbar = () => {
   const dateRef = useRef<number>(Date.now());
   const animationStateRef = useRef<number>(0);
 
-  const [buttonsVisable, setButtonsVisable] = useState(false);
-
   useEffect(() => {
     if (
-      !buttonsVisable &&
+      !navButtonsVisable &&
       buttonsRef.current[0]?.style.animationPlayState === "paused"
     )
       return;
@@ -38,7 +44,7 @@ const Navbar = () => {
     const animationContainer = navContainerRef.current?.firstChild
       ?.lastChild as HTMLDivElement;
     const dT = (Date.now() - dateRef.current) * 0.001;
-    if (buttonsVisable) {
+    if (navButtonsVisable) {
       animationStateRef.current -= dT;
       if (
         animationStateRef.current < 0.25 &&
@@ -85,7 +91,7 @@ const Navbar = () => {
       });
     }
     dateRef.current = Date.now();
-  }, [buttonsVisable]);
+  }, [navButtonsVisable]);
 
   useEffect(() => {
     buttonsRef.current = navContainerRef.current?.firstChild?.lastChild
@@ -155,10 +161,16 @@ const Navbar = () => {
             #7ac5d8b0 100%
           );
         }
+        @media (min-width: 2024px) {
+          .z-50 {
+            width: 1600px;
+          }
+        }
       `}</style>
       <nav
         ref={navContainerRef}
-        className={`z-50 h-28 sticky top-0 py-10 pr-6 xs:pr-8 sm:pr-10 lg:pr-14 flex flex-row-reverse select-none pointer-events-none`}
+        className={`z-50 h-full sticky top-0 py-10 pr-6 xs:pr-8 sm:pr-10 lg:pr-14 flex flex-row-reverse select-none pointer-events-none overflow-visible w-full`}
+        // onClick={() => setNavButtonsVisable(false)}
       >
         <div
           className={`relative ${
@@ -166,10 +178,17 @@ const Navbar = () => {
           } transition-opacity`}
         >
           <div
-            onClick={() => setButtonsVisable(() => !buttonsVisable)}
+            onClick={(e) => {
+              e.stopPropagation();
+              setNavButtonsVisable(!navButtonsVisable);
+            }}
             ref={diamondRef}
             className={`
-            ${navVisable ? `pointer-events-auto` : "pointer-events-none"} 
+            ${
+              navContainerVisable
+                ? `pointer-events-auto`
+                : "pointer-events-none"
+            } 
             ${
               mobile
                 ? `
@@ -231,7 +250,7 @@ const Navbar = () => {
           {true !== undefined && (
             <div
               className={`${
-                buttonsVisable
+                navButtonsVisable
                   ? "/opacity-100 pointer-events-auto /duration-500"
                   : "/opacity-0 pointer-events-none /duration-[.25s]"
               } h-full w-full absolute flex flex-col items-center text-xs transition-opacity -z-10`}
@@ -263,6 +282,12 @@ const Navbar = () => {
               <NavButton className="fas fa-gear" onClick={logout} />
             </div>
           )}
+        </div>
+        <div
+          className="absolute left-4 top-4"
+          onClick={() => setNavButtonsVisable(false)}
+        >
+          <SearchBar />
         </div>
       </nav>
     </>

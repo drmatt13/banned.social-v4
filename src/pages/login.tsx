@@ -136,13 +136,13 @@ const Login: NextPage = () => {
         >
           <div className="flex flex-col items-center">
             <div className="border border-light-border dark:border-dark-border shadow-lg w-full flex rounded overflow-hidden">
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="dark:text-gray-500 text-xs fa-solid fa-user" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="text"
                 placeholder="Email or Username"
                 value={username}
@@ -158,13 +158,13 @@ const Login: NextPage = () => {
               />
             </div>
             <div className="border border-light-border dark:border-dark-border shadow-lg mt-3 w-full flex rounded overflow-hidden">
-              <div className="py-2 w-12 flex justify-center items-center bg-light-secondary dark:bg-dark-secondary">
+              <div className="py-2 w-12 flex justify-center items-center bg-[#e1e1e1] dark:bg-dark-secondary">
                 <i className="dark:text-gray-500 text-xs fa-solid fa-lock" />
               </div>
               <input
                 className={`${
                   loading ? "text-gray-400" : "dark:text-gray-200"
-                } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-dark-form`}
+                } h-10 w-full px-2 py-2 focus:outline-none bg-light-form dark:bg-[#3b4148]`}
                 type="password"
                 placeholder="Password"
                 value={password}
@@ -293,7 +293,7 @@ const Login: NextPage = () => {
             className={`${
               loading
                 ? "opacity-40 dark:opacity-50 bg-light-accent text-black dark:text-gray-900 cursor-not-allowed"
-                : "bg-light-secondary hover:bg-gray-300/50 dark:hover:bg-light-primary cursor-pointer"
+                : "bg-light-secondary hover:bg-gray-100 dark:hover:bg-light-primary cursor-pointer"
             } border border-light-border  sm:w-28 md:w-32 px-2 py-1 rounded-full flex justify-center items-center select-none`}
             onClick={() => oAuth("github")}
             disabled={loading}

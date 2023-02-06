@@ -47,10 +47,11 @@ const NavButton = ({ className, onClick }: any) => {
       `}</style>
       <div
         className={`
-        opacity-0
+          opacity-0
           nav-button
           shadow-xl
-          bg-gray-700
+          bg-blue-500
+          
           dark:bg-white
           transition
           ease-linear
@@ -69,7 +70,10 @@ const NavButton = ({ className, onClick }: any) => {
         }
       >
         <i
-          onClick={onClick}
+          onClick={(e) => {
+            e.stopPropagation();
+            onClick && onClick();
+          }}
           className={`
             ${className}
             ${
@@ -79,14 +83,20 @@ const NavButton = ({ className, onClick }: any) => {
             dark-active
             `
                   : `
-            light-active
+            active:!bg-blue-400
+            active:scale-105
+            active:text-white
+            !ease-out
             `
                 : darkMode
                 ? `
             dark-hover
             `
                 : `
-            light-hover
+            hover:!bg-blue-400
+            hover:scale-105
+            hover:text-white
+            !ease-out
             `
             }
             h-full 
