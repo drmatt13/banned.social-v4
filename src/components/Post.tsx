@@ -38,14 +38,19 @@ const Post = ({ userid, recipientId, body }: IProps) => {
               <img className="h-10 w-10" src={profileImg} alt="avatar" />
             </div>
           )}
-          
+
           <div className="flex-1 flex self-center font-mono font-bold h-10 /bg-black">
-            from > to
+            user1 {">"} user2
           </div>
         </div>
-        <p className="mx-3 pb-3 flex-1 text-left" style={{
-          lineHeight: "1.25rem",
-        }}>{body}</p>
+        <p
+          className="mx-3 pb-3 flex-1 text-left"
+          style={{
+            lineHeight: "1.25rem",
+          }}
+        >
+          {body}
+        </p>
         <div>
           {postImg && <img ref={postImgRef} src={postImg} alt="postImage" />}
         </div>
@@ -58,12 +63,15 @@ const Post = ({ userid, recipientId, body }: IProps) => {
         </div>
         <div className="h-10 flex justify-evenly mx-3">
           <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+            <i className="fa-regular fa-thumbs-up mr-2" />
             Like
           </div>
           <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+            <i className="fa-regular fa-comment mr-2" />
             Comment
           </div>
           <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+            <i className="fa-solid fa-share mr-2" />
             Share
           </div>
         </div>
