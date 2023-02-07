@@ -31,7 +31,7 @@ const Post = ({ userid, recipientId, body }: IProps) => {
 
   return (
     <>
-      <div className="relative bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-4 w-full border dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
+      <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-4 w-full border dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
         <div className="mx-4 flex items-start mb-2">
           {profileImg && (
             <div className="overflow-hidden mr-3 rounded-full /border-2 border-blue-400 dark:border-blue-500">
@@ -39,11 +39,11 @@ const Post = ({ userid, recipientId, body }: IProps) => {
             </div>
           )}
           
-          <div className="flex-1 flex self-center font-mono text-sm font-bold h-10 /bg-black">
+          <div className="flex-1 flex self-center font-mono font-bold h-10 /bg-black">
             from > to
           </div>
         </div>
-        <p className="mx-3 pb-3 flex-1 text-left text-sm text" style={{
+        <p className="mx-3 pb-3 flex-1 text-left" style={{
           lineHeight: "1.25rem",
         }}>{body}</p>
         <div>
@@ -56,7 +56,7 @@ const Post = ({ userid, recipientId, body }: IProps) => {
             <div>xxx shares</div>
           </div>
         </div>
-        <div className="h-12 flex justify-evenly mx-3">
+        <div className="h-10 flex justify-evenly mx-3">
           <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
             Like
           </div>
