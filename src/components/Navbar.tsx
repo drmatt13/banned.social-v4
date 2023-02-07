@@ -100,40 +100,40 @@ const Navbar = () => {
       button.style.animationPlayState = "paused";
       button.style.display = "none";
     });
-    const adjustHeight = () => {
-      const size =
-        window.screen.height / 20 > 36
-          ? 36
-          : window.screen.height / 20 < 24
-          ? 24
-          : window.screen.height / 20;
-      (diamondRef?.current?.parentNode as HTMLDivElement)?.setAttribute(
-        "style",
-        `height: ${size}px !important; width: ${size}px !important;`
-      );
-    };
-    const adjustPadding = () => {
-      const size =
-        window.screen.width / 12.5 > 36
-          ? 36
-          : window.screen.width / 12.5 < 24
-          ? 24
-          : window.screen.width / 12.5;
-      navContainerRef?.current?.setAttribute(
-        "style",
-        `padding-right: ${size}px !important;`
-      );
-    };
+    // const adjustHeight = () => {
+    //   const size =
+    //     window.screen.height / 20 > 36
+    //       ? 36
+    //       : window.screen.height / 20 < 24
+    //       ? 24
+    //       : window.screen.height / 20;
+    //   (diamondRef?.current?.parentNode as HTMLDivElement)?.setAttribute(
+    //     "style",
+    //     `height: ${size}px !important; width: ${size}px !important;`
+    //   );
+    // };
+    // const adjustPadding = () => {
+    //   const size =
+    //     window.screen.width / 12.5 > 36
+    //       ? 36
+    //       : window.screen.width / 12.5 < 24
+    //       ? 24
+    //       : window.screen.width / 12.5;
+    //   navContainerRef?.current?.setAttribute(
+    //     "style",
+    //     `padding-right: ${size}px !important;`
+    //   );
+    // };
     if (mobile) {
-      adjustHeight();
-      adjustPadding();
+      // adjustHeight();
+      // adjustPadding();
       diamondRef.current?.classList.add("duration-75");
       (diamondRef.current?.firstChild as HTMLDivElement)?.classList.add(
         "duration-75"
       );
-      screen.orientation.addEventListener("change", adjustHeight);
+      // screen.orientation.addEventListener("change", adjustHeight);
       return () => {
-        screen.orientation.removeEventListener("change", adjustHeight);
+        // screen.orientation.removeEventListener("change", adjustHeight);
       };
     }
   }, [mobile]);
@@ -141,10 +141,17 @@ const Navbar = () => {
   return (
     <>
       <style jsx>{`
-        .relative {
-          height: clamp(1.5em, 5vh, 2.25em);
-          width: clamp(1.5em, 5vh, 2.25em);
+        @media (max-width: 640px) {
+          .relative {
+            height: 1.7em !important;
+            width: 1.7rem !important;
+          }
         }
+        .relative {
+          height: clamp(1.7em, 5vh, 2.25em);
+          width: clamp(1.7em, 5vh, 2.25em);
+        }
+
         .diamondRef {
           box-shadow: 0 0 0.75em rgb(216, 139, 235);
           border: 1px solid transparent;
@@ -169,7 +176,7 @@ const Navbar = () => {
       `}</style>
       <nav
         ref={navContainerRef}
-        className={`z-50 h-full sticky top-0 py-10 pr-6 xs:pr-8 sm:pr-10 lg:pr-14 flex flex-row-reverse select-none pointer-events-none overflow-visible w-full`}
+        className={`z-50 h-full sticky top-0 pt-6 pr-6 sm:pr-10 lg:pt-8 lg:pr-14 flex flex-row-reverse select-none pointer-events-none overflow-visible w-full`}
         // onClick={() => setNavButtonsVisable(false)}
       >
         <div
@@ -284,7 +291,7 @@ const Navbar = () => {
           )}
         </div>
         <div
-          className="absolute left-4 top-4"
+          className="absolute left-4 top-4 "
           onClick={() => setNavButtonsVisable(false)}
         >
           <SearchBar />

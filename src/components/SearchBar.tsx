@@ -7,7 +7,7 @@ const SearchBar = () => {
     <>
       <div
         onClick={() => inputRef.current?.focus()}
-        className="cursor-text pointer-events-auto z-50 h-10 w-72 max-w-full bg-black/10 dark:bg-white/10  backdrop-blur flex items-center px-4 text-sm rounded-full text-gray-600 dark:text-gray-400 group"
+        className="cursor-text pointer-events-auto z-50 h-10 w-72 max-w-[67.5vw] bg-black/10 dark:bg-white/10  backdrop-blur flex items-center px-4 text-sm rounded-full text-gray-600 dark:text-gray-400 group"
       >
         <i className="fa-solid fa-magnifying-glass transition-colors duration-300 ease-out group-hover:text-black group-focus-within:text-black dark:group-hover:text-white dark:group-focus-within:text-white" />
         <input
