@@ -205,8 +205,8 @@ const Navbar = () => {
             hover:scale-125 
             hover:border-opacity-100`
             }
-            bg-black/10
-            dark:bg-white/10
+            /bg-black/10
+            /dark:bg-white/10
             backdrop-blur
             dark:backdrop-brightness-75
             group 
