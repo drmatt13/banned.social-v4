@@ -35,7 +35,7 @@ const Home: NextPage = () => {
         }
         .container-2 > div {
           width: 75%;
-          max-width: 500px;
+          max-width: 580px;
         }
         @media (max-width: 1100px) {
           .container-1 {

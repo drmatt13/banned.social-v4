@@ -14,7 +14,7 @@ const PostButton = () => {
   return (
     <>
       <div className="w-full flex bg-light-secondary dark:bg-dark-secondary rounded-lg px-4 py-3 mb-5 border dark:border-dark-border shadow-sm dark:shadow-dark-border">
-        <div className="overflow-hidden mr-3 rounded-full border-2 border-blue-400 dark:border-blue-500">
+        <div className="overflow-hidden mr-3 rounded-full /border-2 border-blue-400 dark:border-blue-500">
           <img
             className="h-10 w-10"
             src={

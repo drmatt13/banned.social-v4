@@ -19,6 +19,7 @@ const Navbar = () => {
     navButtonsVisable,
     setNavButtonsVisable,
     toggleDarkMode,
+    darkMode,
   } = useGlobalContext();
 
   const navContainerRef = useRef<HTMLElement | null>(null);
@@ -153,7 +154,6 @@ const Navbar = () => {
         }
 
         .diamondRef {
-          box-shadow: 0 0 0.75em rgb(216, 139, 235);
           border: 1px solid transparent;
           border-image: linear-gradient(45deg, #0b879380, #946a9080);
           border-image-slice: 1;
@@ -205,6 +205,10 @@ const Navbar = () => {
             hover:scale-125 
             hover:border-opacity-100`
             }
+            bg-black/10
+            dark:bg-white/10
+            backdrop-blur
+            dark:backdrop-brightness-75
             group 
             diamondRef 
             absolute 
@@ -219,8 +223,12 @@ const Navbar = () => {
             border-opacity-80 
             transition-all
             ease-linear
-
           `}
+            style={{
+              boxShadow: darkMode
+                ? "0 0 0.75em rgb(215, 140, 235)"
+                : "0 0 1em rgb(40, 115, 200, 0.75)",
+            }}
           >
             <div
               className={`
