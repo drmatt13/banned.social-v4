@@ -33,6 +33,7 @@ export default function Document() {
       </Head>
       <body className="bg-light-primary dark:bg-dark-primary text-black dark:text-white">
         <Main />
+        <div id="modal" />
         <NextScript />
       </body>
     </Html>

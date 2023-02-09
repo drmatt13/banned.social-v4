@@ -7,10 +7,10 @@ import Navbar from "@/components/Navbar";
 import UnprotectedNavbar from "@/components/UnprotectedNavbar";
 import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import OAuthSetUsername from "@/components/OAuthSetUsername";
-import Modal from "@/components/Modal";
+import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // hooks
 import useUser from "@/hooks/useUser";
@@ -24,10 +24,11 @@ interface Props {
 
 const AppLayout = ({ children }: Props) => {
   const router = useRouter();
-  const { loggingOut, modal, setModal, user, setUser, setNavButtonsVisable } =
+  const { loggingOut, user, setUser, setNavButtonsVisable } =
     useGlobalContext();
   const loading = useUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(false);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     if (!loading) {
@@ -41,10 +42,10 @@ const AppLayout = ({ children }: Props) => {
   }, [router.pathname, loading]);
 
   useEffect(() => {
-    if (user && user.username && !user.avatar) {
-      setModal("update avatar");
+    if (!loading && user?.username && !user?.avatar) {
+      setModal(true);
     }
-  }, [setModal, user]);
+  }, [loading, modal, user]);
 
   return (
     <>
@@ -63,7 +64,7 @@ const AppLayout = ({ children }: Props) => {
       ) : (
         <>
           <StaticBackground showNavbar={showNavbar} user={user}>
-            {modal && <Modal />}
+            <UpdateAvatarModal modal={modal} setModal={setModal} />
             {user && !user.username ? (
               <OAuthSetUsername />
             ) : (

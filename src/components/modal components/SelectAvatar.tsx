@@ -2,7 +2,8 @@ import { useCallback, useEffect } from "react";
 import Image from "next/image";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
+import useModalContext from "@/context/modalContext";
 
 // data
 import avatarOrder from "@/data/avatarOrder";
@@ -22,7 +23,8 @@ const SelectAvatar = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { user, setUser, setModal, logout } = useGlobalContext();
+  const { user, setUser, logout } = useGlobalContext();
+  const { setModal } = useModalContext();
 
   const updateAvatar = useCallback(async () => {
     try {
@@ -33,7 +35,7 @@ const SelectAvatar = ({
       const { user, success, error } = data;
       if (success && user) {
         setUser(user);
-        setModal(undefined);
+        setModal(false);
       } else {
         if (error === serviceError.Unauthorized) {
           throw new Error(serviceError.Unauthorized);

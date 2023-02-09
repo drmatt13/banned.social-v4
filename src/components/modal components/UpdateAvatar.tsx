@@ -5,7 +5,7 @@ import SelectAvatar from "@/components/modal components/SelectAvatar";
 import UploadImage from "@/components/modal components/UploadImage";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 const UpdateAvatar = () => {
   const { user } = useGlobalContext();

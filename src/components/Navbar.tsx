@@ -5,7 +5,7 @@ import NavButton from "./NavButton";
 import SearchBar from "./SearchBar";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // styles
 import styles from "@/styles/Navbar.module.scss";

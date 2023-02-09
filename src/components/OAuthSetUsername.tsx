@@ -1,7 +1,7 @@
 import { useCallback, useState, useRef, useEffect } from "react";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // libaries
 import { processService, serviceError } from "@/lib/processService";

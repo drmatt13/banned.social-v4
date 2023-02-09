@@ -9,7 +9,7 @@ import Head from "next/head";
 import Loading from "@/components/Loading";
 
 // context
-import { useGlobalContext } from "../context/globalContext";
+import useGlobalContext from "../context/globalContext";
 
 // utils
 import { processService, serviceError } from "../lib/processService";

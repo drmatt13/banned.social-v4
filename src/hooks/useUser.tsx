@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import type User from "@/types/user";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // utils
 import processService from "@/lib/processService";

@@ -4,10 +4,10 @@ import Head from "next/head";
 import Link from "next/link";
 
 // context
-import { useGlobalContext, GlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 const Home: NextPage = () => {
-  const { logout, setUser, user }: GlobalContext = useGlobalContext();
+  const { logout, setUser, user } = useGlobalContext();
 
   const testDeleteAvatar = () => {
     setUser({ ...user, avatar: undefined } as User);

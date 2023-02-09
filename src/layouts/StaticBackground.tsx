@@ -1,6 +1,6 @@
 // context
 import { useState, useEffect } from "react";
-import { useGlobalContext } from "../context/globalContext";
+import useGlobalContext from "../context/globalContext";
 import type User from "@/types/user";
 
 // styles

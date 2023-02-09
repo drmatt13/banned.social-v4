@@ -11,7 +11,7 @@ import Head from "next/head";
 import AppLayout from "@/layouts/AppLayout";
 
 // global context
-import globalContext from "@/context/globalContext";
+import { globalContext } from "@/context/globalContext";
 
 // global styles
 import "@/styles/globals.scss";
@@ -20,9 +20,6 @@ const MyApp: AppType<{
   session: Session;
 }> = ({ Component, pageProps: { session, ...pageProps } }) => {
   const router = useRouter();
-  const [modal, setModal] = useState<
-    undefined | "update avatar" | "create post" | "update post"
-  >(undefined);
   const [user, setUser] = useState<User>(undefined);
   const [darkMode, setDarkMode] = useState(false);
   const [mobile, setMobile] = useState(false);
@@ -90,8 +87,6 @@ const MyApp: AppType<{
       <SessionProvider session={session}>
         <globalContext.Provider
           value={{
-            modal,
-            setModal,
             mobile,
             user,
             darkMode,
@@ -117,8 +112,6 @@ const MyApp: AppType<{
     <>
       <globalContext.Provider
         value={{
-          modal,
-          setModal,
           mobile,
           user,
           darkMode,

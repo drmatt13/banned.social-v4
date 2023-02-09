@@ -10,7 +10,7 @@ import Head from "next/head";
 import LoginLogo from "@/components/LoginLogo";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // libaries
 import { processService, serviceError } from "@/lib/processService";

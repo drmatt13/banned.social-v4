@@ -2,7 +2,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 // context
-import { useGlobalContext } from "../context/globalContext";
+import useGlobalContext from "../context/globalContext";
 
 const Unprotected = () => {
   const { mobile } = useGlobalContext();

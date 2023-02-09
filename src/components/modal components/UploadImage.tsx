@@ -12,7 +12,8 @@ import Resizer from "react-image-file-resizer";
 import isBase64 from "is-base64";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
+import useModalContext from "@/context/modalContext";
 
 // libaries
 import { processService, serviceError } from "@/lib/processService";
@@ -28,7 +29,8 @@ const UploadImage = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { setUser, setModal, logout } = useGlobalContext();
+  const { setUser, logout } = useGlobalContext();
+  const { setModal } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -86,7 +88,7 @@ const UploadImage = ({
         const { user, success, error } = data;
         if (success && user) {
           setUser(user);
-          setModal(undefined);
+          setModal(false);
         } else {
           if (error === serviceError.Unauthorized) {
             throw new Error(serviceError.Unauthorized);

@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 
 // context
-import { useGlobalContext } from "../context/globalContext";
+import useGlobalContext from "../context/globalContext";
 
 const Home: NextPage = () => {
   const { user } = useGlobalContext();

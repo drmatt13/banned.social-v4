@@ -1,11 +1,7 @@
 import { createContext, useContext } from "react";
 import type User from "../types/user";
 
-export type GlobalContext = {
-  modal: undefined | "update avatar" | "create post" | "update post";
-  setModal: (
-    modal: undefined | "update avatar" | "create post" | "update post"
-  ) => void;
+type GlobalContext = {
   mobile: boolean | undefined;
   user: User;
   darkMode: boolean;
@@ -24,8 +20,6 @@ export type GlobalContext = {
 };
 
 export const globalContext = createContext<GlobalContext>({
-  modal: undefined,
-  setModal: () => {},
   mobile: false,
   user: undefined,
   setUser: () => {},
@@ -41,6 +35,6 @@ export const globalContext = createContext<GlobalContext>({
   setNavButtonsVisable: () => {},
 });
 
-export const useGlobalContext = () => useContext(globalContext);
+const useGlobalContext = () => useContext(globalContext);
 
-export default globalContext;
+export default useGlobalContext;

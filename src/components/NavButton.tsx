@@ -1,7 +1,5 @@
-import { useRef } from "react";
-
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 const NavButton = ({ className, onClick }: any) => {
   const { mobile, darkMode } = useGlobalContext();

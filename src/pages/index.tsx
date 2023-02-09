@@ -9,10 +9,10 @@ import NewsFeed from "@/components/NewsFeed";
 import PostButton from "@/components/PostButton";
 
 // context
-import { useGlobalContext, GlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 const Home: NextPage = () => {
-  const { logout, setUser, user }: GlobalContext = useGlobalContext();
+  const { logout, setUser, user } = useGlobalContext();
 
   return (
     <>
@@ -63,7 +63,7 @@ const Home: NextPage = () => {
         }
       `}</style>
       <div className="absolute flex top-0 pt-20 sm:pt-28 w-full">
-        <div className="container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
+        <div className="select-none container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-1
         </div>
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
@@ -72,7 +72,7 @@ const Home: NextPage = () => {
             <NewsFeed />
           </div>
         </div>
-        <div className="container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
+        <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-3
         </div>
       </div>

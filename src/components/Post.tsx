@@ -41,13 +41,24 @@ const Post = ({ userid, recipientId, body }: IProps) => {
         <div className="mx-4 flex items-start mb-2">
           {profileImg && (
             <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
-              <img className="h-10 w-10" src={profileImg} alt="avatar" />
+              <img
+                className="h-10 w-10 hover:brightness-[98%] select-none"
+                src={profileImg}
+                alt="avatar"
+              />
             </div>
           )}
 
-          <div className="flex-1 flex self-center font-mono font-bold h-10">
+          <div className="flex-1 flex self-center font-xs font-medium h-10">
             <span className="cursor-pointer mr-2">user1</span>{" "}
-            <span className="mr-2">{">"} </span>
+            <span className="mr-2">
+              <i
+                className="fa-solid fa-angle-right"
+                style={{
+                  fontSize: "0.75rem",
+                }}
+              />
+            </span>
             <span className="cursor-pointer">user2</span>
           </div>
         </div>
@@ -65,18 +76,18 @@ const Post = ({ userid, recipientId, body }: IProps) => {
               ref={postImgRef}
               src={postImg}
               alt="postImage"
-              className="cursor-pointer"
+              className="cursor-pointer select-none"
             />
           )}
         </div>
-        <div className="h-10 flex justify-between mx-3 border-b border-black/25 dark:border-white/25">
+        <div className="h-10 flex justify-between mx-3 border-b border-black/25 dark:border-white/25 select-none">
           <div className="flex items-center">xxx likes</div>
           <div className="flex items-center">
             <div className="pr-3">xxx comments</div>
             <div>xxx shares</div>
           </div>
         </div>
-        <div className="h-10 flex justify-evenly mx-3">
+        <div className="h-10 flex justify-evenly mx-3 select-none">
           <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
             <i className="fa-solid fa-thumbs-up mr-2" />
             Like

@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import LoginLogo from "@/components/LoginLogo";
 
 // context
-import { useGlobalContext } from "@/context/globalContext";
+import useGlobalContext from "@/context/globalContext";
 
 // libaries
 import { processService, serviceError } from "@/lib/processService";
