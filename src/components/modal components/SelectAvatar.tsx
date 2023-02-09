@@ -53,6 +53,7 @@ const SelectAvatar = ({
   }, [avatar, logout, setLoading, setModal, setUser]);
 
   useEffect(() => {
+    // console.log("avatar", );
     setAvatar(avatar ? avatar : user?.avatar ? user.avatar : undefined);
   }, [avatar, setAvatar, user?.avatar]);
 
@@ -108,12 +109,18 @@ const SelectAvatar = ({
       </div>
       <button
         className={`${
-          loading || !avatar
-            ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
+          loading || !Object.hasOwnProperty.call(avatarList, avatar || "")
+            ? `${
+                user?.avatar
+                  ? "bg-stone-500/20 dark:bg-neutral-500/30 text-black/80"
+                  : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"
+              } border-light-border dark:border-dark-border cursor-not-allowed`
             : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
         }  mx-2 mb-2 py-2 rounded-full select-none`}
         onClick={updateAvatar}
-        disabled={loading || !avatar}
+        disabled={
+          !loading || Object.hasOwnProperty.call(avatarList, avatar || "")
+        }
       >
         Select Avatar
       </button>

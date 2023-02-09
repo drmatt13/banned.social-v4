@@ -29,7 +29,7 @@ const UploadImage = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { setUser, logout } = useGlobalContext();
+  const { user, setUser, logout } = useGlobalContext();
   const { setModal } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -87,7 +87,10 @@ const UploadImage = ({
         });
         const { user, success, error } = data;
         if (success && user) {
-          setUser(user);
+          setUser({
+            ...user,
+            avatar: user.avatar + "#" + new Date().getTime(),
+          });
           setModal(false);
         } else {
           if (error === serviceError.Unauthorized) {
@@ -204,7 +207,7 @@ const UploadImage = ({
                     >["src"]
                   }
                   alt="preview"
-                  className={`aspect-square w-48 object-cover object-center rounded-md bg-white`}
+                  className={`aspect-square w-48 object-cover object-center rounded-md bg-white select-none`}
                   onError={() => {
                     setPreview(undefined);
                     setImage(undefined);
@@ -264,7 +267,11 @@ const UploadImage = ({
       <button
         className={`${
           loading || !image
-            ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
+            ? `${
+                user?.avatar
+                  ? "bg-stone-500/20 dark:bg-neutral-500/30 text-black/80"
+                  : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"
+              } border-light-border dark:border-dark-border cursor-not-allowed`
             : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
         }  mx-2 mb-2 py-2 rounded-full select-none`}
         onClick={uploadImage}
