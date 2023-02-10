@@ -7,6 +7,11 @@ import SearchBar from "./SearchBar";
 // context
 import useGlobalContext from "@/context/globalContext";
 
+// modals
+import SettingsModal from "@/modals/SettingsModal";
+import MessagesModal from "@/modals/MessagesModal";
+import NotificationsModal from "@/modals/NotificationsModal";
+
 // styles
 import styles from "@/styles/Navbar.module.scss";
 
@@ -18,7 +23,6 @@ const Navbar = () => {
     setNavContainerVisable,
     navButtonsVisable,
     setNavButtonsVisable,
-    toggleDarkMode,
     darkMode,
   } = useGlobalContext();
 
@@ -28,6 +32,27 @@ const Navbar = () => {
   const directionRef = useRef<"left" | "right">("left");
   const dateRef = useRef<number>(Date.now());
   const animationStateRef = useRef<number>(0);
+
+  const [modal, setModal] = useState(false);
+  const [modalType, setModalType] = useState<
+    "messages" | "notifications" | "settings" | false
+  >(false);
+
+  const openModal = useCallback(
+    (string: Exclude<typeof modalType, false>) => {
+      setNavButtonsVisable(false);
+      setModalType(string);
+    },
+    [setNavButtonsVisable]
+  );
+
+  useEffect(() => {
+    if (modalType !== false) setModal(true);
+  }, [modalType]);
+
+  useEffect(() => {
+    if (modal === false) setModalType(false);
+  }, [modal]);
 
   useEffect(() => {
     if (
@@ -101,41 +126,11 @@ const Navbar = () => {
       button.style.animationPlayState = "paused";
       button.style.display = "none";
     });
-    // const adjustHeight = () => {
-    //   const size =
-    //     window.screen.height / 20 > 36
-    //       ? 36
-    //       : window.screen.height / 20 < 24
-    //       ? 24
-    //       : window.screen.height / 20;
-    //   (diamondRef?.current?.parentNode as HTMLDivElement)?.setAttribute(
-    //     "style",
-    //     `height: ${size}px !important; width: ${size}px !important;`
-    //   );
-    // };
-    // const adjustPadding = () => {
-    //   const size =
-    //     window.screen.width / 12.5 > 36
-    //       ? 36
-    //       : window.screen.width / 12.5 < 24
-    //       ? 24
-    //       : window.screen.width / 12.5;
-    //   navContainerRef?.current?.setAttribute(
-    //     "style",
-    //     `padding-right: ${size}px !important;`
-    //   );
-    // };
     if (mobile) {
-      // adjustHeight();
-      // adjustPadding();
       diamondRef.current?.classList.add("duration-75");
       (diamondRef.current?.firstChild as HTMLDivElement)?.classList.add(
         "duration-75"
       );
-      // screen.orientation.addEventListener("change", adjustHeight);
-      return () => {
-        // screen.orientation.removeEventListener("change", adjustHeight);
-      };
     }
   }, [mobile]);
 
@@ -177,7 +172,6 @@ const Navbar = () => {
       <nav
         ref={navContainerRef}
         className={`z-50 h-full sticky top-0 pt-6 pr-6 sm:pr-10 lg:pt-8 lg:pr-14 flex flex-row-reverse select-none pointer-events-none overflow-visible w-full`}
-        // onClick={() => setNavButtonsVisable(false)}
       >
         <div
           className={`relative ${
@@ -205,8 +199,6 @@ const Navbar = () => {
             hover:scale-125 
             hover:border-opacity-100`
             }
-            /bg-black/10
-            /dark:bg-white/10
             backdrop-blur
             dark:backdrop-brightness-75
             group 
@@ -266,35 +258,27 @@ const Navbar = () => {
             <div
               className={`${
                 navButtonsVisable
-                  ? "/opacity-100 pointer-events-auto /duration-500"
-                  : "/opacity-0 pointer-events-none /duration-[.25s]"
+                  ? "pointer-events-auto"
+                  : "pointer-events-none"
               } h-full w-full absolute flex flex-col items-center text-xs transition-opacity -z-10`}
             >
-              <NavButton
-                className="fas fa-earth-americas"
-                // onClick={redirectHome}
-              />
-              <NavButton
-                className="fas fa-newspaper"
-                // onClick={() => toggleModal("apps")}
-              />
-              <NavButton
-                className="fas fa-user"
-                //onClick={redirectHome}
-              />
+              <NavButton className="fas fa-earth-americas" />
+              <NavButton className="fas fa-newspaper" />
+              <NavButton className="fas fa-user" />
               <NavButton
                 className="fa-solid fa-comment"
-                // onClick={() => toggleModal("notes")}
-                // setNotifications={setNotifications}
                 notifications={3}
+                onClick={() => openModal("messages")}
               />
               <NavButton
                 className="fas fa-bell"
-                onClick={toggleDarkMode}
-                // setNotifications={setNotifications}
-                // notifications={2}
+                notifications={2}
+                onClick={() => openModal("notifications")}
               />
-              <NavButton className="fas fa-gear" onClick={logout} />
+              <NavButton
+                className="fas fa-gear"
+                onClick={() => openModal("settings")}
+              />
             </div>
           )}
         </div>
@@ -305,6 +289,18 @@ const Navbar = () => {
           <SearchBar />
         </div>
       </nav>
+      <MessagesModal
+        modal={Boolean(modalType === "messages")}
+        setModal={setModal}
+      />
+      <NotificationsModal
+        modal={Boolean(modalType === "notifications")}
+        setModal={setModal}
+      />
+      <SettingsModal
+        modal={Boolean(modalType === "settings")}
+        setModal={setModal}
+      />
     </>
   );
 };

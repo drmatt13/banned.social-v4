@@ -1,3 +1,4 @@
+import { useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 
 // context
@@ -11,6 +12,28 @@ interface Props {
 const Modal = ({ children }: Props) => {
   const { user } = useGlobalContext();
   const { modal, setModal } = useModalContext();
+
+  const eventListener = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === " " && e.target === document.body) {
+        e.preventDefault();
+      }
+      if (e.key === "Escape") setModal(false);
+    },
+    [setModal]
+  );
+
+  useEffect(() => {
+    if (modal) window.addEventListener("keydown", eventListener);
+    else {
+      window.removeEventListener("keydown", eventListener);
+      document.body.focus();
+    }
+    return () => {
+      window.removeEventListener("keydown", eventListener);
+      document.body.focus();
+    };
+  }, [eventListener, modal]);
 
   return !modal ? (
     <></>

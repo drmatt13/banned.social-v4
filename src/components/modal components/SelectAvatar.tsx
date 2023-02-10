@@ -109,7 +109,7 @@ const SelectAvatar = ({
       </div>
       <button
         className={`${
-          loading || !Object.hasOwnProperty.call(avatarList, avatar || "")
+          loading || user?.avatar === avatar || !avatar
             ? `${
                 user?.avatar
                   ? "bg-stone-500/20 dark:bg-neutral-500/30 text-black/80"
@@ -118,11 +118,9 @@ const SelectAvatar = ({
             : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
         }  mx-2 mb-2 py-2 rounded-full select-none`}
         onClick={updateAvatar}
-        disabled={
-          !loading || Object.hasOwnProperty.call(avatarList, avatar || "")
-        }
+        disabled={loading || user?.avatar === avatar || !avatar}
       >
-        Select Avatar
+        {user?.avatar ? "Update Avatar" : "Select Avatar"}
       </button>
     </div>
   );

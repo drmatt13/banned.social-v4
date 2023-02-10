@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
 // components
-import UpdateAvatar from "@/components/modal components/UpdateAvatar";
-
+import Notifications from "@/components/modal components/Notifications";
 // context
 import { modalContext } from "@/context/modalContext";
 
@@ -14,14 +13,14 @@ interface Props {
   setModal: Dispatch<SetStateAction<boolean>>;
 }
 
-const UpdateAvatarModal = ({ modal, setModal }: Props) => {
+const NotificationsModal = ({ modal, setModal }: Props) => {
   return (
     <modalContext.Provider value={{ modal, setModal }}>
       <ModalLayout>
-        <UpdateAvatar />
+        <Notifications />
       </ModalLayout>
     </modalContext.Provider>
   );
 };
 
-export default UpdateAvatarModal;
+export default NotificationsModal;
