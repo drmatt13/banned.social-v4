@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/router";
 
 // components
 import NavButton from "./NavButton";
@@ -16,9 +17,11 @@ import NotificationsModal from "@/modals/NotificationsModal";
 import styles from "@/styles/Navbar.module.scss";
 
 const Navbar = () => {
+  const router = useRouter();
+
   const {
+    user,
     mobile,
-    logout,
     navContainerVisable,
     setNavContainerVisable,
     navButtonsVisable,
@@ -262,9 +265,18 @@ const Navbar = () => {
                   : "pointer-events-none"
               } h-full w-full absolute flex flex-col items-center text-xs transition-opacity -z-10`}
             >
-              <NavButton className="fas fa-earth-americas" />
-              <NavButton className="fas fa-newspaper" />
-              <NavButton className="fas fa-user" />
+              <NavButton
+                className="fas fa-earth-americas"
+                onClick={() => router.replace(`/`)}
+              />
+              <NavButton
+                className="fas fa-newspaper"
+                onClick={() => router.replace(`/news`)}
+              />
+              <NavButton
+                className="fas fa-user"
+                onClick={() => router.replace(`/${user?._id}`)}
+              />
               <NavButton
                 className="fa-solid fa-comment"
                 notifications={3}
