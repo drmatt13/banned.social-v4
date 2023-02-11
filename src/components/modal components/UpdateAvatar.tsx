@@ -18,7 +18,7 @@ const UpdateAvatar = () => {
 
   return (
     <div className="h-[350px] flex flex-col text-sm">
-      <div className="flex h-10 border-b border-black/25 select-none">
+      <div className="flex-shrink-0 flex h-10 border-b border-black/25 select-none">
         <button
           className={`${
             tab === "select avatar"

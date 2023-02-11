@@ -50,13 +50,15 @@ const PostButton = () => {
           onClick={() => setModal(true)}
           className="relative flex-1 h-10 rounded-full bg-light-primary dark:bg-dark-form border dark:border-gray-900/50 hover:bg-stone-200 dark:hover:bg-white/25 cursor-pointer hover:transition-colors hover:duration-200 ease-out group"
         >
-          <div className="absolute h-full w-full top-0 left-0 flex items-center ml-4 text-gray-600 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white hover:transition-colors hover:duration-200 ease-out">
-            {post.content
-              ? post.content
-              : `What's on your mind, 
+          <div className="absolute h-full w-full top-0 left-0 flex items-center text-gray-600 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white hover:transition-colors hover:duration-200 ease-out truncate">
+            <div className="truncate ml-4 mr-4">
+              {post.content
+                ? post.content
+                : `What's on your mind, 
             ${
               user!.username[0]?.toUpperCase() + user!.username!.substring(1)
             }?`}
+            </div>
           </div>
         </div>
       </div>

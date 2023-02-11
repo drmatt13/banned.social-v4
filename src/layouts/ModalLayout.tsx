@@ -40,6 +40,22 @@ const Modal = ({ children }: Props) => {
   ) : (
     createPortal(
       <>
+        <style jsx>{`
+          .items-center {
+            margin-top: 22.5vh;
+          }
+          @media (max-height: 500px) {
+            .items-center {
+              margin-top: 15vh;
+              margin-bottom: 1.5rem;
+            }
+          }
+          @media (max-height: 440px) {
+            .items-center {
+              margin-top: 10vh;
+            }
+          }
+        `}</style>
         <div
           className={`${
             user?.avatar
@@ -47,7 +63,7 @@ const Modal = ({ children }: Props) => {
               : "bg-black/[15%] dark:bg-transparent"
           } z-50 fixed h-screen overflow-y-auto w-screen top-0 left-0 text-black`}
         >
-          <div className="max-h-[700px] h-[70vh] min-h-[420px] mt-20 flex justify-center items-center">
+          <div className="flex justify-center items-center">
             <div
               className="absolute top-0 h-full w-full"
               onClick={() => user?.avatar && setModal(false)}

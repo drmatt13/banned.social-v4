@@ -11,6 +11,9 @@ import {
 import Resizer from "react-image-file-resizer";
 import isBase64 from "is-base64";
 
+// components
+import BigSubmitButton from "@/components/BigSubmitButton";
+
 // context
 import useGlobalContext from "@/context/globalContext";
 import useModalContext from "@/context/modalContext";
@@ -29,7 +32,7 @@ const UploadImage = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { user, setUser, logout } = useGlobalContext();
+  const { setUser, logout } = useGlobalContext();
   const { setModal } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -264,21 +267,11 @@ const UploadImage = ({
           </div>
         </div>
       </div>
-      <button
-        className={`${
-          loading || !image
-            ? `${
-                user?.avatar
-                  ? "bg-stone-500/20 dark:bg-neutral-500/30 text-black/80"
-                  : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"
-              } border-light-border dark:border-dark-border cursor-not-allowed`
-            : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
-        }  mx-2 mb-2 py-2 rounded-full select-none`}
-        onClick={uploadImage}
+      <BigSubmitButton
         disabled={loading || !image}
-      >
-        Upload Image
-      </button>
+        onClick={uploadImage}
+        value="Upload Image"
+      />
       <input
         ref={inputRef}
         type="file"
