@@ -1,10 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react";
-
-import avatarList from "@/data/avatarList";
+import { useState } from "react";
 
 // context
 import useGlobalContext from "@/context/globalContext";
+
+// data
+import avatarList from "@/data/avatarList";
 
 // modal
 import PostModal from "@/modals/PostModal";
@@ -33,6 +34,7 @@ const PostButton = () => {
         setModal={setModal}
         post={post}
         setPost={setPost}
+        recipient={user?._id!}
       />
       <div className="w-full text-sm flex bg-light-secondary dark:bg-dark-secondary rounded-lg px-4 py-3 mb-5 border dark:border-dark-border shadow-sm dark:shadow-dark-border select-none">
         <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">

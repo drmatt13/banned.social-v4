@@ -3,8 +3,6 @@ import { useRouter } from "next/router";
 
 // components
 import Loading from "@/components/Loading";
-import Navbar from "@/components/Navbar";
-import UnprotectedNavbar from "@/components/UnprotectedNavbar";
 import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import OAuthSetUsername from "@/components/OAuthSetUsername";
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
@@ -16,6 +14,8 @@ import useGlobalContext from "@/context/globalContext";
 import useUser from "@/hooks/useUser";
 
 // layouts
+import Navbar from "@/layouts/Navbar";
+import UnprotectedNavbar from "@/layouts/UnprotectedNavbar";
 import StaticBackground from "@/layouts/StaticBackground";
 
 interface Props {

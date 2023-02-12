@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/router";
 
 // components
-import NavButton from "./NavButton";
-import SearchBar from "./SearchBar";
+import NavButton from "../components/NavButton";
+import SearchBar from "../components/SearchBar";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -41,13 +41,10 @@ const Navbar = () => {
     "messages" | "notifications" | "settings" | false
   >(false);
 
-  const openModal = useCallback(
-    (string: Exclude<typeof modalType, false>) => {
-      setNavButtonsVisable(false);
-      setModalType(string);
-    },
-    [setNavButtonsVisable]
-  );
+  const openModal = useCallback((string: Exclude<typeof modalType, false>) => {
+    // setNavButtonsVisable(false);
+    setModalType(string);
+  }, []);
 
   useEffect(() => {
     if (modalType !== false) setModal(true);
@@ -137,6 +134,14 @@ const Navbar = () => {
     }
   }, [mobile]);
 
+  useEffect(() => {
+    const eventListener = () => {
+      if (navButtonsVisable) setNavButtonsVisable(false);
+    };
+    window.addEventListener("resize", eventListener);
+    return () => window.removeEventListener("resize", eventListener);
+  }, [navButtonsVisable, setNavButtonsVisable]);
+
   return (
     <>
       <style jsx>{`
@@ -167,7 +172,7 @@ const Navbar = () => {
           );
         }
         @media (min-width: 2024px) {
-          .z-50 {
+          .z-10 {
             width: 1600px;
           }
         }
@@ -202,6 +207,7 @@ const Navbar = () => {
             hover:scale-125 
             hover:border-opacity-100`
             }
+            ${modal && !darkMode && "backdrop-brightness-125"}
             backdrop-blur
             dark:backdrop-brightness-75
             group 
@@ -213,10 +219,10 @@ const Navbar = () => {
             h-full 
             w-full 
             border 
-            border-gray-500 
+            border-gray-500
             dark:border-gray-600 
             border-opacity-80 
-            transition-all
+            transition-transform
             ease-linear
           `}
             style={{
@@ -267,35 +273,77 @@ const Navbar = () => {
             >
               <NavButton
                 className="fas fa-earth-americas"
-                onClick={() => router.replace(`/`)}
+                onClick={() => {
+                  setModal(false);
+                  setNavButtonsVisable(false);
+                  router.replace(`/`);
+                }}
               />
               <NavButton
                 className="fas fa-newspaper"
-                onClick={() => router.replace(`/news`)}
+                onClick={() => {
+                  setModal(false);
+                  setNavButtonsVisable(false);
+                  router.replace(`/news`);
+                }}
               />
               <NavButton
                 className="fas fa-user"
-                onClick={() => router.replace(`/${user?._id}`)}
+                onClick={() => {
+                  setModal(false);
+                  setNavButtonsVisable(false);
+                  router.replace(`/${user?._id}`);
+                }}
               />
               <NavButton
                 className="fa-solid fa-comment"
                 notifications={3}
-                onClick={() => openModal("messages")}
+                onClick={() => {
+                  if (modalType === "messages") {
+                    setModal(false);
+                    setNavButtonsVisable(false);
+                  } else {
+                    if (window.innerWidth < 768) {
+                      setNavButtonsVisable(false);
+                    }
+                    openModal("messages");
+                  }
+                }}
               />
               <NavButton
                 className="fas fa-bell"
                 notifications={2}
-                onClick={() => openModal("notifications")}
+                onClick={() => {
+                  if (modalType === "notifications") {
+                    setModal(false);
+                    setNavButtonsVisable(false);
+                  } else {
+                    if (window.innerWidth < 768) {
+                      setNavButtonsVisable(false);
+                    }
+                    openModal("notifications");
+                  }
+                }}
               />
               <NavButton
                 className="fas fa-gear"
-                onClick={() => openModal("settings")}
+                onClick={() => {
+                  if (modalType === "settings") {
+                    setModal(false);
+                    setNavButtonsVisable(false);
+                  } else {
+                    if (window.innerWidth < 768) {
+                      setNavButtonsVisable(false);
+                    }
+                    openModal("settings");
+                  }
+                }}
               />
             </div>
           )}
         </div>
         <div
-          className="absolute left-4 top-4 "
+          className="absolute left-4 top-4"
           onClick={() => setNavButtonsVisable(false)}
         >
           <SearchBar />

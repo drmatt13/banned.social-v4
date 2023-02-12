@@ -3,15 +3,21 @@ import { Dispatch, SetStateAction } from "react";
 // components
 import BigSubmitButton from "@/components/BigSubmitButton";
 
+// context
+import useModalContext from "@/context/modalContext";
+
 //types
 import type PostType from "@/types/post";
 
 interface Props {
   post: PostType;
   setPost: Dispatch<SetStateAction<PostType>>;
+  recipient: string;
 }
 
-const Post = ({ post, setPost }: Props) => {
+const Post = ({ post, setPost, recipient }: Props) => {
+  const { modal, setModal } = useModalContext();
+
   return (
     <>
       <div className="h-64 flex flex-col">
