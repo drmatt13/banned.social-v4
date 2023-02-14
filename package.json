@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@types/open-graph-scraper": "^4.8.2",
     "aws-sdk": "^2.1306.0",
     "axios": "^1.2.0",
     "bcrypt": "^5.1.0",
