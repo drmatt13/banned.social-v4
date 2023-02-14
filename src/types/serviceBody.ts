@@ -5,7 +5,7 @@ interface GetOg {
 
 // user_db
 interface AddUsername {
-  _id: string;
+  // _id: string;
   username: string;
 }
 

@@ -20,6 +20,7 @@ type Type<T> =
         error?:
           | typeof serviceError.UsernameAlreadyExists
           | typeof serviceError.FailedToCreateUser
+          | typeof serviceError.FailedToUpdateUser
           | UniversalTypeError;
       }
     : T extends "get user"

@@ -4,7 +4,7 @@ import { useCallback, useState, useRef, useEffect } from "react";
 import useGlobalContext from "@/context/globalContext";
 
 // libaries
-import { processService, serviceError } from "@/lib/processService";
+import processService from "@/lib/processService";
 import validateUsername from "@/lib/validateUsername";
 
 const OAuthSetUsername = () => {
@@ -31,18 +31,18 @@ const OAuthSetUsername = () => {
         if (success && user) {
           setUser(user);
         } else if (error) {
-          if (error === serviceError.UsernameAlreadyExists) {
-            setUsernameError(serviceError.UsernameAlreadyExists);
+          if (error === "Username already exists") {
+            setUsernameError("Username already exists");
             setUsernameRing(1);
-          } else if (error === serviceError.Unauthorized) {
-            throw new Error(serviceError.Unauthorized);
-          } else if (error === serviceError.FailedToUpdateUser) {
-            throw new Error(serviceError.FailedToUpdateUser);
+          } else if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Failed to update user") {
+            throw new Error("Failed to update user");
           } else {
-            throw new Error(error);
+            throw new Error("Server error");
           }
         } else {
-          throw new Error("processService error");
+          throw new Error("Server error");
         }
         setLoading(false);
       } catch (error) {
