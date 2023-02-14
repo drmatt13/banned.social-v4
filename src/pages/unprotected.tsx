@@ -7,11 +7,11 @@ const Unprotected = () => {
   const test = async () => {
     try {
       const data = await processService("update avatar", {
-        _id: "",
+        // _id: "",
         avatar: "",
       });
 
-      data.error === "";
+      // data.error === "";
     } catch (error) {}
   };
 
