@@ -8,8 +8,8 @@ import {
 } from "react";
 
 // components
-import Post from "@/components/modal components/Post";
-import MobilePost from "@/components/MobilePost";
+import PostDesktop from "@/components/modal components/PostDesktop";
+import PostMobile from "@/components/modal components/PostMobile";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -19,14 +19,15 @@ import { modalContext } from "@/context/modalContext";
 import ModalLayout from "@/layouts/ModalLayout";
 
 //types
-import type PostType from "@/types/post";
+import type Post from "@/types/post";
+import type User from "@/types/user";
 
 interface Props {
   modal: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
-  post: PostType;
-  setPost: Dispatch<SetStateAction<PostType>>;
-  recipient: string;
+  post: Post;
+  setPost: Dispatch<SetStateAction<Post>>;
+  recipient?: User;
 }
 
 const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
@@ -42,6 +43,7 @@ const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
   }, []);
 
   useEffect(() => {
+    adjustWidth();
     setInitialLoad(false);
     window.addEventListener("resize", adjustWidth);
     return () => {
@@ -59,12 +61,16 @@ const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
             !modal ? (
               <></>
             ) : (
-              <MobilePost post={post} setPost={setPost} recipient={recipient} />
+              <PostMobile post={post} setPost={setPost} recipient={recipient} />
             )
           ) : (
             <>
               <ModalLayout>
-                <Post post={post} setPost={setPost} recipient={recipient} />
+                <PostDesktop
+                  post={post}
+                  setPost={setPost}
+                  recipient={recipient}
+                />
               </ModalLayout>
             </>
           )}

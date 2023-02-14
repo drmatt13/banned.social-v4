@@ -11,12 +11,19 @@ import avatarList from "@/data/avatarList";
 import PostModal from "@/modals/PostModal";
 
 // types
-import type PostType from "@/types/post";
+import type User from "@/types/user";
+import type Post from "@/types/post";
 
-const PostButton = () => {
+interface Props {
+  recipient?: User;
+}
+
+const PostButton = ({ recipient }: Props) => {
   const { user } = useGlobalContext();
-  const [post, setPost] = useState<PostType>({
+  const [post, setPost] = useState<Post>({
     content: "",
+    recipient,
+    og: undefined,
   });
   const [modal, setModal] = useState(false);
 
@@ -34,7 +41,7 @@ const PostButton = () => {
         setModal={setModal}
         post={post}
         setPost={setPost}
-        recipient={user?._id!}
+        recipient={user}
       />
       <div className="w-full text-sm flex bg-light-secondary dark:bg-dark-secondary rounded-lg px-4 py-3 mb-5 border dark:border-dark-border shadow-sm dark:shadow-dark-border select-none">
         <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">

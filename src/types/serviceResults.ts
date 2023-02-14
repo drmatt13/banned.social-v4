@@ -1,4 +1,5 @@
 import type User from "@/types/user";
+import Og from "@/types/og";
 import { serviceError } from "@/lib/processService";
 
 type UniversalTypeError =
@@ -10,7 +11,7 @@ type Type<T> =
   // no_db
   T extends "get og"
     ? {
-        og?: any;
+        og?: Og;
         error?: typeof serviceError.FailedToFetchOg | UniversalTypeError;
       }
     : // user_db

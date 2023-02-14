@@ -4,17 +4,48 @@ type Service =
   // user_db
   | "add username"
   | "get user"
+  | "get users" //
   | "login"
   | "oauth"
   | "register"
-  | "update avatar";
-// post_db
-// friend_db
-// notification_db
-// comment_db
-// subcomment_db
-// like_db
-// share_db
-// message_db
+  | "update avatar"
+  // post_db
+  | "create post" //
+  | "delete post" //
+  | "get post" //
+  | "get posts" //
+  | "get user posts" //
+  | "update post" //
+  // friend_db
+  | "add friend" //
+  | "delete friend" //
+  | "get friends" //
+  | "get friend requests" //
+  // notification_db
+  | "get notifications" //
+  | "mark notifications as read" //
+  // comment_db
+  | "create comment" //
+  | "delete comment" //
+  | "get comments" //
+  | "update comment" //
+  // subcomment_db
+  | "create subcomment" //
+  | "delete subcomment" //
+  | "get subcomments" //
+  | "update subcomment" //
+  // like_db
+  | "create like" //
+  | "delete like" //
+  | "get likes" //
+  // share_db
+  | "create share" //
+  | "delete share" //
+  | "get shares" //
+  // message_db
+  | "create message" //
+  | "delete message" //
+  | "get user messages" //
+  | "get messages"; //
 
 export default Service;

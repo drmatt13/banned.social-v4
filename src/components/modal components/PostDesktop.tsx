@@ -7,15 +7,16 @@ import BigSubmitButton from "@/components/BigSubmitButton";
 import useModalContext from "@/context/modalContext";
 
 //types
-import type PostType from "@/types/post";
+import type Post from "@/types/post";
+import type User from "@/types/user";
 
 interface Props {
-  post: PostType;
-  setPost: Dispatch<SetStateAction<PostType>>;
-  recipient: string;
+  post: Post;
+  setPost: Dispatch<SetStateAction<Post>>;
+  recipient?: User;
 }
 
-const Post = ({ post, setPost, recipient }: Props) => {
+const PostDesktop = ({ post, setPost, recipient }: Props) => {
   const { modal, setModal } = useModalContext();
 
   return (
@@ -35,4 +36,4 @@ const Post = ({ post, setPost, recipient }: Props) => {
   );
 };
 
-export default Post;
+export default PostDesktop;
