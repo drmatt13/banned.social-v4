@@ -13,7 +13,7 @@ import avatarOrder from "@/data/avatarOrder";
 import avatarList from "@/data/avatarList";
 
 // libaries
-import { processService, serviceError } from "@/lib/processService";
+import processService from "@/lib/processService";
 
 const SelectAvatar = ({
   avatar,
@@ -30,6 +30,7 @@ const SelectAvatar = ({
   const { setModal } = useModalContext();
 
   const updateAvatar = useCallback(async () => {
+    if (!avatar) return;
     try {
       setLoading(true);
       const data = await processService("update avatar", {
@@ -40,12 +41,12 @@ const SelectAvatar = ({
         setUser(user);
         setModal(false);
       } else {
-        if (error === serviceError.Unauthorized) {
-          throw new Error(serviceError.Unauthorized);
-        } else if (error === serviceError.FailedToUpdateUser) {
-          throw new Error(serviceError.FailedToUpdateUser);
+        if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Failed to update user") {
+          throw new Error("Failed to update user");
         } else {
-          throw new Error(serviceError.ServerError);
+          throw new Error("Server error");
         }
       }
     } catch (error) {

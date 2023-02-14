@@ -1,29 +1,21 @@
-import Head from "next/head";
-import Link from "next/link";
+import { useEffect, useCallback } from "react";
 
-// context
-import useGlobalContext from "../context/globalContext";
+// libraries
+import processService from "@/lib/processService";
 
 const Unprotected = () => {
-  const { mobile } = useGlobalContext();
+  const test = async () => {
+    try {
+      const data = await processService("update avatar", {
+        _id: "",
+        avatar: "",
+      });
 
-  return (
-    <>
-      <Head>
-        <title>Unprotected Page | Social</title>
-      </Head>
-      <Link href="/">
-        <button className="p-4 m-3 border border-light-border dark:border-dark-border hover:bg-gray-100 dark:hover:bg-gray-200 bg-gray-200 dark:bg-white text-black">
-          home page
-        </button>
-      </Link>
-      <Link href="/protected">
-        <button className="p-4 border border-light-border dark:border-dark-border hover:bg-gray-100 dark:hover:bg-gray-200 bg-gray-200 dark:bg-white text-black">
-          protected
-        </button>
-      </Link>
-    </>
-  );
+      data.error === "";
+    } catch (error) {}
+  };
+
+  return <></>;
 };
 
 export default Unprotected;

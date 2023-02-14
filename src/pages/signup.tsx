@@ -11,7 +11,7 @@ import LoginLogo from "@/components/LoginLogo";
 import useGlobalContext from "@/context/globalContext";
 
 // libaries
-import { processService, serviceError } from "@/lib/processService";
+import processService from "@/lib/processService";
 import validateUsername from "@/lib/validateUsername";
 import validateEmail from "@/lib/validateEmail";
 
@@ -68,20 +68,20 @@ const Signup: NextPage = () => {
           Cookie.set("token", token, { expires: 1 });
           window.location.replace(`${window.location.origin}`);
         } else {
-          if (error === serviceError.UsernameAlreadyExists) {
-            setUsernameError(serviceError.UsernameAlreadyExists);
+          if (error === "Username already exists") {
+            setUsernameError("Username already exists");
             setUsernameRing(1);
-          } else if (error === serviceError.EmailAlreadyExists) {
-            setEmailError(serviceError.EmailAlreadyExists);
+          } else if (error === "Email already exists") {
+            setEmailError("Email already exists");
             setEmailRing(1);
-          } else if (error === serviceError.InvalidEmail) {
+          } else if (error === "Invalid email") {
             window.location.replace(`https://www.facebook.com`);
-          } else if (error === serviceError.Unauthorized) {
-            throw new Error(serviceError.Unauthorized);
-          } else if (error === serviceError.InvalidForm) {
-            throw new Error(serviceError.InvalidForm);
+          } else if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Invalid form") {
+            throw new Error("Invalid form");
           } else {
-            throw new Error(serviceError.ServerError);
+            throw new Error("Server error");
           }
         }
         setLoading(false);

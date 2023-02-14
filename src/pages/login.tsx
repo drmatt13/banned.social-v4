@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
 import Cookie from "js-cookie";
 import Head from "next/head";
+import Link from "next/link";
 
 // components
 import LoginLogo from "@/components/LoginLogo";
@@ -13,8 +14,7 @@ import LoginLogo from "@/components/LoginLogo";
 import useGlobalContext from "@/context/globalContext";
 
 // libaries
-import { processService, serviceError } from "@/lib/processService";
-import Link from "next/link";
+import processService from "@/lib/processService";
 
 const Login: NextPage = () => {
   const { darkMode, mobile } = useGlobalContext();
@@ -59,14 +59,15 @@ const Login: NextPage = () => {
             }${queryString}`
           );
         } else {
-          if (error === serviceError.Unauthorized) {
+          if (error === "Unauthorized") {
             alert("Unauthorized");
-          } else if (error === serviceError.InvalidCredentials) {
-            alert("invalid credentials");
+            logout();
+          } else if (error === "Invalid Credentials") {
+            alert("Invalid Credentials");
             setLoading(false);
             setError(true);
           } else {
-            throw new Error(serviceError.ServerError);
+            throw new Error("Server error");
           }
         }
       } catch (error) {

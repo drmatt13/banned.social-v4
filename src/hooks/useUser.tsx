@@ -20,7 +20,7 @@ const useUser = (user: User, setUser: (user: User) => void): boolean => {
       if (!Cookies.get("token")) return setLoading(false);
       // check if token cookie is valid and update current user
       try {
-        const res = await processService("get user");
+        const res = await processService("get user", undefined);
         if (res.user) {
           setUser(res.user);
           setLoading(false);

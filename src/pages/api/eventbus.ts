@@ -1,7 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type ServiceResults from "@/types/serviceResults";
-import type ServiceBody from "@/types/serviceBody";
-import type Service from "@/types/service";
 import { serviceError } from "@/lib/processService";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import chalk from "chalk";
@@ -9,20 +6,11 @@ import axios from "axios";
 
 const URL = process.env.BASE_URL + "/api/services";
 
-interface EventbusApiRequest extends NextApiRequest {
-  body: ServiceBody & { service: Service };
-  cookies: {
-    token?: string;
-    "next-auth.session-token"?: string;
-    "__Secure-next-auth.session-token"?: string;
-  };
-  data: ServiceResults;
-  method: "POST";
-}
-
 const eventbus = async (
-  req: EventbusApiRequest,
-  res: NextApiResponse<ServiceResults>
+  req: NextApiRequest & {
+    data: any;
+  },
+  res: NextApiResponse
 ) => {
   let verifiedToken: string | JwtPayload = "";
 
@@ -69,6 +57,9 @@ const eventbus = async (
       // *****************************
       // *******  NO DB  *************
       // *****************************
+      case "get og":
+        req = await axios.post(`${URL}/no_db/get_og`, body);
+        break;
 
       // *****************************
       // *******  USER DB  ***********

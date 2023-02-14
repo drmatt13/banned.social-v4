@@ -2,17 +2,25 @@
 import useGlobalContext from "@/context/globalContext";
 
 interface Props {
+  radius?:
+    | "rounded-sm"
+    | "rounded-md"
+    | "rounded-lg"
+    | "rounded-xl"
+    | "rounded-2xl"
+    | "rounded-full";
   value: string;
   onClick: (e: any) => any;
   disabled: boolean;
 }
 
-const BigSubmitButton = ({ value, onClick, disabled }: Props) => {
+const BigSubmitButton = ({ radius, value, onClick, disabled }: Props) => {
   const { user } = useGlobalContext();
 
   return (
     <button
-      className={`${
+      className={`
+      ${radius || "rounded-full"} ${
         disabled
           ? `${
               user?.avatar
@@ -20,7 +28,7 @@ const BigSubmitButton = ({ value, onClick, disabled }: Props) => {
                 : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"
             } border-light-border dark:border-dark-border cursor-not-allowed`
           : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
-      }  mx-2 mb-2 py-2 rounded-full select-none`}
+      }  mx-2 mb-2 py-2 select-none`}
       onClick={onClick}
       disabled={disabled}
     >

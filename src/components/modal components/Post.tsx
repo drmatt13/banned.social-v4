@@ -23,6 +23,7 @@ const Post = ({ post, setPost, recipient }: Props) => {
       <div className="h-64 flex flex-col">
         <div className="p-4">
           <input
+            className="outline-none"
             type="text"
             value={post.content}
             onChange={(e) => setPost({ ...post, content: e.target.value })}

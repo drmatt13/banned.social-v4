@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 // components
 import Messages from "@/components/modal components/Messages";
@@ -14,8 +14,9 @@ interface Props {
 }
 
 const MessagesModal = ({ modal, setModal }: Props) => {
+  const [loading, setLoading] = useState(false);
   return (
-    <modalContext.Provider value={{ modal, setModal }}>
+    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ModalLayout>
         <Messages />
       </ModalLayout>

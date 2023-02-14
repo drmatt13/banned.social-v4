@@ -12,7 +12,7 @@ import Loading from "@/components/Loading";
 import useGlobalContext from "../context/globalContext";
 
 // utils
-import { processService, serviceError } from "../lib/processService";
+import processService from "../lib/processService";
 
 const Login: NextPage = () => {
   const { data: session } = useSession();
@@ -53,12 +53,12 @@ const Login: NextPage = () => {
           //   `${path && "/" + path}${queryString ? "?" : ""}${queryString}`
           // );
         } else {
-          if (error === serviceError.Unauthorized) {
-            throw new Error(serviceError.Unauthorized);
-          } else if (error === serviceError.FailedToCreateUser) {
-            throw new Error(serviceError.FailedToCreateUser);
+          if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Failed to create user") {
+            throw new Error("Failed to create user");
           } else {
-            throw new Error(serviceError.ServerError);
+            throw new Error("Server error");
           }
         }
       } catch (error) {
@@ -66,7 +66,7 @@ const Login: NextPage = () => {
         logout();
       }
     },
-    [logout, router]
+    [logout]
   );
 
   useEffect(() => {

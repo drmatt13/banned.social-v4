@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 // components
 import UpdateAvatar from "@/components/modal components/UpdateAvatar";
@@ -15,8 +15,10 @@ interface Props {
 }
 
 const UpdateAvatarModal = ({ modal, setModal }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   return (
-    <modalContext.Provider value={{ modal, setModal }}>
+    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ModalLayout>
         <UpdateAvatar />
       </ModalLayout>

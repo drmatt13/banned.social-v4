@@ -6,15 +6,16 @@ import UploadImage from "@/components/modal components/UploadImage";
 
 // context
 import useGlobalContext from "@/context/globalContext";
+import useModalContext from "@/context/modalContext";
 
 const UpdateAvatar = () => {
   const { user } = useGlobalContext();
+  const { loading, setLoading } = useModalContext();
   const [tab, setTab] = useState<"select avatar" | "upload image">(
     "select avatar"
   );
   const [avatar, setAvatar] = useState(user?.avatar);
   const [image, setImage] = useState<File | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
 
   return (
     <div className="h-[350px] flex flex-col text-sm">

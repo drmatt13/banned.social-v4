@@ -3,10 +3,10 @@ import type ServiceBody from "@/types/serviceBody";
 import type ServiceResults from "@/types/serviceResults";
 import type Service from "@/types/service";
 
-export const processService = async (
-  service: Service,
-  body?: ServiceBody
-): Promise<ServiceResults> => {
+export async function processService<T extends Service>(
+  service: T,
+  body: ServiceBody<T>
+): Promise<ServiceResults<T>> {
   try {
     const res = await axios.post(
       `/api/eventbus`,
@@ -18,9 +18,9 @@ export const processService = async (
     );
     return res.data;
   } catch (error) {
-    return { error: serviceError.ServerError, success: false };
+    throw new Error("Server error");
   }
-};
+}
 
 export const serviceError = {
   EmailAlreadyExists: "Email already exists",
@@ -30,11 +30,12 @@ export const serviceError = {
   InvalidEmail: "Invalid email",
   FailedToCreateUser: "Failed to create user",
   FailedToUpdateUser: "Failed to update user",
-  FailedToCreateSession: "Failed to create session",
+  FailedToGetUser: "Failed to get user",
+  FailedToFetchOg: "Failed to fetch og",
   Unauthorized: "Unauthorized",
-  UserNotFound: "User not found",
   UsernameAlreadyExists: "Username already exists",
   ServerError: "Server Error",
+  UnknownError: "Unknown Error",
 } as const;
 
 export default processService;

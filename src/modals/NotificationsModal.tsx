@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 // components
 import Notifications from "@/components/modal components/Notifications";
@@ -14,8 +14,10 @@ interface Props {
 }
 
 const NotificationsModal = ({ modal, setModal }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   return (
-    <modalContext.Provider value={{ modal, setModal }}>
+    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ModalLayout>
         <Notifications />
       </ModalLayout>

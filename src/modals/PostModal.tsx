@@ -32,7 +32,8 @@ interface Props {
 const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
   const { mobile } = useGlobalContext();
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
   const [screenWidth, setScreenWidth] = useState(0);
   const deferredScreenWidth = useDeferredValue(screenWidth);
 
@@ -41,20 +42,20 @@ const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
   }, []);
 
   useEffect(() => {
-    setLoading(false);
+    setInitialLoad(false);
     window.addEventListener("resize", adjustWidth);
     return () => {
       window.removeEventListener("resize", adjustWidth);
     };
-  }, [adjustWidth, loading]);
+  }, [adjustWidth]);
 
   return (
-    <modalContext.Provider value={{ modal, setModal }}>
-      {loading ? (
+    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
+      {initialLoad ? (
         <></>
       ) : (
         <>
-          {mobile && deferredScreenWidth < 768 ? (
+          {mobile || deferredScreenWidth < 600 ? (
             !modal ? (
               <></>
             ) : (

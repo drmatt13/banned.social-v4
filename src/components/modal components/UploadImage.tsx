@@ -19,7 +19,7 @@ import useGlobalContext from "@/context/globalContext";
 import useModalContext from "@/context/modalContext";
 
 // libaries
-import { processService, serviceError } from "@/lib/processService";
+import processService from "@/lib/processService";
 
 const UploadImage = ({
   image,
@@ -96,12 +96,12 @@ const UploadImage = ({
           });
           setModal(false);
         } else {
-          if (error === serviceError.Unauthorized) {
-            throw new Error(serviceError.Unauthorized);
-          } else if (error === serviceError.FailedToUpdateUser) {
-            throw new Error(serviceError.FailedToUpdateUser);
+          if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Failed to update user") {
+            throw new Error("Failed to update user");
           } else {
-            throw new Error(serviceError.ServerError);
+            throw new Error("Server error");
           }
         }
       } catch (error) {

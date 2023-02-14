@@ -136,11 +136,11 @@ const Navbar = () => {
 
   useEffect(() => {
     const eventListener = () => {
-      if (navButtonsVisable) setNavButtonsVisable(false);
+      if (modal && window.innerWidth < 768) setNavButtonsVisable(false);
     };
     window.addEventListener("resize", eventListener);
     return () => window.removeEventListener("resize", eventListener);
-  }, [navButtonsVisable, setNavButtonsVisable]);
+  }, [modal, navButtonsVisable, setNavButtonsVisable]);
 
   return (
     <>
@@ -189,6 +189,7 @@ const Navbar = () => {
           <div
             onClick={(e) => {
               e.stopPropagation();
+              setModal(false);
               setNavButtonsVisable(!navButtonsVisable);
             }}
             ref={diamondRef}
@@ -342,11 +343,14 @@ const Navbar = () => {
             </div>
           )}
         </div>
-        <div
-          className="absolute left-4 top-4"
-          onClick={() => setNavButtonsVisable(false)}
-        >
+        <div className="absolute left-4 top-4">
           <SearchBar />
+          <div
+            onClick={() => setModal(false)}
+            className={`${
+              (!modal || (modal && !navButtonsVisable)) && "hidden"
+            } z-10 absolute left-0 top-0 w-full h-full rounded-full bg-black/[6%] dark:bg-black/[38%] pointer-events-auto`}
+          />
         </div>
       </nav>
       <MessagesModal

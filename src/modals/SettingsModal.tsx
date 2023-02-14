@@ -16,6 +16,7 @@ interface Props {
 }
 
 const SettingsModal = ({ modal, setModal }: Props) => {
+  const [loading, setLoading] = useState(false);
   const [settingsOptions, setSettingsOptions] = useState<
     "settings" | "update avatar"
   >("settings");
@@ -27,7 +28,7 @@ const SettingsModal = ({ modal, setModal }: Props) => {
   }, [modal, settingsOptions]);
 
   return (
-    <modalContext.Provider value={{ modal, setModal }}>
+    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ModalLayout>
         {settingsOptions === "settings" && (
           <Settings setSettingsOptions={setSettingsOptions} />
