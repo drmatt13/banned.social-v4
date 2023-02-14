@@ -1,6 +1,7 @@
 import { serviceError } from "@/lib/processService";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
+// @ts-ignore
 import ogs from "open-graph-scraper";
 
 // return username, profile_id, and profileAvatar
