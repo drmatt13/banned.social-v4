@@ -30,10 +30,12 @@ const SettingsModal = ({ modal, setModal }: Props) => {
   return (
     <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ModalLayout>
-        {settingsOptions === "settings" && (
-          <Settings setSettingsOptions={setSettingsOptions} />
-        )}
-        {settingsOptions === "update avatar" && <UpdateAvatar />}
+        <>
+          {settingsOptions === "settings" && (
+            <Settings setSettingsOptions={setSettingsOptions} />
+          )}
+          {settingsOptions === "update avatar" && <UpdateAvatar />}
+        </>
       </ModalLayout>
     </modalContext.Provider>
   );
