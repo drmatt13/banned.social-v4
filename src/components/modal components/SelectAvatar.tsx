@@ -40,6 +40,7 @@ const SelectAvatar = ({
       if (success && user) {
         setUser(user);
         setModal(false);
+        setLoading(false);
       } else {
         if (error === "Unauthorized") {
           throw new Error("Unauthorized");

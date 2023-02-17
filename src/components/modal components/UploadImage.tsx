@@ -75,16 +75,16 @@ const UploadImage = ({
       e.preventDefault();
       if (!image) return;
       setLoading(true);
-      const base64 = await resizeFile(image);
-      if (
-        typeof base64 !== "string" ||
-        !isBase64(base64, { mimeRequired: true })
-      ) {
-        alert("Error resizing image");
-        setLoading(false);
-        return;
-      }
       try {
+        const base64 = await resizeFile(image);
+        if (
+          typeof base64 !== "string" ||
+          !isBase64(base64, { mimeRequired: true })
+        ) {
+          alert("Error resizing image");
+          setLoading(false);
+          return;
+        }
         const data = await processService("update avatar", {
           avatar: base64,
         });
@@ -94,6 +94,7 @@ const UploadImage = ({
             ...user,
             avatar: user.avatar + "#" + new Date().getTime(),
           });
+          setLoading(false);
           setModal(false);
         } else {
           if (error === "Unauthorized") {

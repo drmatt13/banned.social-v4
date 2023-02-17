@@ -10,7 +10,7 @@ interface Props {
     | "rounded-2xl"
     | "rounded-full";
   value: string;
-  onClick: (e: any) => any;
+  onClick?: (e: any) => any;
   disabled: boolean;
 }
 

@@ -5,13 +5,15 @@ import type Service from "@/types/service";
 
 export async function processService<T extends Service>(
   service: T,
-  body: ServiceBody<T>
+  body: ServiceBody<T>,
+  controller?: AbortController
 ): Promise<ServiceResults<T>> {
   try {
     const res = await axios.post(
       `/api/eventbus`,
       {
         service,
+        signal: controller?.signal,
         ...body,
       },
       { withCredentials: true }

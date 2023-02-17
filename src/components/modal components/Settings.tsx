@@ -15,14 +15,17 @@ const Settings = ({ setSettingsOptions }: Props) => {
   return (
     <>
       <div className="h-64 p-4">
+        <button onClick={toggleDarkMode} className="p-2 bg-gray-400 m-2 border">
+          darkmode
+        </button>
         <button
           onClick={() => setSettingsOptions("update avatar")}
           className="p-2 bg-gray-400 m-2 border"
         >
-          change profile picture
+          edit profile picture
         </button>
-        <button onClick={toggleDarkMode} className="p-2 bg-gray-400 m-2 border">
-          darkmode
+        <button onClick={undefined} className="p-2 bg-gray-400 m-2 border">
+          edit username
         </button>
         <button onClick={logout} className="p-2 bg-gray-400 m-2 border">
           logout

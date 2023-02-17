@@ -1,10 +1,10 @@
-import { createContext, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
 
 export type ModalContext = {
   modal: boolean;
-  setModal: (modal: boolean) => void;
+  setModal: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: Dispatch<SetStateAction<boolean>>;
 };
 
 export const modalContext = createContext<ModalContext>({

@@ -6,10 +6,11 @@ import useGlobalContext from "@/context/globalContext";
 import useModalContext from "@/context/modalContext";
 
 interface Props {
-  children: React.ReactNode;
+  children: JSX.Element;
+  visable?: boolean;
 }
 
-const Modal = ({ children }: Props) => {
+const Modal = ({ children, visable = true }: Props) => {
   const { user, navButtonsVisable } = useGlobalContext();
   const { modal, setModal } = useModalContext();
 
@@ -37,6 +38,8 @@ const Modal = ({ children }: Props) => {
 
   return !modal ? (
     <></>
+  ) : !visable ? (
+    <>{children}</>
   ) : (
     createPortal(
       <>
@@ -59,7 +62,7 @@ const Modal = ({ children }: Props) => {
         <div
           className={`${
             user?.avatar
-              ? "bg-black/30 dark:bg-black/40"
+              ? "bg-black/20 dark:bg-black/40"
               : "bg-black/[15%] dark:bg-transparent"
           } ${
             !navButtonsVisable && "z-50"

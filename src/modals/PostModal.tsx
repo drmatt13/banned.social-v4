@@ -1,41 +1,36 @@
 import {
-  Dispatch,
-  SetStateAction,
   useState,
   useEffect,
   useCallback,
   useDeferredValue,
+  useRef,
 } from "react";
 
 // components
 import PostDesktop from "@/components/modal components/PostDesktop";
 import PostMobile from "@/components/modal components/PostMobile";
+import PostInput from "@/components/modal components/PostInput";
 
 // context
 import useGlobalContext from "@/context/globalContext";
-import { modalContext } from "@/context/modalContext";
+import useModalContext from "@/context/modalContext";
+import usePostContext from "@/context/postContext";
 
 // layout
 import ModalLayout from "@/layouts/ModalLayout";
 
-//types
-import type Post from "@/types/post";
-import type User from "@/types/user";
-
-interface Props {
-  modal: boolean;
-  setModal: Dispatch<SetStateAction<boolean>>;
-  post: Post;
-  setPost: Dispatch<SetStateAction<Post>>;
-  recipient?: User;
-}
-
-const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
+const PostModal = () => {
+  const { modal } = useModalContext();
+  const { setInitialLoad } = usePostContext();
   const { mobile } = useGlobalContext();
 
-  const [loading, setLoading] = useState(false);
-  const [initialLoad, setInitialLoad] = useState(true);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [caretPosition, setCaretPosition] = useState(0);
   const [screenWidth, setScreenWidth] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [postStyle, setPostStyle] = useState<"mobile" | "desktop">("desktop");
+
   const deferredScreenWidth = useDeferredValue(screenWidth);
 
   const adjustWidth = useCallback(() => {
@@ -44,39 +39,45 @@ const PostModal = ({ modal, setModal, post, setPost, recipient }: Props) => {
 
   useEffect(() => {
     adjustWidth();
-    setInitialLoad(false);
+    setLoading(false);
+    if (!modal) setInitialLoad(true);
     window.addEventListener("resize", adjustWidth);
     return () => {
       window.removeEventListener("resize", adjustWidth);
     };
-  }, [adjustWidth]);
+  }, [adjustWidth, modal, setInitialLoad]);
+
+  useEffect(() => {
+    if (!mobile && deferredScreenWidth >= 600) {
+      setPostStyle("desktop");
+    } else {
+      setPostStyle("mobile");
+    }
+  }, [deferredScreenWidth, mobile]);
 
   return (
-    <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
-      {initialLoad ? (
+    <>
+      {loading ? (
         <></>
       ) : (
-        <>
-          {mobile || deferredScreenWidth < 600 ? (
-            !modal ? (
-              <></>
-            ) : (
-              <PostMobile post={post} setPost={setPost} recipient={recipient} />
-            )
-          ) : (
-            <>
-              <ModalLayout>
-                <PostDesktop
-                  post={post}
-                  setPost={setPost}
-                  recipient={recipient}
-                />
-              </ModalLayout>
-            </>
-          )}
-        </>
+        modal && (
+          <>
+            <ModalLayout visable={postStyle !== "mobile"}>
+              <PostDesktop visable={postStyle !== "mobile"}>
+                <PostMobile visable={postStyle === "mobile"}>
+                  <PostInput
+                    textareaRef={textareaRef}
+                    caretPosition={caretPosition}
+                    setCaretPosition={setCaretPosition}
+                    postStyle={postStyle}
+                  />
+                </PostMobile>
+              </PostDesktop>
+            </ModalLayout>
+          </>
+        )
       )}
-    </modalContext.Provider>
+    </>
   );
 };
 
