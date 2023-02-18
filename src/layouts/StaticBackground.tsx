@@ -65,11 +65,11 @@ const StaticBackground = ({ children, showNavbar, user }: Props) => {
           minHeight: viewportHeight,
           background: darkMode
             ? mobile
-              ? "radial-gradient(at center center, rgba(51, 51, 51, 0.3) 0%, rgba(0, 0, 0, 0.9) 100%)"
-              : "radial-gradient(at center center, rgba(51, 51, 51, 0.50) 0%, rgba(0, 0, 0, 0.6) 100%)"
+              ? "radial-gradient(at center center, rgba(20, 20, 20, 0.4) 0%, rgba(0, 0, 0, .95) 100%)" // dark mobile
+              : "radial-gradient(at center center, rgba(51, 51, 51, 0.50) 0%, rgba(0, 0, 0, 0.6) 100%)" // dark desktop
             : mobile
-            ? "radial-gradient(at center center, rgba(29, 29, 29, 0.30) 0%, rgba(5, 5, 5, 0.5) 100%)"
-            : "radial-gradient(at center center, rgba(29, 29, 29, 0.75) 0%, rgba(5, 5, 5, 0.7) 100%)",
+            ? "radial-gradient(at center center, rgba(80, 80, 80, 0.60) 0%, rgba(5, 5, 5, 0.25) 100%)" // light mobile
+            : "radial-gradient(at center center, rgba(29, 29, 29, 0.75) 0%, rgba(5, 5, 5, 0.7) 100%)", // light desktop
         }}
       />
       <div className="z-10">{children}</div>
