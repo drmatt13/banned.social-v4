@@ -1,9 +1,8 @@
+import Og from "@/types/og";
+
 export default interface UrlCache {
   [url: string]: {
-    description: string;
-    image: string;
-    siteName: string;
-    title: string;
-    url: string;
+    og: Og;
+    inStack?: boolean;
   };
 }

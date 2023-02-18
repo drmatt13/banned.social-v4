@@ -79,7 +79,7 @@ const Modal = ({ children, visable = true }: Props) => {
                   user?.avatar
                     ? "bg-white/80 dark:bg-white/75 backdrop-blur"
                     : "bg-white/75 dark:bg-white/50"
-                } pointer-events-auto overflow-hidden relative border  border-gray-300 dark:border-gray-500 shadow-lg rounded-2xl w-[95%] max-w-[500px]`}
+                } pointer-events-auto overflow-hidden relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-2xl w-[95%] max-w-[500px] mb-5`}
                 onClick={(e) => e.stopPropagation()}
               >
                 {children}

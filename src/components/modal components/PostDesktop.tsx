@@ -22,9 +22,15 @@ const PostDesktop = ({ children, visable }: any) => {
   ) : (
     <>
       <div className="flex flex-col">
-        <div className="relative w-fill h-14 text-center">
-          <div className="py-2 border-b border-black/[15%] dark:border-black/20 font-bold text-lg">
-            Create post
+        <div className="relative w-fill text-center mt-2 mb-3 border-b border-black/[15%] dark:border-black/20 ">
+          <div className="font-bold text-lg pb-2">Create post</div>
+          <div
+            className="absolute top-0 right-2 flex justify-center items-center"
+            onClick={() => setModal(false)}
+          >
+            <div className="bg-white/90 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border shadow">
+              <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
+            </div>
           </div>
         </div>
         <div className="pb-1 px-3 flex">

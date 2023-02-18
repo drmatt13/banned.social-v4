@@ -43,6 +43,7 @@ const PostModal = () => {
     if (!modal) setInitialLoad(true);
     window.addEventListener("resize", adjustWidth);
     return () => {
+      setCaretPosition(0);
       window.removeEventListener("resize", adjustWidth);
     };
   }, [adjustWidth, modal, setInitialLoad]);

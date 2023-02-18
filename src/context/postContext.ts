@@ -1,9 +1,10 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 
 // types
-import Post from "@/types/post";
-import User from "@/types/user";
-import UrlCache from "@/types/UrlCache";
+import type Og from "@/types/og";
+import type Post from "@/types/post";
+import type User from "@/types/user";
+import type UrlCache from "@/types/UrlCache";
 
 export type PostContext = {
   post: Post;
@@ -13,13 +14,13 @@ export type PostContext = {
   setInitialLoad: Dispatch<SetStateAction<boolean>>;
   loadingOg: boolean;
   setLoadingOg: Dispatch<SetStateAction<boolean>>;
-  getOgData: () => Promise<void>;
-  urlCache: UrlCache;
-  setUrlCache: Dispatch<SetStateAction<UrlCache>>;
-  ogStack: Array<UrlCache>;
-  setOgStack: Dispatch<SetStateAction<Array<UrlCache>>>;
+  // urlCache: UrlCache;
+  // setUrlCache: Dispatch<SetStateAction<UrlCache>>;
+  ogStack: Array<Og>;
+  setOgStack: Dispatch<SetStateAction<Array<Og>>>;
   image: string | undefined;
   setImage: Dispatch<SetStateAction<string | undefined>>;
+  processUrl: (url: string) => void;
 };
 
 export const postContext = createContext<PostContext>({
@@ -30,13 +31,13 @@ export const postContext = createContext<PostContext>({
   setInitialLoad: () => {},
   loadingOg: false,
   setLoadingOg: () => {},
-  getOgData: () => Promise.resolve(),
-  urlCache: {},
-  setUrlCache: () => {},
+  // urlCache: {},
+  // setUrlCache: () => {},
   ogStack: [],
   setOgStack: () => {},
   image: undefined,
   setImage: () => {},
+  processUrl: () => {},
 });
 
 const usePostContext = () => useContext(postContext);
