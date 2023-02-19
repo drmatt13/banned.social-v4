@@ -42,7 +42,7 @@ const PostMobile = ({ children, visable }: any) => {
             <div className="p-2 border-b border-black/20 dark:border-white/25 flex">
               <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
                 <img
-                  className="h-10 w-10 hover:brightness-[98%]"
+                  className="h-10 w-10 hover:brightness-[98%] select-none"
                   src={
                     avatarList[user?.avatar!]
                       ? `data:image/jpg;base64, ${avatarList[user?.avatar!]}`

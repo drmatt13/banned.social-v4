@@ -28,13 +28,13 @@ const PostDesktop = ({ children, visable }: any) => {
             className="absolute top-0 right-2 flex justify-center items-center"
             onClick={() => setModal(false)}
           >
-            <div className="bg-white/90 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border shadow">
+            <div className="bg-neutral-300/90 dark:bg-neutral-200/90 hover:!bg-white h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border dark:border-black/[12.5%] shadow transition-colors ease-out">
               <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
             </div>
           </div>
         </div>
         <div className="pb-1 px-3 flex">
-          <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
+          <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer select-none">
             <Link href={`/${user?._id}`}>
               <img
                 className="h-10 w-10 hover:brightness-[98%]"

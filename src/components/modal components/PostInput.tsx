@@ -234,8 +234,8 @@ const PostInput = ({
           maxRows={postStyle === "mobile" ? 9 : 7}
           className={`${
             postStyle === "mobile"
-              ? "p-2 text-sm /dark:text-dark-secondary dark:caret-white"
-              : "py-2 px-3.5 d/ark:text-black-600 dark:caret-black "
+              ? "p-2 text-sm dark:caret-white"
+              : "py-2 px-3.5 dark:caret-black "
           } outline-none h-full resize-none bg-transparent decoration-none pointer-events-none`}
           style={{
             lineHeight: "1.45rem",
@@ -303,13 +303,13 @@ const PostInput = ({
               postStyle === "mobile"
                 ? "dark:bg-white/[15%] dark:border-black/40 shadow"
                 : "dark:bg-white/40 dark:border-black/[17.5%]"
-            } relative p-2 flex bg-white/50 border border-black/[17.5%] w-full h-full rounded`}
+            } relative p-2 flex bg-white/50 border border-black/[17.5%] w-full h-full rounded cursor-default hover:bg-gray-100 dark:hover:bg-white/50 select-none`}
           >
             <div
-              className=" bg-white absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow"
+              className=" bg-white/80 hover:bg-white absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto"
               onClick={() => setOgStack(removeLastIndex(ogStack))}
             >
-              <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center"></i>
+              <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center" />
             </div>
             {post.og.image && (
               <div className="w-14 h-9 bg-black/10 dark:bg-black/[15%] mr-2 border border-black/[12.5%] dark:border-black/[17.5%]">
