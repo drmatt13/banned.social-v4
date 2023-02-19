@@ -28,7 +28,7 @@ const PostDesktop = ({ children, visable }: any) => {
             className="absolute top-0 right-2 flex justify-center items-center"
             onClick={() => setModal(false)}
           >
-            <div className="bg-neutral-300/90 dark:bg-neutral-200/90 hover:!bg-white h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border dark:border-black/[12.5%] shadow transition-colors ease-out">
+            <div className="bg-neutral-300/90 dark:bg-neutral-100/80 hover:bg-red-400 dark:hover:bg-white h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border hover:border-none dark:border-black/[12.5%] shadow transition-colors ease-out">
               <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
             </div>
           </div>

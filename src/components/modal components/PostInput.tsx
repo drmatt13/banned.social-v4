@@ -306,7 +306,7 @@ const PostInput = ({
             } relative p-2 flex bg-white/50 border border-black/[17.5%] w-full h-full rounded cursor-default hover:bg-gray-100 dark:hover:bg-white/50 select-none`}
           >
             <div
-              className=" bg-white/80 hover:bg-white absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto"
+              className=" bg-white/80 hover:bg-red-400 dark:hover:bg-white absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out"
               onClick={() => setOgStack(removeLastIndex(ogStack))}
             >
               <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center" />
