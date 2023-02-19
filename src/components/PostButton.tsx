@@ -91,7 +91,8 @@ const PostButton = ({ recipient }: Props) => {
       if (ogStack.length === 0) {
         urlCacheRef.current[url]!.inStack = true;
         setOgStack([urlCacheRef.current[url]!.og]);
-        return setUrlsProcessing((u) => u - 1);
+        setLoadingOg(false);
+        return setUrlsProcessing(0);
       }
       let index = ogStack.length - 1;
       //check to see if an object with the same og data is already in the stack
@@ -147,6 +148,7 @@ const PostButton = ({ recipient }: Props) => {
       } catch (error) {
         setUrlsProcessing((u) => u - 1);
       }
+      setLoadingOg(false);
     },
     [adjustStack]
   );
@@ -154,6 +156,7 @@ const PostButton = ({ recipient }: Props) => {
   const processUrl = useCallback(
     (url: string) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      // setLoadingOg(true);
       timeoutRef.current = setTimeout(() => {
         getOgData(url);
       }, 750);

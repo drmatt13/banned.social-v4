@@ -13,8 +13,8 @@ import usePostContext from "@/context/postContext";
 import avatarList from "@/data/avatarList";
 
 const PostMobile = ({ children, visable }: any) => {
-  const {} = usePostContext();
-  const { setModal } = useModalContext();
+  const { post } = usePostContext();
+  const { setModal, loading } = useModalContext();
   const { user } = useGlobalContext();
 
   return !visable ? (
@@ -57,7 +57,7 @@ const PostMobile = ({ children, visable }: any) => {
             <BigSubmitButton
               radius="rounded-md"
               value="Post"
-              disabled={false}
+              disabled={(!post.content && !post.og) || loading}
               // onClick={getOgData}
             />
           </div>

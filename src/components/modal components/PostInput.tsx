@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useDeferredValue } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import DOMPurify from "dompurify";
@@ -53,6 +53,19 @@ const PostInput = ({
     processUrl,
   } = usePostContext();
 
+  const duplicateTextRef = useRef<HTMLDivElement>(null);
+  const fakeTextareaRef = useRef<HTMLTextAreaElement>(null);
+  // const linkText = useDeferredValue(post.content);
+
+  const adjustPWidth = useCallback(() => {
+    if (!textareaRef.current) return;
+    const textarea = textareaRef.current;
+    const p = duplicateTextRef.current;
+    if (!p) return;
+    const scrollbarWidth = textarea.offsetWidth - textarea.clientWidth;
+    p.style.width = `${textarea.offsetWidth - scrollbarWidth}px`;
+  }, [textareaRef]);
+
   const placeCursorAtEnd = useCallback(
     (textareaElement: HTMLTextAreaElement) => {
       if (!textareaElement) return;
@@ -101,7 +114,6 @@ const PostInput = ({
     (e: any) => {
       if (e.type === "paste") return;
       setCaretPosition(getCaretPosition() || 0);
-      console.log(getCurrentWord());
       if (validateUrl(getCurrentWord() || "")) {
         processUrl(getCurrentWord()!);
       }
@@ -109,18 +121,35 @@ const PostInput = ({
     [getCaretPosition, getCurrentWord, processUrl, setCaretPosition]
   );
 
-  const handlePaste = useCallback((e: any) => {}, []);
+  const handlePaste = useCallback(
+    (e: any) => {
+      const clipboardData = e.clipboardData;
+      const text = clipboardData.getData("text");
+      const words = text.split(/\s+/);
+      for (let i = words.length - 1; i >= 0; i--) {
+        if (validateUrl(words[i])) {
+          processUrl(words[i]);
+          return;
+        }
+      }
+    },
+    [processUrl]
+  );
 
   const windowResizeEvent = useCallback(() => {
     setCaretPosition(getCaretPosition() || 0);
-  }, [getCaretPosition, setCaretPosition]);
+    adjustPWidth();
+  }, [adjustPWidth, getCaretPosition, setCaretPosition]);
 
   useEffect(() => {
-    textareaRef.current?.addEventListener("input", handleInput);
-    textareaRef.current?.addEventListener("paste", handlePaste);
+    const textarea = textareaRef.current;
+    textarea?.addEventListener("input", handleInput);
+    textarea?.addEventListener("paste", handlePaste);
     window.addEventListener("resize", windowResizeEvent);
     return () => {
       window.removeEventListener("resize", windowResizeEvent);
+      textarea?.removeEventListener("input", handleInput);
+      textarea?.removeEventListener("paste", handlePaste);
     };
   }, [
     getCaretPosition,
@@ -140,6 +169,16 @@ const PostInput = ({
     if (!textareaRef.current) return;
     if (initialLoad) {
       placeCursorAtEnd(textareaRef.current!);
+      if (ogStack.length === 0) {
+        const words = post.content.split(/\s+/);
+        for (let i = words.length - 1; i >= 0; i--) {
+          if (validateUrl(words[i] || "")) {
+            setLoadingOg(true);
+            processUrl(words[i] || "");
+            break;
+          }
+        }
+      }
       setInitialLoad(false);
     } else {
       if (caretPosition !== 0) {
@@ -148,29 +187,82 @@ const PostInput = ({
         placeCursorAtEnd(textareaRef.current!);
       }
     }
+    adjustPWidth();
   }, [
+    adjustPWidth,
     caretPosition,
     initialLoad,
+    ogStack.length,
     placeCursorAtEnd,
+    post.content,
+    processUrl,
     setCaretPositionInTextArea,
     setInitialLoad,
+    setLoadingOg,
     textareaRef,
   ]);
 
+  const wrapUrlsInSpans = useCallback(
+    (text: string) => {
+      const urlRegex = /(https?:\/\/[^\s]+)/g;
+      const wrappedText = text.replace(
+        urlRegex,
+        `<span class="${
+          postStyle === "mobile"
+            ? "dark:text-purple-400 dark:bg-dark-secondary"
+            : "dark:text-blue-500"
+        } text-blue-500">$&</span>`
+      );
+      return wrappedText;
+    },
+    [postStyle]
+  );
+
+  useEffect(() => {
+    let text = post.content;
+    duplicateTextRef.current!.innerHTML = wrapUrlsInSpans(text);
+  }, [post.content, wrapUrlsInSpans]);
+
   return (
     <>
-      <div
-        className={`${
-          postStyle === "desktop" && "pt-2"
-        } relative mb-3 overflow-y-auto flex flex-col`}
-      >
+      <div className={`relative mb-3 flex flex-col overflow-hidden w-full`}>
+        {/* *********************************************************************************************** */}
+        <TextareaAutosize
+          ref={fakeTextareaRef}
+          value={post.content}
+          minRows={postStyle === "mobile" ? 6 : 5}
+          maxRows={postStyle === "mobile" ? 9 : 7}
+          className={`${
+            postStyle === "mobile"
+              ? "p-2 text-sm /dark:text-dark-secondary dark:caret-white"
+              : "py-2 px-3.5 d/ark:text-black-600 dark:caret-black "
+          } outline-none h-full resize-none bg-transparent decoration-none pointer-events-none`}
+          style={{
+            lineHeight: "1.45rem",
+          }}
+          tabIndex={-1}
+        />
+        <p
+          ref={duplicateTextRef}
+          className={`${
+            postStyle === "mobile" ? "p-2 text-sm" : "py-2 px-3.5"
+          } text-transparent h-full absolute left-0 whitespace-pre-wrap break-words pointer-events-none`}
+          style={{
+            lineHeight: "1.45rem",
+          }}
+          tabIndex={-1}
+        >
+          {post.content}
+        </p>
         <TextareaAutosize
           ref={textareaRef}
           minRows={postStyle === "mobile" ? 6 : 5}
           maxRows={postStyle === "mobile" ? 9 : 7}
           className={`${
-            postStyle === "mobile" ? "p-2 text-sm" : "pb-2 px-3.5"
-          } outline-none h-full resize-none bg-transparent decoration-none`}
+            postStyle === "mobile"
+              ? "p-2 text-sm dark:caret-white"
+              : "py-2 px-3.5 dark:caret-black "
+          } caret-black absolute top-0 w-full outline-none h-full resize-none bg-transparent decoration-none text-transparent`}
           style={{
             lineHeight: "1.45rem",
           }}
@@ -179,9 +271,15 @@ const PostInput = ({
               ...post,
               content: e.currentTarget.value,
             });
+            adjustPWidth();
+          }}
+          onScroll={(e) => {
+            duplicateTextRef.current!.style.transform = `translateY(-${e.currentTarget.scrollTop}px)`;
+            fakeTextareaRef.current!.scrollTop = e.currentTarget.scrollTop;
           }}
         />
-        <div className="absolute top-0 pointer-events-none whitespace-pre-wrap break-words">
+        {/* *********************************************************************************************** */}
+        <div className="absolute top-0 pointer-events-none">
           {!post.content && (
             <div
               className={`${
@@ -214,9 +312,9 @@ const PostInput = ({
               <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center"></i>
             </div>
             {post.og.image && (
-              <div className="w-14 h-9 bg-black/20 mr-2">
+              <div className="w-14 h-9 bg-black/10 dark:bg-black/[15%] mr-2 border border-black/[12.5%] dark:border-black/[17.5%]">
                 <img
-                  className="w-full h-full border border-gray-500 dark:border-white/[17.5%]"
+                  className="w-full h-full  object-cover"
                   src={post.og.image.url}
                   alt={post.og.title}
                 />
