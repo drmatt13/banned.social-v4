@@ -300,9 +300,9 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
                 : "hover:bg-red-400 dark:hover:bg-white"
             } ${
               postStyle === "desktop"
-                ? "dark:border border-black/25"
-                : " bg-white"
-            } bg-white/80 absolute h-5 w-5 -top-2 right-0.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out`}
+                ? "dark:border-neutral-400 dark:hover:border-black/40 border-black/25 bg-white dark:bg-neutral-100 right-0.5"
+                : "bg-white dark:bg-neutral-300 right-1"
+            } border border-neutral-500 hover:border-none dark:hover:border-solid absolute h-5 w-5 -top-2 rounded-full p-2 flex justify-center items-center cursor-pointer /border shadow pointer-events-auto transition-colors ease-out`}
             onClick={() => setOgStack(removeLastIndex(ogStack))}
           >
             <i className="fas fa-times text-xs text-gray-800 dark:text-black/90 w-5 h-5 flex justify-center items-center" />

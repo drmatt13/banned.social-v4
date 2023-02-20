@@ -33,7 +33,7 @@ const BigSubmitButton = ({
               user?.avatar
                 ? `${
                     customDarkDisabled
-                      ? "dark:bg-neutral-500/[45%] text-black/95"
+                      ? "dark:bg-neutral-500/[45%] text-black/[85%]"
                       : "dark:bg-neutral-500/30 text-black/80"
                   } bg-stone-500/20 `
                 : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"

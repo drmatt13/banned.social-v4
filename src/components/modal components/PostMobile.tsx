@@ -32,7 +32,7 @@ const PostMobile = ({ children }: Props) => {
                   mobile
                     ? "active:text-black dark:text-neutral-200 dark:active:text-white"
                     : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
-                } text-black/90 mx-3 transition-colors ease-out`}
+                } text-black/90 mx-2 transition-colors ease-out select-none`}
               >
                 <i
                   className="fa-solid fa-arrow-left cursor-pointer px-1"
@@ -45,7 +45,7 @@ const PostMobile = ({ children }: Props) => {
                   mobile
                     ? "active:text-black dark:text-neutral-200 dark:active:text-white"
                     : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
-                } text-black/90 mx-4 font-bold cursor-pointer transition-colors ease-out`}
+                } text-black/90 mx-3 font-bold cursor-pointer transition-colors ease-out select-none`}
                 onClick={() => {}}
               >
                 Post
