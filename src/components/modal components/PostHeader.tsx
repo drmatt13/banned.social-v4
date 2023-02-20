@@ -45,12 +45,12 @@ const PostHeader = () => {
               ? `${
                   postStyle === "desktop"
                     ? "active:border-black/40 dark:active:bg-white/20"
-                    : "active:border-black/[52.5%] dark:border-neutral-200/50 dark:active:border-neutral-200 dark:active:bg-black/25"
+                    : "active:border-black/[52.5%] dark:border-neutral-200/50 dark:active:border-neutral-200/80 dark:active:bg-black/25"
                 } active:bg-gray-800/5`
               : `${
                   postStyle === "desktop"
                     ? "hover:border-black/40 dark:hover:bg-white/20"
-                    : "hover:border-black/[52.5%] dark:border-neutral-200/50 dark:hover:border-neutral-200 dark:hover:bg-black/25"
+                    : "hover:border-black/[52.5%] dark:border-neutral-200/50 dark:hover:border-neutral-200/80 dark:hover:bg-black/25"
                 } hover:bg-gray-800/5`
           } w-10 h-10 flex justify-center items-center rounded border-2 border-dashed border-black/25 group cursor-pointer transition-colors ease-out`}
         >
@@ -60,12 +60,12 @@ const PostHeader = () => {
                 ? `${
                     postStyle === "desktop"
                       ? "group-active:text-sky-700 dark:group-active:text-black"
-                      : "group-active:text-blue-600 dark:text-neutral-200 dark:group-active:text-white"
+                      : "group-active:text-blue-600 dark:text-neutral-200/60 dark:group-active:text-white"
                   }`
                 : `${
                     postStyle === "desktop"
                       ? "group-hover:text-sky-700 dark:group-hover:text-black"
-                      : "group-hover:text-blue-600 dark:text-neutral-200 dark:group-hover:text-white"
+                      : "group-hover:text-blue-600 dark:text-neutral-200/60 dark:group-hover:text-white"
                   }`
             } fa-solid fa-image text-lg text-gray-800 transition-all ease-out`}
           />
