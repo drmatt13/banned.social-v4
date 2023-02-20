@@ -1,5 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState, useCallback, useRef, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useDeferredValue,
+} from "react";
 import Link from "next/link";
 import _ from "lodash";
 
@@ -55,7 +61,7 @@ function checkOgEquality(og1: Og, og2: Og): boolean {
 }
 
 const PostButton = ({ recipient }: Props) => {
-  const { user } = useGlobalContext();
+  const { user, mobile } = useGlobalContext();
   const [post, setPost] = useState<Post>({
     content: "",
     recipient,
@@ -67,11 +73,37 @@ const PostButton = ({ recipient }: Props) => {
   const [loadingOg, setLoadingOg] = useState(false);
   const [image, setImage] = useState<string | undefined>(undefined);
   const [urlsProcessing, setUrlsProcessing] = useState(0);
+  const [postStyle, setPostStyle] = useState<"mobile" | "desktop">("desktop");
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const urlCacheRef = useRef<UrlCache>({}); // not context
   const [ogStack, setOgStack] = useState<Array<Og>>([]); // will get added to context
+
+  const [screenWidth, setScreenWidth] = useState(0);
+  const deferredScreenWidth = useDeferredValue(screenWidth);
+
+  const adjustWidth = useCallback(() => {
+    setScreenWidth(window.innerWidth);
+  }, []);
+
+  useEffect(() => {
+    adjustWidth();
+    setLoading(false);
+    if (!modal) setInitialLoad(true);
+    window.addEventListener("resize", adjustWidth);
+    return () => {
+      window.removeEventListener("resize", adjustWidth);
+    };
+  }, [adjustWidth, modal, setInitialLoad]);
+
+  useEffect(() => {
+    if (!mobile && deferredScreenWidth >= 600) {
+      setPostStyle("desktop");
+    } else {
+      setPostStyle("mobile");
+    }
+  }, [deferredScreenWidth, mobile]);
 
   useEffect(() => {
     if (ogStack.length === 0) {
@@ -206,6 +238,7 @@ const PostButton = ({ recipient }: Props) => {
             image,
             setImage,
             processUrl,
+            postStyle,
           }}
         >
           <PostModal />

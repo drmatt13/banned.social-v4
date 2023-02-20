@@ -14,13 +14,12 @@ export type PostContext = {
   setInitialLoad: Dispatch<SetStateAction<boolean>>;
   loadingOg: boolean;
   setLoadingOg: Dispatch<SetStateAction<boolean>>;
-  // urlCache: UrlCache;
-  // setUrlCache: Dispatch<SetStateAction<UrlCache>>;
   ogStack: Array<Og>;
   setOgStack: Dispatch<SetStateAction<Array<Og>>>;
   image: string | undefined;
   setImage: Dispatch<SetStateAction<string | undefined>>;
   processUrl: (url: string) => void;
+  postStyle: "mobile" | "desktop";
 };
 
 export const postContext = createContext<PostContext>({
@@ -31,13 +30,12 @@ export const postContext = createContext<PostContext>({
   setInitialLoad: () => {},
   loadingOg: false,
   setLoadingOg: () => {},
-  // urlCache: {},
-  // setUrlCache: () => {},
   ogStack: [],
   setOgStack: () => {},
   image: undefined,
   setImage: () => {},
   processUrl: () => {},
+  postStyle: "mobile",
 });
 
 const usePostContext = () => useContext(postContext);

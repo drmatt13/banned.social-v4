@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useState, useEffect, useRef } from "react";
 
-interface IProps {
+interface Props {
   postid?: number;
   userid?: number;
   recipientId?: number;
@@ -10,7 +10,7 @@ interface IProps {
   body?: string;
 }
 
-const Post = ({ userid, recipientId, body }: IProps) => {
+const Post = ({ userid, recipientId, body }: Props) => {
   const postImgRef = useRef<HTMLImageElement>(null);
 
   const [profileImg, setProfileImg] = useState(

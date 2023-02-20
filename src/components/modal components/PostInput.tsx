@@ -27,16 +27,10 @@ interface Props {
   caretPosition: number;
   setCaretPosition: React.Dispatch<React.SetStateAction<number>>;
   textareaRef: React.RefObject<HTMLTextAreaElement>;
-  postStyle: "mobile" | "desktop";
 }
 
-const PostInput = ({
-  textareaRef,
-  caretPosition,
-  setCaretPosition,
-  postStyle,
-}: Props) => {
-  const { user } = useGlobalContext();
+const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
+  const { user, mobile } = useGlobalContext();
   const { loading, setLoading } = useModalContext();
   const {
     initialLoad,
@@ -51,6 +45,7 @@ const PostInput = ({
     setOgStack,
     setImage,
     processUrl,
+    postStyle,
   } = usePostContext();
 
   const duplicateTextRef = useRef<HTMLDivElement>(null);
@@ -230,8 +225,8 @@ const PostInput = ({
         <TextareaAutosize
           ref={fakeTextareaRef}
           value={post.content}
-          minRows={postStyle === "mobile" ? 6 : 5}
-          maxRows={postStyle === "mobile" ? 9 : 7}
+          minRows={5}
+          maxRows={postStyle === "mobile" ? 8 : 7}
           className={`${
             postStyle === "mobile"
               ? "p-2 text-sm dark:caret-white"
@@ -256,8 +251,8 @@ const PostInput = ({
         </p>
         <TextareaAutosize
           ref={textareaRef}
-          minRows={postStyle === "mobile" ? 6 : 5}
-          maxRows={postStyle === "mobile" ? 9 : 7}
+          minRows={5}
+          maxRows={postStyle === "mobile" ? 8 : 7}
           className={`${
             postStyle === "mobile"
               ? "p-2 text-sm dark:caret-white"
@@ -306,7 +301,11 @@ const PostInput = ({
             } relative p-2 flex bg-white/50 border border-black/[17.5%] w-full h-full rounded cursor-default hover:bg-gray-100 dark:hover:bg-white/50 select-none`}
           >
             <div
-              className=" bg-white/80 hover:bg-red-400 dark:hover:bg-white absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out"
+              className={`${
+                mobile
+                  ? "active:bg-red-400 dark:active:bg-white"
+                  : "hover:bg-red-400 dark:hover:bg-white"
+              } bg-white/80 absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out`}
               onClick={() => setOgStack(removeLastIndex(ogStack))}
             >
               <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center" />
