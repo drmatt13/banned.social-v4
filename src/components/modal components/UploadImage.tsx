@@ -1,15 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  useState,
-  useCallback,
-  useEffect,
-  useRef,
-  DetailedHTMLProps,
-  ImgHTMLAttributes,
-} from "react";
-
-import Resizer from "react-image-file-resizer";
-import isBase64 from "is-base64";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 // components
 import BigSubmitButton from "@/components/BigSubmitButton";
@@ -23,13 +13,19 @@ import processService from "@/lib/processService";
 
 const UploadImage = ({
   image,
-  setImage,
+  loadImage,
+  loadingImage,
+  removeImage,
+  errorLoadingImage,
   loading,
   setLoading,
 }: {
-  image: File | undefined;
-  setImage: (image: File | undefined) => void;
+  image: string;
+  loadImage: (e: unknown) => void;
   loading: boolean;
+  loadingImage: boolean;
+  removeImage: () => void;
+  errorLoadingImage: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
   const { setUser, logout } = useGlobalContext();
@@ -37,141 +33,45 @@ const UploadImage = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
-  const [preview, setPreview] = useState<string | undefined>(undefined);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const assessFile = useCallback(
-    (file: File | undefined | null) => {
-      if (file?.type === "image/png" || file?.type === "image/jpeg") {
-        setImage(file);
-      }
-    },
-    [setImage]
-  );
-
-  const resizeFile = useCallback(
-    (file: File) =>
-      new Promise<string | Blob | File | ProgressEvent<FileReader>>(
-        (resolve) => {
-          Resizer.imageFileResizer(
-            file,
-            960,
-            960,
-            "JPEG",
-            80,
-            0,
-            (uri) => {
-              resolve(uri);
-            },
-            "base64"
-          );
-        }
-      ),
-    []
-  );
-
-  const uploadImage = useCallback(
-    async (e: any) => {
-      e.preventDefault();
-      if (!image) return;
-      setLoading(true);
-      try {
-        const base64 = await resizeFile(image);
-        if (
-          typeof base64 !== "string" ||
-          !isBase64(base64, { mimeRequired: true })
-        ) {
-          alert("Error resizing image");
-          setLoading(false);
-          return;
-        }
-        const data = await processService("update avatar", {
-          avatar: base64,
+  const uploadImage = useCallback(async () => {
+    if (!image) return;
+    setLoading(true);
+    try {
+      const data = await processService("update avatar", {
+        avatar: image,
+      });
+      const { user, success, error } = data;
+      if (success && user) {
+        setUser({
+          ...user,
+          avatar: user.avatar,
         });
-        const { user, success, error } = data;
-        if (success && user) {
-          setUser({
-            ...user,
-            avatar: user.avatar + "#" + new Date().getTime(),
-          });
-          setLoading(false);
-          setModal(false);
+        setLoading(false);
+        setModal(false);
+      } else {
+        if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Failed to update user") {
+          throw new Error("Failed to update user");
         } else {
-          if (error === "Unauthorized") {
-            throw new Error("Unauthorized");
-          } else if (error === "Failed to update user") {
-            throw new Error("Failed to update user");
-          } else {
-            throw new Error("Server error");
-          }
+          throw new Error("Server error");
         }
-      } catch (error) {
-        alert("Server error");
-        logout();
       }
-    },
-    [image, logout, resizeFile, setLoading, setModal, setUser]
-  );
-
-  const processImage = useCallback(
-    (image: File) => {
-      const reader = new FileReader();
-      reader.onloadend = (e: any) => {
-        setPreview(e.target.result);
-      };
-      reader.onerror = (e) => {
-        setPreview(undefined);
-        setImage(undefined);
-        alert("Error loading image");
-      };
-      reader.readAsDataURL(image);
-    },
-    [setImage]
-  );
+    } catch (error) {
+      alert("Upload error, please try again or a different image :(");
+      setLoading(false);
+    }
+  }, [image, setLoading, setModal, setUser]);
 
   useEffect(() => {
-    if (image) {
-      processImage(image);
-    } else {
-      setPreview(undefined);
-    }
-    if (inputRef.current) {
-      inputRef.current.value = "";
-    }
-  }, [image, processImage]);
-
-  useEffect(() => {
-    if (!dropRef.current || !inputRef.current) return;
-    const dropContainer = dropRef.current;
     const input = inputRef.current;
-    const dropContainerCallback = (e: DragEvent) => {
-      if (loading) return;
-      assessFile(e.dataTransfer?.files[0]);
-    };
-    const inputCallback = () => {
-      if (loading) return;
-      assessFile(input.files && input.files[0]);
-    };
-    const preventDefault = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    dropContainer.addEventListener("dragenter", preventDefault, false);
-    dropContainer.addEventListener("dragleave", preventDefault, false);
-    dropContainer.addEventListener("dragover", preventDefault, false);
-    dropContainer.addEventListener("drop", preventDefault, false);
-    dropContainer.addEventListener("drop", dropContainerCallback, false);
-    input.onchange = inputCallback;
+    input?.addEventListener("change", loadImage);
     return () => {
-      if (!dropContainer || !input) return;
-      dropContainer.removeEventListener("dragenter", preventDefault, false);
-      dropContainer.removeEventListener("dragleave", preventDefault, false);
-      dropContainer.removeEventListener("dragover", preventDefault, false);
-      dropContainer.removeEventListener("drop", preventDefault, false);
-      dropContainer.removeEventListener("drop", dropContainerCallback, false);
-      input.onchange = null;
+      input?.removeEventListener("change", loadImage);
     };
-  }, [assessFile, loading]);
+  }, [loadImage]);
 
   useEffect(() => {
     if (initialLoad) {
@@ -179,44 +79,72 @@ const UploadImage = ({
     }
   }, [initialLoad]);
 
+  useEffect(() => {
+    if (image) inputRef.current?.value && (inputRef.current.value = "");
+  }, [image]);
+
   return (
     <div className="h-full flex flex-col">
       <div className={`flex-1 flex flex-col justify-center`}>
         <div
           className={`${
-            !preview && "px-8 flex-col items-center justify-evenly flex-1"
+            !image && "px-8 flex-col items-center justify-evenly flex-1"
           } ${initialLoad && "hidden"} flex my-8`}
         >
           <div
             ref={dropRef}
+            onDrag={
+              !loadingImage
+                ? (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                : undefined
+            }
+            onDragOver={
+              !loadingImage
+                ? (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                : undefined
+            }
+            onDragLeave={
+              !loadingImage
+                ? (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }
+                : undefined
+            }
+            onDrop={
+              !loadingImage
+                ? (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    loadImage(e);
+                  }
+                : undefined
+            }
             className={`${
-              preview
+              image
                 ? "flex-1 items-end"
                 : "justify-evenly items-center border-dashed border-2 aspect-video bg-gray-200 dark:bg-white/30 cursor-pointer"
             } flex flex-col max-w-full h-full border-blue-400 dark:border-blue-600 rounded-lg`}
-            onTouchEnd={() => !preview && inputRef.current?.click()}
-            onClick={() => !preview && inputRef.current?.click()}
+            onTouchEnd={() => !image && inputRef.current?.click()}
+            onClick={() => !image && inputRef.current?.click()}
           >
-            {preview ? (
+            {image ? (
               <div
                 className={`${
                   loading && "grayscale-[.75] cursor-not-allowed"
                 } bg-blue-500 dark:bg-blue-600 p-1 rounded-lg mx-2 aspect-square`}
               >
                 <img
-                  src={
-                    preview as unknown as DetailedHTMLProps<
-                      ImgHTMLAttributes<HTMLImageElement>,
-                      HTMLImageElement
-                    >["src"]
-                  }
+                  src={image}
                   alt="preview"
                   className={`aspect-square w-48 object-cover object-center rounded-md bg-white select-none`}
-                  onError={() => {
-                    setPreview(undefined);
-                    setImage(undefined);
-                    alert("Error loading image");
-                  }}
+                  onError={removeImage}
                 />
               </div>
             ) : (
@@ -231,19 +159,19 @@ const UploadImage = ({
           <div className="flex-1 flex justify-center">
             <div
               className={`${
-                preview
+                image
                   ? "flex flex-col flex-1 mx-2 relative"
                   : "w-48 xs:w-64 mt-4 flex items-center justify-end"
               }`}
             >
-              <div className={`${preview && "w-full absolute bottom-0"}`}>
+              <div className={`${image && "w-full absolute bottom-0"}`}>
                 <button
                   className={`${
                     loading || false
                       ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
                       : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer"
                   } ${
-                    preview ? "rounded-full flex-1" : "rounded-lg translate-x-1"
+                    image ? "rounded-full flex-1" : "rounded-lg translate-x-1"
                   } px-4 py-2 text-center select-none w-full text-xs xs:text-sm truncate`}
                   onClick={() => inputRef.current?.click()}
                   disabled={loading}
@@ -256,9 +184,9 @@ const UploadImage = ({
                       ? "border-light-border dark:border-dark-border bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300 cursor-not-allowed"
                       : "bg-red-700/90 dark:bg-red-700/80 text-white hover:bg-red-600/90 dark:hover:bg-red-600/80 cursor-pointer"
                   } ${
-                    preview ? "rounded-full flex-1" : " hidden"
+                    image ? "rounded-full flex-1" : " hidden"
                   } px-4 py-2 text-center mt-2 select-none w-full text-xs xs:text-sm truncate`}
-                  onClick={() => setImage(undefined)}
+                  onClick={removeImage}
                   disabled={loading}
                 >
                   Remove Image

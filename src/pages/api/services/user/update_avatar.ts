@@ -50,6 +50,7 @@ export default connectDB(
         throw new Error(serviceError.FailedToUpdateUser);
       }
     } catch (error) {
+      console.log(error);
       res.json({ error: (error as any).message, success: false });
     }
   }

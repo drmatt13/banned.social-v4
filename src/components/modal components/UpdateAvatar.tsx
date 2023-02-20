@@ -8,6 +8,9 @@ import UploadImage from "@/components/modal components/UploadImage";
 import useGlobalContext from "@/context/globalContext";
 import useModalContext from "@/context/modalContext";
 
+// hooks
+import useImage from "@/hooks/useImage";
+
 const UpdateAvatar = () => {
   const { user } = useGlobalContext();
   const { loading, setLoading } = useModalContext();
@@ -15,7 +18,8 @@ const UpdateAvatar = () => {
     "select avatar"
   );
   const [avatar, setAvatar] = useState(user?.avatar);
-  const [image, setImage] = useState<File | undefined>(undefined);
+  const { image, loadImage, loadingImage, removeImage, errorLoadingImage } =
+    useImage();
 
   return (
     <div className="h-[350px] flex flex-col text-sm">
@@ -63,7 +67,10 @@ const UpdateAvatar = () => {
         {tab === "upload image" && (
           <UploadImage
             image={image}
-            setImage={setImage}
+            loadImage={loadImage}
+            loadingImage={loadingImage}
+            removeImage={removeImage}
+            errorLoadingImage={errorLoadingImage}
             loading={loading}
             setLoading={setLoading}
           />
