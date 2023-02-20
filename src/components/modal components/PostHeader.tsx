@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 // context
-import useModalContext from "@/context/modalContext";
+// import useModalContext from "@/context/modalContext";
 import usePostContext from "@/context/postContext";
 import useGlobalContext from "@/context/globalContext";
 
@@ -10,9 +10,9 @@ import useGlobalContext from "@/context/globalContext";
 import avatarList from "@/data/avatarList";
 
 const PostHeader = () => {
-  const { post, postStyle } = usePostContext();
-  const { setModal } = useModalContext();
   const { user, mobile } = useGlobalContext();
+  // const { setModal } = useModalContext();
+  const { post, postStyle, imageInputRef } = usePostContext();
 
   return (
     <>
@@ -40,6 +40,9 @@ const PostHeader = () => {
           <div>{user?.username}</div>
         </div>
         <div
+          onClick={() => {
+            imageInputRef.current?.click();
+          }}
           className={`${
             mobile
               ? `${

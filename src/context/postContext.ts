@@ -1,10 +1,15 @@
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
+import {
+  createContext,
+  Dispatch,
+  RefObject,
+  SetStateAction,
+  useContext,
+} from "react";
 
 // types
 import type Og from "@/types/og";
 import type Post from "@/types/post";
 import type User from "@/types/user";
-import type UrlCache from "@/types/UrlCache";
 
 export type PostContext = {
   post: Post;
@@ -16,10 +21,15 @@ export type PostContext = {
   setLoadingOg: Dispatch<SetStateAction<boolean>>;
   ogStack: Array<Og>;
   setOgStack: Dispatch<SetStateAction<Array<Og>>>;
-  image: string | undefined;
-  setImage: Dispatch<SetStateAction<string | undefined>>;
   processUrl: (url: string) => void;
   postStyle: "mobile" | "desktop";
+  image: string;
+  loadImage: (e: unknown) => void;
+  loadingImage: boolean;
+  errorLoadingImage: boolean;
+  setErrorLoadingImage: Dispatch<SetStateAction<boolean>>;
+  removeImage: () => void;
+  imageInputRef: RefObject<HTMLInputElement>;
 };
 
 export const postContext = createContext<PostContext>({
@@ -32,10 +42,15 @@ export const postContext = createContext<PostContext>({
   setLoadingOg: () => {},
   ogStack: [],
   setOgStack: () => {},
-  image: undefined,
-  setImage: () => {},
   processUrl: () => {},
   postStyle: "mobile",
+  image: "",
+  loadImage: () => {},
+  loadingImage: false,
+  errorLoadingImage: false,
+  setErrorLoadingImage: () => {},
+  removeImage: () => {},
+  imageInputRef: { current: null },
 });
 
 const usePostContext = () => useContext(postContext);

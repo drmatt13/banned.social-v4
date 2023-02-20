@@ -17,6 +17,9 @@ import { postContext } from "@/context/postContext";
 // data
 import avatarList from "@/data/avatarList";
 
+// hooks
+import useImage from "@/hooks/useImage";
+
 // modal
 import PostModal from "@/modals/PostModal";
 
@@ -62,6 +65,15 @@ function checkOgEquality(og1: Og, og2: Og): boolean {
 
 const PostButton = ({ recipient }: Props) => {
   const { user, mobile } = useGlobalContext();
+  const {
+    image,
+    loadImage,
+    loadingImage,
+    errorLoadingImage,
+    removeImage,
+    setErrorLoadingImage,
+  } = useImage();
+
   const [post, setPost] = useState<Post>({
     content: "",
     recipient,
@@ -71,47 +83,20 @@ const PostButton = ({ recipient }: Props) => {
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [loadingOg, setLoadingOg] = useState(false);
-  const [image, setImage] = useState<string | undefined>(undefined);
   const [urlsProcessing, setUrlsProcessing] = useState(0);
   const [postStyle, setPostStyle] = useState<"mobile" | "desktop">("desktop");
+  const [ogStack, setOgStack] = useState<Array<Og>>([]);
+  const [screenWidth, setScreenWidth] = useState(0);
+
+  const deferredScreenWidth = useDeferredValue(screenWidth);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const urlCacheRef = useRef<UrlCache>({}); // not context
-  const [ogStack, setOgStack] = useState<Array<Og>>([]); // will get added to context
-
-  const [screenWidth, setScreenWidth] = useState(0);
-  const deferredScreenWidth = useDeferredValue(screenWidth);
+  const urlCacheRef = useRef<UrlCache>({});
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   const adjustWidth = useCallback(() => {
     setScreenWidth(window.innerWidth);
   }, []);
-
-  useEffect(() => {
-    adjustWidth();
-    setLoading(false);
-    if (!modal) setInitialLoad(true);
-    window.addEventListener("resize", adjustWidth);
-    return () => {
-      window.removeEventListener("resize", adjustWidth);
-    };
-  }, [adjustWidth, modal, setInitialLoad]);
-
-  useEffect(() => {
-    if (!mobile && deferredScreenWidth >= 600) {
-      setPostStyle("desktop");
-    } else {
-      setPostStyle("mobile");
-    }
-  }, [deferredScreenWidth, mobile]);
-
-  useEffect(() => {
-    if (ogStack.length === 0) {
-      setPost((p) => ({ ...p, og: undefined }));
-    } else {
-      setPost((p) => ({ ...p, og: ogStack[ogStack.length - 1] }));
-    }
-  }, [ogStack]);
 
   const adjustStack = useCallback(
     (url: string) => {
@@ -188,13 +173,51 @@ const PostButton = ({ recipient }: Props) => {
   const processUrl = useCallback(
     (url: string) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      // setLoadingOg(true);
       timeoutRef.current = setTimeout(() => {
         getOgData(url);
       }, 750);
     },
     [getOgData]
   );
+
+  useEffect(() => {
+    adjustWidth();
+    setLoading(false);
+    if (!modal) setInitialLoad(true);
+    window.addEventListener("resize", adjustWidth);
+    return () => {
+      window.removeEventListener("resize", adjustWidth);
+    };
+  }, [adjustWidth, modal, setInitialLoad]);
+
+  useEffect(() => {
+    if (!mobile && deferredScreenWidth >= 600) {
+      setPostStyle("desktop");
+    } else {
+      setPostStyle("mobile");
+    }
+  }, [deferredScreenWidth, mobile]);
+
+  useEffect(() => {
+    if (ogStack.length === 0) {
+      setPost((p) => ({ ...p, og: undefined }));
+    } else {
+      setPost((p) => ({ ...p, og: ogStack[ogStack.length - 1] }));
+    }
+  }, [ogStack]);
+
+  useEffect(() => {
+    const input = imageInputRef.current;
+    input?.addEventListener("change", loadImage);
+    return () => {
+      input?.removeEventListener("change", loadImage);
+    };
+  }, [loadImage]);
+
+  useEffect(() => {
+    if (image)
+      imageInputRef.current?.value && (imageInputRef.current.value = "");
+  }, [image]);
 
   useEffect(() => {
     if (urlsProcessing > 0) {
@@ -235,10 +258,15 @@ const PostButton = ({ recipient }: Props) => {
             setLoadingOg,
             ogStack,
             setOgStack,
-            image,
-            setImage,
             processUrl,
             postStyle,
+            image,
+            loadImage,
+            loadingImage,
+            errorLoadingImage,
+            removeImage,
+            setErrorLoadingImage,
+            imageInputRef,
           }}
         >
           <PostModal />
@@ -274,6 +302,12 @@ const PostButton = ({ recipient }: Props) => {
           </div>
         </div>
       </div>
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/png, image/jpeg"
+        className="hidden"
+      />
     </>
   );
 };

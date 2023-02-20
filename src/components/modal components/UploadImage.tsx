@@ -74,14 +74,14 @@ const UploadImage = ({
   }, [loadImage]);
 
   useEffect(() => {
+    if (image) inputRef.current?.value && (inputRef.current.value = "");
+  }, [image]);
+
+  useEffect(() => {
     if (initialLoad) {
       setInitialLoad(false);
     }
   }, [initialLoad]);
-
-  useEffect(() => {
-    if (image) inputRef.current?.value && (inputRef.current.value = "");
-  }, [image]);
 
   return (
     <div className="h-full flex flex-col">

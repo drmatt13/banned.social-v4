@@ -43,7 +43,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     image,
     ogStack,
     setOgStack,
-    setImage,
+    removeImage,
     processUrl,
     postStyle,
   } = usePostContext();
@@ -292,7 +292,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
         </div>
       )}
       {ogStack.length !== 0 && (post.og?.title || post.og?.description) && (
-        <div className="relative px-2 mb-3 h-20">
+        <div className="relative px-2 mb-3 h-20 select-none">
           <div
             className={`${
               mobile
@@ -302,7 +302,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
               postStyle === "desktop"
                 ? "dark:border-neutral-400 dark:hover:border-black/40 border-black/25 bg-white dark:bg-neutral-100 right-0.5"
                 : "bg-white dark:bg-neutral-300 right-1"
-            } border border-neutral-500 hover:border-none dark:hover:border-solid absolute h-5 w-5 -top-2 rounded-full p-2 flex justify-center items-center cursor-pointer /border shadow pointer-events-auto transition-colors ease-out`}
+            } border border-neutral-400 hover:border-none dark:hover:border-solid absolute h-5 w-5 -top-2 rounded-full p-2 flex justify-center items-center cursor-pointer pointer-events-auto transition-colors ease-out`}
             onClick={() => setOgStack(removeLastIndex(ogStack))}
           >
             <i className="fas fa-times text-xs text-gray-800 dark:text-black/90 w-5 h-5 flex justify-center items-center" />
@@ -322,19 +322,29 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
                   } bg-gray-300/80 dark:bg-white/40 dark:border-black/[17.5%]`
             } p-2 flex border border-black/[17.5%] w-full h-full rounded cursor-default select-none transition-colors ease-out`}
           >
-            {post.og.image && (
-              <div className="w-14 h-9 bg-black/10 dark:bg-black/[15%] mr-2 border border-black/[12.5%] dark:border-black/[17.5%]">
-                <img
-                  className="w-full h-full  object-cover"
-                  src={post.og.image.url}
-                  alt={post.og.title}
-                />
-              </div>
+            {post.og.image?.url && (
+              <img
+                className="mr-2.5 shadow h-9 aspect-video object-cover rounded-sm"
+                src={post.og.image.url}
+                alt={post.og.title || post.og.title || "og image"}
+              />
             )}
-            <div className="flex flex-col flex-1 text-xs justify-start overflow-hidden">
-              <div className="flex-1">{post.og.title}</div>
-              <div className="flex-[2]">{post.og.description}</div>
-              <div className="flex-1">{post.og.url}</div>
+            <div
+              className="flex flex-col flex-1 justify-start overflow-hidden"
+              style={{
+                fontSize: "0.8rem",
+              }}
+            >
+              <div className="flex-1 truncate">{post.og.siteName}</div>
+              <div className="flex-1 font-bold truncate">{post.og.title}</div>
+              {post.og.description && (
+                <div className="flex-1 truncate">{post.og.description}</div>
+              )}
+              {post.og.url && !post.og.siteName && (
+                <div className="flex-1 truncate">
+                  {decodeURI(post.og.url || "")}
+                </div>
+              )}
             </div>
           </div>
         </div>

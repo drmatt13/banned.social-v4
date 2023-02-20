@@ -72,6 +72,10 @@ const Modal = ({ children, visable = true }: Props) => {
             <div
               className="absolute top-0 h-full w-full"
               onClick={() => user?.avatar && setModal(false)}
+              onDragStart={(e) => e.preventDefault()}
+              onDragCapture={(e) => e.preventDefault()}
+              onDropCapture={(e) => e.preventDefault()}
+              onDragOverCapture={(e) => e.preventDefault()}
             />
             <div className="z-10 w-full flex justify-center pointer-events-none">
               <div
