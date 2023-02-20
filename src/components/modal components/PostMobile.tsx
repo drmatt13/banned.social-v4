@@ -8,6 +8,7 @@ import PostHeader from "@/components/modal components/PostHeader";
 // context
 import useModalContext from "@/context/modalContext";
 import usePostContext from "@/context/postContext";
+import useGlobalContext from "@/context/globalContext";
 
 interface Props {
   children: JSX.Element;
@@ -16,6 +17,7 @@ interface Props {
 const PostMobile = ({ children }: Props) => {
   const { post, postStyle } = usePostContext();
   const { setModal, loading } = useModalContext();
+  const { mobile } = useGlobalContext();
 
   return postStyle === "desktop" ? (
     <>{children}</>
@@ -25,7 +27,13 @@ const PostMobile = ({ children }: Props) => {
         <div className="z-50 fixed h-screen w-screen bg-light-secondary dark:bg-dark-secondary">
           <div className="h-full w-full flex flex-col">
             <div className="h-12 flex items-center border-b border-black/20 dark:border-white/25">
-              <div className="mx-3">
+              <div
+                className={`${
+                  mobile
+                    ? "active:text-black dark:text-neutral-200 dark:active:text-white"
+                    : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
+                } text-black/90 mx-3 transition-colors ease-out`}
+              >
                 <i
                   className="fa-solid fa-arrow-left cursor-pointer px-1"
                   onClick={() => setModal(false)}
@@ -33,7 +41,11 @@ const PostMobile = ({ children }: Props) => {
               </div>
               <div className="flex-1">Create Post</div>
               <div
-                className="mx-4 font-bold cursor-pointer text-black/90 hover:text-black dark:text-neutral-200 dark:hover:text-white transition-colors ease-out"
+                className={`${
+                  mobile
+                    ? "active:text-black dark:text-neutral-200 dark:active:text-white"
+                    : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
+                } text-black/90 mx-4 font-bold cursor-pointer transition-colors ease-out`}
                 onClick={() => {}}
               >
                 Post
@@ -42,6 +54,7 @@ const PostMobile = ({ children }: Props) => {
             <PostHeader />
             {children}
             <BigSubmitButton
+              customDarkDisabled={true}
               radius="rounded-md"
               value="Post"
               disabled={(!post.content && !post.og) || loading}

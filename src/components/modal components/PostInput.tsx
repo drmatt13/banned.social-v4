@@ -292,24 +292,36 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
         </div>
       )}
       {ogStack.length !== 0 && (post.og?.title || post.og?.description) && (
-        <div className="px-2 mb-3 h-20">
+        <div className="relative px-2 mb-3 h-20">
+          <div
+            className={`${
+              mobile
+                ? "active:bg-red-400 dark:active:bg-white"
+                : "hover:bg-red-400 dark:hover:bg-white"
+            } ${
+              postStyle === "desktop"
+                ? "dark:border border-black/25"
+                : " bg-white"
+            } bg-white/80 absolute h-5 w-5 -top-2 right-0.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out`}
+            onClick={() => setOgStack(removeLastIndex(ogStack))}
+          >
+            <i className="fas fa-times text-xs text-gray-800 dark:text-black/90 w-5 h-5 flex justify-center items-center" />
+          </div>
           <div
             className={`${
               postStyle === "mobile"
-                ? "dark:bg-white/[15%] dark:border-black/40 shadow"
-                : "dark:bg-white/40 dark:border-black/[17.5%]"
-            } relative p-2 flex bg-white/50 border border-black/[17.5%] w-full h-full rounded cursor-default hover:bg-gray-100 dark:hover:bg-white/50 select-none`}
+                ? `${
+                    mobile
+                      ? "active:bg-gray-200/75 dark:active:bg-white/20"
+                      : "hover:bg-gray-200/75 dark:hover:bg-white/20"
+                  } bg-gray-100/50 dark:bg-white/[15%] dark:border-black/40 shadow`
+                : `${
+                    mobile
+                      ? "active:bg-gray-400/40 dark:active:bg-white/60"
+                      : "hover:bg-gray-400/40 dark:hover:bg-white/60"
+                  } bg-gray-300/80 dark:bg-white/40 dark:border-black/[17.5%]`
+            } p-2 flex border border-black/[17.5%] w-full h-full rounded cursor-default select-none transition-colors ease-out`}
           >
-            <div
-              className={`${
-                mobile
-                  ? "active:bg-red-400 dark:active:bg-white"
-                  : "hover:bg-red-400 dark:hover:bg-white"
-              } bg-white/80 absolute h-5 w-5 -top-1.5 -right-1.5 rounded-full p-2 flex justify-center items-center cursor-pointer border shadow pointer-events-auto transition-colors ease-out`}
-              onClick={() => setOgStack(removeLastIndex(ogStack))}
-            >
-              <i className="fas fa-times text-xs text-gray-800 w-5 h-5 flex justify-center items-center" />
-            </div>
             {post.og.image && (
               <div className="w-14 h-9 bg-black/10 dark:bg-black/[15%] mr-2 border border-black/[12.5%] dark:border-black/[17.5%]">
                 <img

@@ -42,7 +42,11 @@ const PostHeader = () => {
         <div
           className={`${
             mobile
-              ? ``
+              ? `${
+                  postStyle === "desktop"
+                    ? "active:border-black/40 dark:active:bg-white/20"
+                    : "active:border-black/[52.5%] dark:border-neutral-200/50 dark:active:border-neutral-200 dark:active:bg-black/25"
+                } active:bg-gray-800/5`
               : `${
                   postStyle === "desktop"
                     ? "hover:border-black/40 dark:hover:bg-white/20"
@@ -53,12 +57,16 @@ const PostHeader = () => {
           <i
             className={`${
               mobile
-                ? ``
+                ? `${
+                    postStyle === "desktop"
+                      ? "group-active:text-sky-700 dark:group-active:text-black"
+                      : "group-active:text-blue-600 dark:text-neutral-200 dark:group-active:text-white"
+                  }`
                 : `${
                     postStyle === "desktop"
                       ? "group-hover:text-sky-700 dark:group-hover:text-black"
                       : "group-hover:text-blue-600 dark:text-neutral-200 dark:group-hover:text-white"
-                  } `
+                  }`
             } fa-solid fa-image text-lg text-gray-800 transition-all ease-out`}
           />
         </div>

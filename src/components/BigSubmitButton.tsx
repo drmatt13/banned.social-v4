@@ -12,10 +12,17 @@ interface Props {
   value: string;
   onClick?: (e: any) => any;
   disabled: boolean;
+  customDarkDisabled?: boolean;
 }
 
-const BigSubmitButton = ({ radius, value, onClick, disabled }: Props) => {
-  const { user } = useGlobalContext();
+const BigSubmitButton = ({
+  radius,
+  value,
+  onClick,
+  disabled,
+  customDarkDisabled = false,
+}: Props) => {
+  const { user, mobile } = useGlobalContext();
 
   return (
     <button
@@ -24,11 +31,19 @@ const BigSubmitButton = ({ radius, value, onClick, disabled }: Props) => {
         disabled
           ? `${
               user?.avatar
-                ? "bg-stone-500/20 dark:bg-neutral-500/30 text-black/80"
+                ? `${
+                    customDarkDisabled
+                      ? "dark:bg-neutral-500/[45%] text-black/95"
+                      : "dark:bg-neutral-500/30 text-black/80"
+                  } bg-stone-500/20 `
                 : "bg-light-secondary dark:bg-dark-accent text-gray-600 dark:text-gray-300"
             } border-light-border dark:border-dark-border cursor-not-allowed`
-          : "bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-500 cursor-pointer transition-colors ease-out"
-      }  mx-2 mb-2 py-2 select-none`}
+          : `${
+              mobile
+                ? "active:bg-blue-600 dark:active:bg-blue-500"
+                : "hover:bg-blue-600 dark:hover:bg-blue-500"
+            } bg-blue-500 dark:bg-blue-600 text-white cursor-pointer transition-colors ease-out`
+      } mx-2 mb-2 py-2 select-none`}
       onClick={onClick}
       disabled={disabled}
     >
