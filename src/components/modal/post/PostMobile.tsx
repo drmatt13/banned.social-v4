@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 
 // components
 import BigSubmitButton from "@/components/BigSubmitButton";
-import PostHeader from "@/components/modal components/PostHeader";
+import PostHeader from "@/components/modal/post/PostHeader";
 
 // context
 import useModalContext from "@/context/modalContext";
@@ -24,9 +24,9 @@ const PostMobile = ({ children }: Props) => {
   ) : (
     createPortal(
       <>
-        <div className="z-50 fixed h-screen w-screen bg-light-secondary dark:bg-dark-secondary">
-          <div className="h-full w-full flex flex-col">
-            <div className="h-12 flex items-center border-b border-black/20 dark:border-white/25">
+        <div className="z-50 fixed h-screen w-screen bg-light-secondary dark:bg-dark-secondary overflow-y-auto">
+          <div className="w-full flex flex-col">
+            <div className="h-12 shrink-0 flex items-center border-b border-black/20 dark:border-white/25">
               <div
                 className={`${
                   mobile

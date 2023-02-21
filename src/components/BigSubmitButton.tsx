@@ -43,7 +43,7 @@ const BigSubmitButton = ({
                 ? "active:bg-blue-600 dark:active:bg-blue-500"
                 : "hover:bg-blue-600 dark:hover:bg-blue-500"
             } bg-blue-500 dark:bg-blue-600 text-white cursor-pointer transition-colors ease-out`
-      } mx-2 mb-2 py-2 select-none`}
+      } mx-2 mb-2 py-2 select-none shrink-0`}
       onClick={onClick}
       disabled={disabled}
     >

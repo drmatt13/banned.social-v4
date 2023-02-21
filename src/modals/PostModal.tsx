@@ -1,15 +1,9 @@
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useDeferredValue,
-  useRef,
-} from "react";
+import { useState, useEffect, useRef } from "react";
 
 // components
-import PostDesktop from "@/components/modal components/PostDesktop";
-import PostMobile from "@/components/modal components/PostMobile";
-import PostInput from "@/components/modal components/PostInput";
+import PostDesktop from "@/components/modal/post/PostDesktop";
+import PostMobile from "@/components/modal/post/PostMobile";
+import PostInput from "@/components/modal/post/PostInput";
 
 // context
 import useModalContext from "@/context/modalContext";

@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 // components
 import BigSubmitButton from "@/components/BigSubmitButton";
-import PostHeader from "@/components/modal components/PostHeader";
+import PostHeader from "@/components/modal/post/PostHeader";
 
 // context
 import useModalContext from "@/context/modalContext";
@@ -54,31 +54,33 @@ const PostDesktop = ({ children }: Props) => {
           Drop Photo
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="relative w-fill text-center mt-2 mb-3 border-b border-black/[15%] dark:border-black/20 ">
-          <div className="font-bold text-lg pb-2">Create post</div>
-          <div
-            className="absolute top-0 right-2 flex justify-center items-center"
-            onClick={() => setModal(false)}
-          >
+      <div>
+        <div className="flex flex-col h-max overflow-y-auto">
+          <div className="relative text-center mt-2 mb-3 border-b border-black/[15%] dark:border-black/20 ">
+            <div className="font-bold text-lg pb-2">Create post</div>
             <div
-              className={`${
-                mobile
-                  ? "active:bg-red-400 dark:active:bg-white"
-                  : "hover:bg-red-400 dark:hover:bg-white"
-              } bg-neutral-300/90 dark:bg-neutral-100/80 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border hover:border-none dark:border-black/[12.5%] shadow transition-colors ease-out`}
+              className="absolute top-0 right-2 flex justify-center items-center"
+              onClick={() => setModal(false)}
             >
-              <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
+              <div
+                className={`${
+                  mobile
+                    ? "active:bg-red-400 dark:active:bg-white"
+                    : "hover:bg-red-400 dark:hover:bg-white"
+                } bg-neutral-300/90 dark:bg-neutral-100/80 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border hover:border-none dark:border-black/[12.5%] shadow transition-colors ease-out`}
+              >
+                <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
+              </div>
             </div>
           </div>
+          <PostHeader />
+          {children}
+          <BigSubmitButton
+            value="Post"
+            disabled={(!post.content && !post.og) || loading}
+            // onClick={getOgData}
+          />
         </div>
-        <PostHeader />
-        {children}
-        <BigSubmitButton
-          value="Post"
-          disabled={(!post.content && !post.og) || loading}
-          // onClick={getOgData}
-        />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 // components
-import SelectAvatar from "@/components/modal components/SelectAvatar";
-import UploadImage from "@/components/modal components/UploadImage";
+import SelectAvatar from "@/components/modal/SelectAvatar";
+import UploadImage from "@/components/modal/UploadImage";
 
 // context
 import useGlobalContext from "@/context/globalContext";

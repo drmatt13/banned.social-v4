@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 
 // components
-import Settings from "@/components/modal components/Settings";
-import UpdateAvatar from "@/components/modal components/UpdateAvatar";
+import Settings from "@/components/modal/Settings";
+import UpdateAvatar from "@/components/modal/UpdateAvatar";
 
 // context
 import { modalContext } from "@/context/modalContext";

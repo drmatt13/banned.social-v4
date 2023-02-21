@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
 // components
-import Messages from "@/components/modal components/Messages";
+import Messages from "@/components/modal/Messages";
 // context
 import { modalContext } from "@/context/modalContext";
 
