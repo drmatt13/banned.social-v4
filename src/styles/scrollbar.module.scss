@@ -1,0 +1,53 @@
+.lightScroll > * {
+  ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+  }
+  
+  ::-webkit-scrollbar-track {
+  background: #aaa7;
+  border-radius: 12px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+  border-radius: 12px;
+  background: rgb(59 130 246); 
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+  background: rgb(37 99 235); 
+  }
+  ::-webkit-scrollbar-corner {
+  background: none;
+  
+  }
+}
+
+.darkScroll > * {
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    }
+    
+    ::-webkit-scrollbar-track {
+    background: rgba(128, 131, 138, 0.3);
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background: rgba(83, 87, 93, 0.75); 
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 63, 65, 0.75); 
+    }
+    ::-webkit-scrollbar-corner {
+    background: none;
+    
+    }
+}

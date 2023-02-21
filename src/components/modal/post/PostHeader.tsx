@@ -62,12 +62,12 @@ const PostHeader = () => {
               mobile
                 ? `${
                     postStyle === "desktop"
-                      ? "group-active:text-sky-700 dark:group-active:text-black"
+                      ? "group-active:text-blue-600 dark:group-active:text-black"
                       : "group-active:text-blue-600 dark:text-neutral-200/60 dark:group-active:text-white"
                   }`
                 : `${
                     postStyle === "desktop"
-                      ? "group-hover:text-sky-700 dark:group-hover:text-black"
+                      ? "group-hover:text-blue-600 dark:group-hover:text-black"
                       : "group-hover:text-blue-600 dark:text-neutral-200/60 dark:group-hover:text-white"
                   }`
             } fa-solid fa-image text-lg text-gray-800 transition-all ease-out pointer-events-none`}

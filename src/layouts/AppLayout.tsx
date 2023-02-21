@@ -70,7 +70,7 @@ const AppLayout = ({ children }: Props) => {
             ) : (
               (!user || (user && user.avatar)) && (
                 <div
-                  className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto"
+                  className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
                   onClick={() => setNavButtonsVisable(false)}
                 >
                   {showNavbar && !loading && (

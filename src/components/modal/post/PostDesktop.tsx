@@ -29,6 +29,16 @@ const PostDesktop = ({ children }: Props) => {
         e.stopPropagation();
         dropRef.current!.style.opacity = "1";
       }}
+      onDragEnter={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropRef.current!.style.opacity = "1";
+      }}
+      onDragOverCapture={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropRef.current!.style.opacity = "1";
+      }}
       onDragLeave={(e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -50,7 +60,7 @@ const PostDesktop = ({ children }: Props) => {
         ref={dropRef}
         className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/75 dark:bg-neutral-400/60 z-10 opacity-0 transition-opacity ease-out pointer-events-none"
       >
-        <div className="text-xl font-bold text-neutral-600 dark:text-stone-800">
+        <div className="text-xl font-bold text-neutral-600 dark:text-stone-800 pointer-events-none">
           Drop Photo
         </div>
       </div>

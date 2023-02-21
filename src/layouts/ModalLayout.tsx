@@ -44,14 +44,14 @@ const Modal = ({ children, visable = true }: Props) => {
     createPortal(
       <>
         <style jsx>{`
-          @media (max-height: 420px) {
+          @media (max-height: 360px) {
             .fixed {
-              padding-top: 32px !important;
-              padding-bottom: 32px !important;
+              padding-top: 27px !important;
+              padding-bottom: 27px !important;
               align-items: flex-start !important;
             }
             .max-h-\[85\%\] {
-              max-height: 357px !important;
+              max-height: 308px !important;
             }
           }
         `}</style>
@@ -77,10 +77,14 @@ const Modal = ({ children, visable = true }: Props) => {
               user?.avatar
                 ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
                 : "bg-white/75 dark:bg-white/50"
-            } pointer-events-auto overflow-y-auto relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-2xl w-[95%] max-w-[500px] max-h-[85%]`}
-            onClick={(e) => e.stopPropagation()}
+            } pointer-events-auto overflow-y-hidden flex relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[500px] max-h-[85%]`}
           >
-            {children}
+            <div
+              className="w-full max-h-[85%] overflow-y-auto z-50"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </>,

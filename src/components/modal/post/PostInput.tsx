@@ -15,6 +15,9 @@ import usePostContext from "@/context/postContext";
 // libraries
 import validateUrl from "@/lib/validateUrl";
 
+// styles
+import styles from "@/styles/scrollbar.module.scss";
+
 interface Props {
   caretPosition: number;
   setCaretPosition: React.Dispatch<React.SetStateAction<number>>;
@@ -22,7 +25,7 @@ interface Props {
 }
 
 const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
-  const { user, mobile } = useGlobalContext();
+  const { user, mobile, darkMode } = useGlobalContext();
   const { loading, setLoading } = useModalContext();
   const {
     initialLoad,
@@ -42,11 +45,12 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
   const duplicateTextRef = useRef<HTMLDivElement>(null);
   const fakeTextareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const adjustPWidth = useCallback(() => {
-    if (!textareaRef.current) return;
-    const textarea = textareaRef.current;
+  const adjustInputSize = useCallback(() => {
+    const fakeTextarea = fakeTextareaRef.current;
     const p = duplicateTextRef.current;
-    if (!p) return;
+    const textarea = textareaRef.current;
+    if (!textarea || !fakeTextarea || !p) return;
+    textarea.style.height = `${fakeTextarea.offsetHeight}px`;
     const scrollbarWidth = textarea.offsetWidth - textarea.clientWidth;
     p.style.width = `${textarea.offsetWidth - scrollbarWidth}px`;
   }, [textareaRef]);
@@ -123,8 +127,8 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
 
   const windowResizeEvent = useCallback(() => {
     setCaretPosition(getCaretPosition() || 0);
-    adjustPWidth();
-  }, [adjustPWidth, getCaretPosition, setCaretPosition]);
+    adjustInputSize();
+  }, [adjustInputSize, getCaretPosition, setCaretPosition]);
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -172,9 +176,9 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
         placeCursorAtEnd(textareaRef.current!);
       }
     }
-    adjustPWidth();
+    adjustInputSize();
   }, [
-    adjustPWidth,
+    adjustInputSize,
     caretPosition,
     initialLoad,
     ogStack.length,
@@ -213,59 +217,67 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
       <div
         className={`relative mb-3 flex flex-col shirk-0 overflow-hidden w-full`}
       >
-        {/* *********************************************************************************************** */}
-        <TextareaAutosize
-          ref={fakeTextareaRef}
-          value={post.content}
-          minRows={image ? 2 : 5}
-          maxRows={postStyle === "mobile" ? (image ? 5 : 8) : image ? 5 : 7}
+        <div
           className={`${
-            postStyle === "mobile"
-              ? "p-2 text-sm dark:caret-white"
-              : "py-2 px-3.5 dark:caret-black "
-          } outline-none h-full resize-none bg-transparent decoration-none pointer-events-none`}
-          style={{
-            lineHeight: "1.45rem",
-          }}
-          tabIndex={-1}
-        />
-        <p
-          ref={duplicateTextRef}
-          className={`${
-            postStyle === "mobile" ? "p-2 text-sm" : "py-2 px-3.5"
-          } text-transparent h-full absolute left-0 whitespace-pre-wrap break-words pointer-events-none`}
-          style={{
-            lineHeight: "1.45rem",
-          }}
-          tabIndex={-1}
+            postStyle === "desktop"
+              ? `${darkMode ? styles.darkScroll : styles.lightScroll} pr-2`
+              : "dark:[color-scheme:dark]"
+          } flex`}
         >
-          {post.content}
-        </p>
-        <TextareaAutosize
-          ref={textareaRef}
-          minRows={image ? 2 : 5}
-          maxRows={postStyle === "mobile" ? (image ? 5 : 8) : image ? 5 : 7}
-          className={`${
-            postStyle === "mobile"
-              ? "p-2 text-sm dark:caret-white"
-              : "py-2 px-3.5 dark:caret-black "
-          } caret-black absolute top-0 w-full outline-none h-full resize-none bg-transparent decoration-none text-transparent`}
-          style={{
-            lineHeight: "1.45rem",
-          }}
-          onInput={(e) => {
-            setPost({
-              ...post,
-              content: e.currentTarget.value,
-            });
-            adjustPWidth();
-          }}
-          onScroll={(e) => {
-            duplicateTextRef.current!.style.transform = `translateY(-${e.currentTarget.scrollTop}px)`;
-            fakeTextareaRef.current!.scrollTop = e.currentTarget.scrollTop;
-          }}
-        />
-        {/* *********************************************************************************************** */}
+          <div className="relative w-full flex flex-col">
+            <TextareaAutosize
+              ref={fakeTextareaRef}
+              value={post.content}
+              minRows={image ? (postStyle === "desktop" ? 2 : 3) : 5}
+              maxRows={postStyle === "mobile" ? (image ? 6 : 8) : image ? 5 : 7}
+              className={`${
+                postStyle === "mobile"
+                  ? "p-2 text-sm dark:caret-white"
+                  : "py-2 px-3.5 dark:caret-black "
+              } outline-none h-full resize-none bg-transparent decoration-none pointer-events-none`}
+              style={{
+                lineHeight: "1.45rem",
+              }}
+              tabIndex={-1}
+            />
+            <p
+              ref={duplicateTextRef}
+              className={`${
+                postStyle === "mobile" ? "p-2 text-sm" : "py-2 px-3.5"
+              } text-transparent h-full absolute left-0 whitespace-pre-wrap break-words pointer-events-none`}
+              style={{
+                lineHeight: "1.45rem",
+              }}
+              tabIndex={-1}
+            >
+              {post.content}
+            </p>
+            <TextareaAutosize
+              ref={textareaRef}
+              minRows={image ? (postStyle === "desktop" ? 2 : 3) : 5}
+              maxRows={postStyle === "mobile" ? (image ? 6 : 8) : image ? 5 : 7}
+              className={`${
+                postStyle === "mobile"
+                  ? "p-2 text-sm dark:caret-white"
+                  : "py-2 px-3.5 dark:caret-black "
+              } cursor-auto caret-black absolute top-0 w-full outline-none h-full resize-none bg-transparent decoration-none text-transparent`}
+              style={{
+                lineHeight: "1.45rem",
+              }}
+              onInput={(e) => {
+                setPost({
+                  ...post,
+                  content: e.currentTarget.value,
+                });
+                adjustInputSize();
+              }}
+              onScroll={(e) => {
+                duplicateTextRef.current!.style.transform = `translateY(-${e.currentTarget.scrollTop}px)`;
+                fakeTextareaRef.current!.scrollTop = e.currentTarget.scrollTop;
+              }}
+            />
+          </div>
+        </div>
         <div className="absolute top-0 pointer-events-none">
           {!post.content && (
             <div

@@ -47,14 +47,14 @@ const OgContent = () => {
               postStyle === "mobile"
                 ? `${
                     mobile
-                      ? "active:bg-gray-200/75 dark:active:bg-white/20"
-                      : "hover:bg-gray-200/75 dark:hover:bg-white/20"
-                  } bg-gray-100/50 dark:bg-white/[15%] dark:border-black/40 shadow`
+                      ? "active:bg-gray-200/75 dark:active:bg-neutral-100/[15%]"
+                      : "hover:bg-gray-200/75 dark:hover:bg-neutral-100/[15%]"
+                  } bg-gray-100/50 dark:bg-neutral-100/10 dark:border-black/40 shadow`
                 : `${
                     mobile
-                      ? "active:bg-gray-400/40 dark:active:bg-white/60"
-                      : "hover:bg-gray-400/40 dark:hover:bg-white/60"
-                  } bg-gray-300/80 dark:bg-white/40 dark:border-black/[17.5%]`
+                      ? "active:bg-gray-400/20 dark:active:bg-white/60"
+                      : "hover:bg-gray-400/20 dark:hover:bg-white/60"
+                  } bg-neutral-200/50 dark:bg-white/40 dark:border-black/[17.5%]`
             } p-2 flex border border-black/[17.5%] w-full h-full rounded cursor-default select-none transition-colors ease-out`}
           >
             {post.og.image?.url && (

@@ -15,16 +15,20 @@ interface Props {
 }
 
 const PostMobile = ({ children }: Props) => {
-  const { post, postStyle } = usePostContext();
+  const { mobile, darkMode } = useGlobalContext();
   const { setModal, loading } = useModalContext();
-  const { mobile } = useGlobalContext();
+  const { post, postStyle } = usePostContext();
 
   return postStyle === "desktop" ? (
     <>{children}</>
   ) : (
     createPortal(
       <>
-        <div className="z-50 fixed h-screen w-screen bg-light-secondary dark:bg-dark-secondary overflow-y-auto">
+        <div
+          className={`${
+            darkMode && "dark:[color-scheme:dark]"
+          } z-50 fixed h-screen w-screen bg-light-secondary dark:bg-dark-secondary overflow-y-auto`}
+        >
           <div className="w-full flex flex-col">
             <div className="h-12 shrink-0 flex items-center border-b border-black/20 dark:border-white/25">
               <div
