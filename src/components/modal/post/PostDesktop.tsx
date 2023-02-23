@@ -16,7 +16,7 @@ interface Props {
 const PostDesktop = ({ children }: Props) => {
   const { mobile } = useGlobalContext();
   const { setModal, loading } = useModalContext();
-  const { post, postStyle, loadImage } = usePostContext();
+  const { post, postStyle, loadImage, image } = usePostContext();
 
   const dropRef = useRef<HTMLDivElement>(null);
 
@@ -87,7 +87,8 @@ const PostDesktop = ({ children }: Props) => {
           {children}
           <BigSubmitButton
             value="Post"
-            disabled={(!post.content && !post.og) || loading}
+            disabled={(!post.content && !post.og && !image) || loading}
+            radius="rounded-lg"
             // onClick={getOgData}
           />
         </div>

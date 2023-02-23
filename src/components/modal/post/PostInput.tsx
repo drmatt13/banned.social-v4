@@ -81,6 +81,74 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     []
   );
 
+  const getWordsAroundCaret = useCallback(() => {
+    const caretPosition = getCaretPosition();
+    if (caretPosition === undefined || !textareaRef.current) {
+      return [undefined, undefined];
+    }
+    const text = textareaRef.current.value;
+    let leftBoundary = caretPosition - 1;
+    while (leftBoundary >= 0 && !/\s/.test(text.charAt(leftBoundary))) {
+      leftBoundary--;
+    }
+    const leftWord =
+      leftBoundary < caretPosition - 1
+        ? text.substring(leftBoundary + 1, caretPosition)
+        : undefined;
+    let rightBoundary = caretPosition;
+    while (
+      rightBoundary < text.length &&
+      !/\s/.test(text.charAt(rightBoundary))
+    ) {
+      rightBoundary++;
+    }
+    const rightWord =
+      rightBoundary > caretPosition
+        ? text.substring(caretPosition, rightBoundary)
+        : undefined;
+    return [leftWord, rightWord];
+  }, [getCaretPosition, textareaRef]);
+
+  const handlePaste = useCallback(
+    (e: any) => {
+      const clipboardData = e.clipboardData;
+      const text = clipboardData.getData("text");
+      const words = text.split(/\s+/);
+
+      const [leftWord, rightWord] = getWordsAroundCaret();
+      words[0] = leftWord ? leftWord + words[0] : words[0];
+      words[words.length - 1] =
+        rightWord && words.length > 1
+          ? words[words.length - 1] + rightWord
+          : words[words.length - 1];
+      for (let i = 0; i < words.length; i++) {
+        if (validateUrl(words[i] || "")) {
+          processUrl(words[i] || "");
+        }
+      }
+    },
+    [getWordsAroundCaret, processUrl]
+  );
+
+  const wrapUrlsInSpans = useCallback(
+    (text: string) => {
+      const words = text.split(/([\s\n]+)/);
+      const newWords = words.map((word) => {
+        if (validateUrl(word)) {
+          return `<span class="${
+            postStyle === "mobile"
+              ? "dark:text-purple-400 dark:bg-dark-secondary"
+              : "dark:text-blue-500"
+          } text-blue-500">${word}</span>`;
+        } else {
+          return word;
+        }
+      });
+      return newWords.join("");
+    },
+    [postStyle]
+  );
+
   const getCurrentWord = useCallback(() => {
     const textarea = textareaRef.current;
     const position = getCaretPosition();
@@ -108,21 +176,6 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
       }
     },
     [getCaretPosition, getCurrentWord, processUrl, setCaretPosition]
-  );
-
-  const handlePaste = useCallback(
-    (e: any) => {
-      const clipboardData = e.clipboardData;
-      const text = clipboardData.getData("text");
-      const words = text.split(/\s+/);
-      for (let i = words.length - 1; i >= 0; i--) {
-        if (validateUrl(words[i])) {
-          processUrl(words[i]);
-          return;
-        }
-      }
-    },
-    [processUrl]
   );
 
   const windowResizeEvent = useCallback(() => {
@@ -190,22 +243,6 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     setLoadingOg,
     textareaRef,
   ]);
-
-  const wrapUrlsInSpans = useCallback(
-    (text: string) => {
-      const urlRegex = /(https?:\/\/[^\s]+)/g;
-      const wrappedText = text.replace(
-        urlRegex,
-        `<span class="${
-          postStyle === "mobile"
-            ? "dark:text-purple-400 dark:bg-dark-secondary"
-            : "dark:text-blue-500"
-        } text-blue-500">$&</span>`
-      );
-      return wrappedText;
-    },
-    [postStyle]
-  );
 
   useEffect(() => {
     let text = post.content;

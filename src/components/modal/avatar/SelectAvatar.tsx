@@ -15,6 +15,9 @@ import avatarList from "@/data/avatarList";
 // libaries
 import processService from "@/lib/processService";
 
+// styles
+import styles from "@/styles/scrollbar.module.scss";
+
 const SelectAvatar = ({
   avatar,
   setAvatar,
@@ -26,7 +29,7 @@ const SelectAvatar = ({
   loading: boolean;
   setLoading: (loading: boolean) => void;
 }) => {
-  const { user, setUser, logout } = useGlobalContext();
+  const { user, setUser, logout, darkMode, mobile } = useGlobalContext();
   const { setModal } = useModalContext();
 
   const updateAvatar = useCallback(async () => {
@@ -62,8 +65,12 @@ const SelectAvatar = ({
   }, [avatar, setAvatar, user?.avatar]);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="flex-1 px-3 my-2 overflow-auto">
+    <div
+      className={`${
+        !mobile && darkMode ? styles.darkScroll : styles.lightScroll
+      } h-full flex flex-col`}
+    >
+      <div className={`${!mobile && "mr-2"} flex-1 px-3 my-2 overflow-auto`}>
         <div className="h-0 grid grid-cols-6 gap-2 pt-1 [&>div:last-of-type]:mb-3">
           {avatarOrder.map((img) => (
             <div key={img}>

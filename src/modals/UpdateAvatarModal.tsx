@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
 // components
-import UpdateAvatar from "@/components/modal/UpdateAvatar";
+import UpdateAvatar from "@/components/modal/avatar/UpdateAvatar";
 
 // context
 import { modalContext } from "@/context/modalContext";

@@ -32,6 +32,21 @@ import type UrlCache from "@/types/UrlCache";
 // libaries
 import processService from "@/lib/processService";
 
+function getDomainFromUrl(url: string): string {
+  let domain = "";
+  const a = document.createElement("a");
+  a.href = url;
+  if (a.hostname) {
+    const parts = a.hostname.split(".");
+    if (parts.length > 1) {
+      domain = parts[parts.length - 2] + "." + parts[parts.length - 1];
+    } else {
+      domain = parts[0] || "";
+    }
+  }
+  return domain;
+}
+
 interface Props {
   recipient?: User;
 }
@@ -163,6 +178,17 @@ const PostButton = ({ recipient }: Props) => {
         };
         adjustStack(url);
       } catch (error) {
+        urlCacheRef.current = {
+          ...urlCacheRef.current,
+          [url]: {
+            og: {
+              siteName: getDomainFromUrl(url).toUpperCase(),
+              title: getDomainFromUrl(url),
+            },
+            inStack: false,
+          },
+        };
+        adjustStack(url);
         setUrlsProcessing((u) => u - 1);
       }
       setLoadingOg(false);
@@ -172,10 +198,12 @@ const PostButton = ({ recipient }: Props) => {
 
   const processUrl = useCallback(
     (url: string) => {
+      setLoadingOg(true);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
         getOgData(url);
-      }, 750);
+        setLoadingOg(false);
+      }, 1000);
     },
     [getOgData]
   );
@@ -236,6 +264,20 @@ const PostButton = ({ recipient }: Props) => {
       ""
     );
   }, []);
+
+  useEffect(() => {
+    // if user tries to leave page with unsaved changes, prompt them
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (post.content === "" && !image) {
+        e.preventDefault();
+      }
+      e.returnValue = "Changes you made may not be saved.";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [image, post.content]);
 
   return (
     <>

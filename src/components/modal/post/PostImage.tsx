@@ -26,7 +26,7 @@ const PostImage = () => {
 
   return (
     <>
-      <div className="relative px-2 mb-3 select-none">
+      <div className="relative px-2 mb-2.5 select-none">
         <div
           onClick={removeImage}
           className={`${
@@ -39,7 +39,7 @@ const PostImage = () => {
           src={image}
           alt="image for upload"
           className={`${
-            postStyle === "desktop" ? "rounded-xl" : "rounded-md"
+            postStyle === "desktop" ? "rounded-lg" : "rounded-md"
           } w-full aspect-video object-cover shadow`}
         />
       </div>

@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState, useEffect } from "react";
 
 // components
 import Settings from "@/components/modal/Settings";
-import UpdateAvatar from "@/components/modal/UpdateAvatar";
+import UpdateAvatar from "@/components/modal/avatar/UpdateAvatar";
 
 // context
 import { modalContext } from "@/context/modalContext";
