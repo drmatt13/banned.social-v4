@@ -309,6 +309,7 @@ const PostButton = ({ recipient }: Props) => {
             removeImage,
             setErrorLoadingImage,
             imageInputRef,
+            urlCacheRef,
           }}
         >
           <PostModal />

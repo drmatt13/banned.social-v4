@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useDeferredValue } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
 
 import DOMPurify from "dompurify";
@@ -40,10 +40,12 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     setOgStack,
     processUrl,
     postStyle,
+    urlCacheRef,
   } = usePostContext();
 
   const duplicateTextRef = useRef<HTMLDivElement>(null);
   const fakeTextareaRef = useRef<HTMLTextAreaElement>(null);
+  const [previousWord, setPreviousWord] = useState<string>("");
 
   const adjustInputSize = useCallback(() => {
     const fakeTextarea = fakeTextareaRef.current;
@@ -167,15 +169,41 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     return currentWord;
   }, [getCaretPosition, textareaRef]);
 
+  const handleKeydown = useCallback(
+    (e: any) => {
+      if (!e.code || e.ctrlKey || e.metaKey || e.altKey) return;
+      setPreviousWord(getCurrentWord() || "");
+    },
+    [getCurrentWord]
+  );
+
   const handleInput = useCallback(
     (e: any) => {
-      if (e.type === "paste") return;
+      // if (e.type === "paste") return;
+      const currentWord = getCurrentWord() || "";
       setCaretPosition(getCaretPosition() || 0);
-      if (validateUrl(getCurrentWord() || "")) {
-        processUrl(getCurrentWord()!);
+      if (validateUrl(currentWord)) {
+        if (urlCacheRef.current[previousWord]) {
+          const newCache = { ...urlCacheRef.current };
+          newCache[previousWord]!.inStack = false;
+          urlCacheRef.current = newCache;
+          setOgStack((prev) => {
+            const newStack = prev.filter((item) => item.url !== previousWord);
+            return newStack;
+          });
+        }
+        processUrl(currentWord);
       }
     },
-    [getCaretPosition, getCurrentWord, processUrl, setCaretPosition]
+    [
+      getCaretPosition,
+      getCurrentWord,
+      previousWord,
+      processUrl,
+      setCaretPosition,
+      setOgStack,
+      urlCacheRef,
+    ]
   );
 
   const windowResizeEvent = useCallback(() => {
@@ -185,17 +213,20 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
 
   useEffect(() => {
     const textarea = textareaRef.current;
+    textarea?.addEventListener("keydown", handleKeydown);
     textarea?.addEventListener("input", handleInput);
     textarea?.addEventListener("paste", handlePaste);
     window.addEventListener("resize", windowResizeEvent);
     return () => {
-      window.removeEventListener("resize", windowResizeEvent);
+      textarea?.removeEventListener("keydown", handleKeydown);
       textarea?.removeEventListener("input", handleInput);
       textarea?.removeEventListener("paste", handlePaste);
+      window.removeEventListener("resize", windowResizeEvent);
     };
   }, [
     getCaretPosition,
     handleInput,
+    handleKeydown,
     handlePaste,
     setCaretPosition,
     textareaRef,

@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+import { useEffect } from "react";
+
 // components
 import Loading from "@/components/Loading";
 

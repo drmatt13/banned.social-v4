@@ -1,6 +1,7 @@
 import {
   createContext,
   Dispatch,
+  MutableRefObject,
   RefObject,
   SetStateAction,
   useContext,
@@ -10,6 +11,7 @@ import {
 import type Og from "@/types/og";
 import type Post from "@/types/post";
 import type User from "@/types/user";
+import type UrlCache from "@/types/UrlCache";
 
 export type PostContext = {
   post: Post;
@@ -30,6 +32,7 @@ export type PostContext = {
   setErrorLoadingImage: Dispatch<SetStateAction<boolean>>;
   removeImage: () => void;
   imageInputRef: RefObject<HTMLInputElement>;
+  urlCacheRef: MutableRefObject<UrlCache>;
 };
 
 export const postContext = createContext<PostContext>({
@@ -51,6 +54,7 @@ export const postContext = createContext<PostContext>({
   setErrorLoadingImage: () => {},
   removeImage: () => {},
   imageInputRef: { current: null },
+  urlCacheRef: { current: {} },
 });
 
 const usePostContext = () => useContext(postContext);
