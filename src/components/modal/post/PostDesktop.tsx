@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
 // components
 import BigSubmitButton from "@/components/BigSubmitButton";
