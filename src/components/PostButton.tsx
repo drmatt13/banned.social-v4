@@ -184,6 +184,7 @@ const PostButton = ({ recipient }: Props) => {
             og: {
               siteName: getDomainFromUrl(url).toUpperCase(),
               title: getDomainFromUrl(url),
+              url,
             },
             inStack: false,
           },

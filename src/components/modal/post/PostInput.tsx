@@ -179,18 +179,12 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
 
   const handleInput = useCallback(
     (e: any) => {
-      // if (e.type === "paste") return;
       const currentWord = getCurrentWord() || "";
       setCaretPosition(getCaretPosition() || 0);
       if (validateUrl(currentWord)) {
         if (urlCacheRef.current[previousWord]) {
-          const newCache = { ...urlCacheRef.current };
-          newCache[previousWord]!.inStack = false;
-          urlCacheRef.current = newCache;
-          setOgStack((prev) => {
-            const newStack = prev.filter((item) => item.url !== previousWord);
-            return newStack;
-          });
+          urlCacheRef.current[previousWord]!.inStack = false;
+          setOgStack((prev) => prev.filter((url) => url !== previousWord));
         }
         processUrl(currentWord);
       }
