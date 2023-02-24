@@ -76,16 +76,22 @@ const OgContent = () => {
                 }}
               >
                 {post.og.siteName && (
-                  <div className="h-5 truncate">{post.og.siteName}</div>
+                  <div className="h-[1.125rem] truncate">
+                    {post.og.siteName}
+                  </div>
                 )}
                 {post.og.title && (
-                  <div className="h-5 font-bold truncate">{post.og.title}</div>
+                  <div className="h-[1.125rem] font-bold truncate">
+                    {post.og.title}
+                  </div>
                 )}
                 {post.og.description && (
-                  <div className="h-5 truncate">{post.og.description}</div>
+                  <div className="h-[1.125rem] truncate">
+                    {post.og.description}
+                  </div>
                 )}
                 {post.og.url && !post.og.siteName && (
-                  <div className="h-5 truncate">
+                  <div className="h-[1.125rem] truncate">
                     {decodeURI(post.og.url || "")}
                   </div>
                 )}
