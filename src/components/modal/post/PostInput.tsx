@@ -32,7 +32,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     setInitialLoad,
     post,
     setPost,
-    recipient,
+    recipient_id,
     loadingOg,
     setLoadingOg,
     image,
