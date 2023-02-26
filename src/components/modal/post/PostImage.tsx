@@ -13,7 +13,7 @@ const PostImage = () => {
     setInitialLoad,
     post,
     setPost,
-    recipient,
+    recipient_id,
     loadingOg,
     setLoadingOg,
     image,
