@@ -28,19 +28,23 @@ const PostImage = () => {
     <>
       <div className="relative px-2 mb-2.5 select-none">
         <div
-          onClick={removeImage}
+          onClick={() => !loading && removeImage()}
           className={`${
-            mobile ? "active:bg-white" : "hover:bg-white"
-          } absolute top-2 right-4 bg-neutral-100 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border border-black/20 shadow transition-colors ease-out`}
+            loading
+              ? "cursor-not-allowed"
+              : mobile
+              ? "active:bg-white"
+              : "hover:bg-white cursor-pointer"
+          } z-50 absolute top-2 right-4 bg-neutral-100 h-7 w-7 rounded-full flex justify-center items-center border border-black/20 shadow transition-colors ease-out`}
         >
           <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
         </div>
         <img
           src={image}
           alt="image for upload"
-          className={`${
+          className={`${loading && "grayscale-[.5]"} ${
             postStyle === "desktop" ? "rounded-lg" : "rounded-md"
-          } w-full aspect-video object-cover shadow`}
+          } w-full aspect-video object-cover shadow transition-all`}
         />
       </div>
     </>

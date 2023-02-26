@@ -18,7 +18,7 @@ interface Props {
 const PostMobile = ({ children }: Props) => {
   const { mobile, darkMode } = useGlobalContext();
   const { setModal, loading } = useModalContext();
-  const { post, postStyle, loadImage, image } = usePostContext();
+  const { post, postStyle, loadImage, submitPost, image } = usePostContext();
 
   const dropRef = useRef<HTMLDivElement>(null);
 
@@ -31,17 +31,17 @@ const PostMobile = ({ children }: Props) => {
           onDragOver={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropRef.current!.style.opacity = "1";
+            if (!loading) dropRef.current!.style.opacity = "1";
           }}
           onDragEnter={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropRef.current!.style.opacity = "1";
+            if (!loading) dropRef.current!.style.opacity = "1";
           }}
           onDragOverCapture={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            dropRef.current!.style.opacity = "1";
+            if (!loading) dropRef.current!.style.opacity = "1";
           }}
           onDragLeave={(e) => {
             e.preventDefault();
@@ -75,24 +75,28 @@ const PostMobile = ({ children }: Props) => {
             <div className="h-12 shrink-0 flex items-center border-b border-black/20 dark:border-white/25">
               <div
                 className={`${
-                  mobile
-                    ? "active:text-black dark:text-neutral-200 dark:active:text-white"
-                    : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
-                } text-black/90 mx-2 transition-colors ease-out select-none`}
+                  loading
+                    ? "cursor-not-allowed"
+                    : mobile
+                    ? "active:text-black dark:active:text-white"
+                    : "hover:text-black dark:hover:text-white cursor-pointer"
+                } text-black/90 dark:text-neutral-200 mx-2 transition-colors ease-out select-none`}
               >
                 <i
-                  className="fa-solid fa-arrow-left cursor-pointer px-1"
-                  onClick={() => setModal(false)}
+                  className="fa-solid fa-arrow-left px-1"
+                  onClick={() => !loading && setModal(false)}
                 />
               </div>
               <div className="flex-1">Create Post</div>
               <div
                 className={`${
-                  mobile
-                    ? "active:text-black dark:text-neutral-200 dark:active:text-white"
-                    : "hover:text-black dark:text-neutral-200 dark:hover:text-white"
-                } text-black/90 mx-3 font-bold cursor-pointer transition-colors ease-out select-none`}
-                onClick={() => {}}
+                  loading
+                    ? "cursor-not-allowed"
+                    : mobile
+                    ? "active:text-black dark:active:text-white"
+                    : "hover:text-black dark:hover:text-white cursor-pointer"
+                } text-black/90 dark:text-neutral-200 mx-3 font-bold  transition-colors ease-out select-none`}
+                onClick={submitPost}
               >
                 Post
               </div>
@@ -103,8 +107,8 @@ const PostMobile = ({ children }: Props) => {
               customDarkDisabled={true}
               radius="rounded-md"
               value="Post"
-              disabled={(!post.content && !post.og) || loading}
-              // onClick={getOgData}
+              disabled={(!post.content && !post.og && !image) || loading}
+              onClick={submitPost}
             />
           </div>
         </div>

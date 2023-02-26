@@ -1,7 +1,8 @@
-module.exports = {
-  experimental: {
-    // images: {
-    //   allowFutureImage: true,
-    // },
-  },
+/**
+ * @type {import('next').NextConfig}
+ */
+const nextConfig = {
+  experimental: {},
 };
+
+module.exports = nextConfig;

@@ -1,9 +1,12 @@
-import type User from "@/types/user";
 import Og from "@/types/og";
 
 interface Post {
+  _id?: string;
   content: string;
-  recipient?: User;
+  user_id?: string;
+  recipient_id?: string;
+  sharedPost_id?: string;
+  image?: string;
   og?: Og;
 }
 

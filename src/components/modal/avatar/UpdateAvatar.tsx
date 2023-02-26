@@ -13,7 +13,7 @@ import useImage from "@/hooks/useImage";
 
 const UpdateAvatar = () => {
   const { user } = useGlobalContext();
-  const { loading, setLoading } = useModalContext();
+  const { loading } = useModalContext();
   const [tab, setTab] = useState<"select avatar" | "upload image">(
     "select avatar"
   );
@@ -57,12 +57,7 @@ const UpdateAvatar = () => {
       </div>
       <div className="flex-1">
         {tab === "select avatar" && (
-          <SelectAvatar
-            avatar={avatar}
-            setAvatar={setAvatar}
-            loading={loading}
-            setLoading={setLoading}
-          />
+          <SelectAvatar avatar={avatar} setAvatar={setAvatar} />
         )}
         {tab === "upload image" && (
           <UploadImage
@@ -71,8 +66,6 @@ const UpdateAvatar = () => {
             loadingImage={loadingImage}
             removeImage={removeImage}
             errorLoadingImage={errorLoadingImage}
-            loading={loading}
-            setLoading={setLoading}
           />
         )}
       </div>

@@ -1,35 +1,51 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 
-interface Props {
-  postid?: number;
-  userid?: number;
-  recipientId?: number;
-  sharedPostId?: number;
-  title?: string;
-  body?: string;
-}
+// context
+import useGlobalContext from "@/context/globalContext";
 
-const Post = ({ userid, recipientId, body }: Props) => {
-  const postImgRef = useRef<HTMLImageElement>(null);
+// data
+import avatarList from "@/data/avatarList";
 
-  const [profileImg, setProfileImg] = useState(
-    `https://i.pravatar.cc/50?img=${Math.floor(Math.random() * (70 - 1) + 1)}`
-  );
+// types
+import type User from "@/types/user";
+import type IPost from "@/types/post";
+import type FeedCache from "@/types/feedCache";
+import type Og from "@/types/og";
 
-  const [postImg, setPostImg] = useState(
-    `https://picsum.photos/id/${Math.floor(
-      Math.random() * (1075 - 1) + 1
-    )}/650/400`
-  );
+type FeedUser = FeedCache[keyof User] | undefined;
+
+const Post = ({
+  _id,
+  user_id,
+  recipient_id,
+  sharedPost_id,
+  content,
+  image,
+  og,
+}: IPost) => {
+  const { feedCache, user } = useGlobalContext();
+
+  const [postUser, setPostUser] = useState<FeedUser>(undefined);
+  const [postRecipient, setPostRecipient] = useState<FeedUser>(undefined);
+
+  const likePost = useCallback(() => {}, []);
+  const commentOnPost = useCallback(() => {}, []);
+  const sharePost = useCallback(() => {}, []);
 
   useEffect(() => {
-    postImgRef.current?.addEventListener("error", () => {
-      postImgRef.current?.remove();
-    });
-  }, []);
+    if (user_id && (user_id === user?._id || feedCache[user_id])) {
+      setPostUser(feedCache[user_id] || user);
+    }
+    if (recipient_id && feedCache[recipient_id]) {
+      setPostRecipient(feedCache[recipient_id]);
+    }
+    console.log(image);
+  }, [feedCache, image, recipient_id, user, user_id]);
 
-  return (
+  return !postUser ? (
+    <></>
+  ) : (
     <>
       <style jsx>{`
         @media (max-width: 535px) {
@@ -37,45 +53,52 @@ const Post = ({ userid, recipientId, body }: Props) => {
           border-radius: 0;
         }
       `}</style>
-      <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-4 w-full border dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
+      <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-5 w-full border dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
         <div className="mx-4 flex items-start mb-2">
-          {profileImg && (
-            <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
-              <img
-                className="h-10 w-10 hover:brightness-[98%] select-none"
-                src={profileImg}
-                alt="avatar"
-              />
-            </div>
-          )}
-
+          <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
+            <img
+              className="h-10 w-10 hover:brightness-[98%] select-none"
+              src={
+                avatarList[user?.avatar!]
+                  ? `data:image/jpg;base64, ${avatarList[user?.avatar!]}`
+                  : user?.avatar
+              }
+              alt={user?.avatar}
+            />
+          </div>
           <div className="flex-1 flex self-center font-xs font-medium h-10">
-            <span className="cursor-pointer mr-2">user1</span>{" "}
-            <span className="mr-2">
-              <i
-                className="fa-solid fa-angle-right"
-                style={{
-                  fontSize: "0.75rem",
-                }}
-              />
-            </span>
-            <span className="cursor-pointer">user2</span>
+            <span className="cursor-pointer mr-2">{postUser.username}</span>{" "}
+            {postRecipient && (
+              <>
+                <span className="mr-2">
+                  <i
+                    className="fa-solid fa-angle-right"
+                    style={{
+                      fontSize: "0.75rem",
+                    }}
+                  />
+                </span>
+                <span className="cursor-pointer">{postRecipient.username}</span>
+              </>
+            )}
           </div>
         </div>
-        <p
-          className="mx-3 pb-3 flex-1 text-left"
-          style={{
-            lineHeight: "1.25rem",
-          }}
-        >
-          {body}
-        </p>
+        {
+          <p
+            className={`${content ? "pb-3" : "pb-.5"} mx-3 flex-1 text-left`}
+            style={{
+              lineHeight: "1.25rem",
+            }}
+          >
+            {content}
+          </p>
+        }
         <div>
-          {postImg && (
+          {image && (
             <img
-              ref={postImgRef}
-              src={postImg}
-              alt="postImage"
+              // ref={postImgRef}
+              src={image}
+              alt={image}
               className="cursor-pointer select-none"
             />
           )}

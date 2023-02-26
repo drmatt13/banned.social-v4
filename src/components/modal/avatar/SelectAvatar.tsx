@@ -21,16 +21,12 @@ import styles from "@/styles/scrollbar.module.scss";
 const SelectAvatar = ({
   avatar,
   setAvatar,
-  loading,
-  setLoading,
 }: {
   avatar: string | undefined;
   setAvatar: (avatar: string | undefined) => void;
-  loading: boolean;
-  setLoading: (loading: boolean) => void;
 }) => {
   const { user, setUser, logout, darkMode, mobile } = useGlobalContext();
-  const { setModal } = useModalContext();
+  const { setModal, loading, setLoading } = useModalContext();
 
   const updateAvatar = useCallback(async () => {
     if (!avatar) return;
@@ -67,7 +63,7 @@ const SelectAvatar = ({
   return (
     <div
       className={`${
-        !mobile && darkMode ? styles.darkScroll : styles.lightScroll
+        mobile ? "" : darkMode ? styles.darkScroll : styles.lightScroll
       } h-full flex flex-col`}
     >
       <div className={`${!mobile && "mr-2"} flex-1 px-3 my-2 overflow-auto`}>

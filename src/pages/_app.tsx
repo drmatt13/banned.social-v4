@@ -1,6 +1,3 @@
-import type { AppType } from "next/dist/shared/lib/utils";
-import type { Session } from "next-auth";
-import type User from "@/types/user";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, signOut } from "next-auth/react";
@@ -16,6 +13,12 @@ import { globalContext } from "@/context/globalContext";
 // global styles
 import "@/styles/globals.scss";
 
+// types
+import type { AppType } from "next/dist/shared/lib/utils";
+import type { Session } from "next-auth";
+import type User from "@/types/user";
+import type FeedCache from "@/types/feedCache";
+
 const MyApp: AppType<{
   session: Session;
 }> = ({ Component, pageProps: { session, ...pageProps } }) => {
@@ -26,6 +29,7 @@ const MyApp: AppType<{
   const [loggingOut, setLoggingOut] = useState(false);
   const [navContainerVisable, setNavContainerVisable] = useState(true);
   const [navButtonsVisable, setNavButtonsVisable] = useState(false);
+  const [feedCache] = useState<FeedCache>({});
 
   useEffect(() => {
     if (
@@ -100,6 +104,7 @@ const MyApp: AppType<{
             setNavContainerVisable,
             navButtonsVisable,
             setNavButtonsVisable,
+            feedCache,
           }}
         >
           <AppLayout>
@@ -125,6 +130,7 @@ const MyApp: AppType<{
           setNavContainerVisable,
           navButtonsVisable,
           setNavButtonsVisable,
+          feedCache,
         }}
       >
         <AppLayout>

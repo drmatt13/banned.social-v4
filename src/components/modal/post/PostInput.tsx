@@ -292,7 +292,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
               value={post.content}
               minRows={image ? (postStyle === "desktop" ? 2 : 3) : 5}
               maxRows={postStyle === "mobile" ? (image ? 6 : 8) : image ? 5 : 7}
-              className={`${
+              className={`${loading ? "animate-pulse" : ""} ${
                 postStyle === "mobile"
                   ? "p-2 text-sm dark:caret-white"
                   : "py-2 px-3.5 dark:caret-black "
@@ -304,7 +304,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
             />
             <p
               ref={duplicateTextRef}
-              className={`${
+              className={`${loading ? "animate-pulse" : ""} ${
                 postStyle === "mobile" ? "p-2 text-sm" : "py-2 px-3.5"
               } text-transparent h-full absolute left-0 whitespace-pre-wrap break-words pointer-events-none`}
               style={{
@@ -318,7 +318,9 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
               ref={textareaRef}
               minRows={image ? (postStyle === "desktop" ? 2 : 3) : 5}
               maxRows={postStyle === "mobile" ? (image ? 6 : 8) : image ? 5 : 7}
-              className={`${
+              className={`
+              ${loading ? "animate-pulse" : ""}
+              ${
                 postStyle === "mobile"
                   ? "p-2 text-sm dark:caret-white"
                   : "py-2 px-3.5 dark:caret-black "
@@ -337,6 +339,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
                 duplicateTextRef.current!.style.transform = `translateY(-${e.currentTarget.scrollTop}px)`;
                 fakeTextareaRef.current!.scrollTop = e.currentTarget.scrollTop;
               }}
+              disabled={loading}
             />
           </div>
         </div>

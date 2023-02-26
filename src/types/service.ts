@@ -10,10 +10,10 @@ type Service =
   | "register"
   | "update avatar"
   // post_db
-  | "create post" //
+  | "create post"
   | "delete post" //
   | "get post" //
-  | "get posts" //
+  | "get posts"
   | "get user posts" //
   | "update post" //
   // friend_db

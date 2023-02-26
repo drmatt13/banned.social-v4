@@ -1,6 +1,9 @@
-import type User from "@/types/user";
-import Og from "@/types/og";
 import { serviceError } from "@/lib/processService";
+
+// types
+import type User from "@/types/user";
+import type Og from "@/types/og";
+import type Post from "@/types/post";
 
 type UniversalTypeError =
   | typeof serviceError.Unauthorized
@@ -61,6 +64,25 @@ type Type<T> =
         error?:
           | typeof serviceError.InvalidUserId
           | typeof serviceError.FailedToUpdateUser
+          | typeof serviceError.FailedToUploadImage
+          | UniversalTypeError;
+      }
+    : // post_db
+    T extends "create post"
+    ? {
+        post?: Post;
+        error?:
+          | typeof serviceError.FailedToCreatePost
+          | typeof serviceError.FailedToUploadImage
+          | UniversalTypeError;
+      }
+    : T extends "get posts"
+    ? {
+        posts?: Post[];
+        error?:
+          | typeof serviceError.FailedToGetPosts
+          | typeof serviceError.NoMorePosts
+          | typeof serviceError.InvalidRequest
           | UniversalTypeError;
       }
     : never;

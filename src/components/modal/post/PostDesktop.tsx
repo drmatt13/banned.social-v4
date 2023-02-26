@@ -16,7 +16,7 @@ interface Props {
 const PostDesktop = ({ children }: Props) => {
   const { mobile } = useGlobalContext();
   const { setModal, loading } = useModalContext();
-  const { post, postStyle, loadImage, image } = usePostContext();
+  const { post, postStyle, loadImage, image, submitPost } = usePostContext();
 
   const dropRef = useRef<HTMLDivElement>(null);
 
@@ -27,17 +27,17 @@ const PostDesktop = ({ children }: Props) => {
       onDragOver={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        dropRef.current!.style.opacity = "1";
+        if (!loading) dropRef.current!.style.opacity = "1";
       }}
       onDragEnter={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        dropRef.current!.style.opacity = "1";
+        if (!loading) dropRef.current!.style.opacity = "1";
       }}
       onDragOverCapture={(e) => {
         e.preventDefault();
         e.stopPropagation();
-        dropRef.current!.style.opacity = "1";
+        if (!loading) dropRef.current!.style.opacity = "1";
       }}
       onDragLeave={(e) => {
         e.preventDefault();
@@ -70,14 +70,16 @@ const PostDesktop = ({ children }: Props) => {
             <div className="font-bold text-lg pb-2">Create post</div>
             <div
               className="absolute top-0 right-2 flex justify-center items-center"
-              onClick={() => setModal(false)}
+              onClick={() => !loading && setModal(false)}
             >
               <div
                 className={`${
-                  mobile
+                  loading
+                    ? "cursor-not-allowed"
+                    : mobile
                     ? "active:bg-red-400 dark:active:bg-white"
-                    : "hover:bg-red-400 dark:hover:bg-white"
-                } bg-neutral-300/90 dark:bg-neutral-100/80 h-7 w-7 rounded-full flex justify-center items-center cursor-pointer border hover:border-none dark:border-black/[12.5%] shadow transition-colors ease-out`}
+                    : "hover:bg-red-400 dark:hover:bg-white hover:border-none cursor-pointer"
+                } bg-neutral-300/90 dark:bg-neutral-100/80 h-7 w-7 rounded-full flex justify-center items-center border dark:border-black/[12.5%] shadow transition-colors ease-out`}
               >
                 <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
               </div>
@@ -89,7 +91,7 @@ const PostDesktop = ({ children }: Props) => {
             value="Post"
             disabled={(!post.content && !post.og && !image) || loading}
             radius="rounded-lg"
-            // onClick={getOgData}
+            onClick={submitPost}
           />
         </div>
       </div>

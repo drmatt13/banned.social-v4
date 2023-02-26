@@ -1,3 +1,5 @@
+import type Post from "./post";
+
 // no_db
 interface GetOg {
   url: string;
@@ -33,6 +35,18 @@ interface UpdateAvatar {
   avatar: string;
 }
 
+// post_db
+interface CreatePost {
+  sharedPost_id?: Post;
+  post: Post;
+}
+
+interface GetPosts {
+  page: number;
+  limit: number;
+  type: "global" | "friends";
+}
+
 type ServiceBody<T> =
   // no_db
   T extends "get og"
@@ -50,6 +64,11 @@ type ServiceBody<T> =
     ? Register
     : T extends "update avatar"
     ? UpdateAvatar
+    : // post_db
+    T extends "create post"
+    ? CreatePost
+    : T extends "get posts"
+    ? GetPosts
     : never;
 
 export default ServiceBody;

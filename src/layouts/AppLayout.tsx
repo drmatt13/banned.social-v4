@@ -72,6 +72,7 @@ const AppLayout = ({ children }: Props) => {
                 <div
                   className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
                   onClick={() => setNavButtonsVisable(false)}
+                  onDragStart={(e) => e.preventDefault()}
                 >
                   {showNavbar && !loading && (
                     <>

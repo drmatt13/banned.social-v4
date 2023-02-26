@@ -1,17 +1,79 @@
-import React from "react";
+import { useState, useEffect, useCallback } from "react";
 
 // components
-import Post from "./Post";
+import Post from "@/components/Post";
+import Loading from "@/components/Loading";
+
+// libaries
+import processService from "@/lib/processService";
+
+// types
+import type IPost from "@/types/post";
 
 const NewsFeed = () => {
+  const [page, setPage] = useState(1);
+  const [posts, setPosts] = useState<Array<IPost>>([]);
+  const [loading, setLoading] = useState(false);
+  const [initialLoad, setInitialLoad] = useState(true);
+
+  const getPosts = useCallback(async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      const data = await processService("get posts", {
+        page,
+        limit: 10,
+        type: "global",
+      });
+      const { success, error } = data;
+      if (success && data.posts) {
+        console.log(data.posts);
+        setPosts([...posts, ...data.posts]);
+        setPage(page + 1);
+      } else {
+        if (error === "Failed to get posts") {
+          throw new Error("Failed to get posts");
+        } else if (error === "No more posts") {
+          console.log("No more posts");
+          setLoading(false);
+        } else if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Server Error") {
+          throw new Error("Server Error");
+        } else {
+          throw new Error("Unknown Error");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [loading, page, posts]);
+
+  useEffect(() => {
+    if (initialLoad) getPosts();
+    setInitialLoad(false);
+  }, [getPosts, initialLoad, loading]);
+
   return (
     <>
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
-      <Post body="oekfposekfsefkAnother Demake for the night stream! Resident Evil 3 Nemesis Demake [PC] is here, and in the Calderbank! Tested and approved! This is an complete English version of an amazing Demake of Resident Evil 3 with a Zelda-style game perspective. A mixture of classic and remake makes this game the best RE Demake you've ever seen! The story of the game is a mixture of the original classic and the remake" />
+      {posts &&
+        posts.map((post: IPost) => (
+          <Post
+            key={post._id}
+            _id={post._id!}
+            user_id={post.user_id}
+            recipient_id={post.recipient_id}
+            sharedPost_id={post.sharedPost_id}
+            content={post.content}
+            image={post.image}
+            og={post.og}
+          />
+        ))}
+
+      <div className="relative h-28 mb-5">
+        <Loading />
+      </div>
     </>
   );
 };

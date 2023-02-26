@@ -9,6 +9,9 @@ import {
 import Link from "next/link";
 import _ from "lodash";
 
+// components
+import Post from "@/components/Post";
+
 // context
 import useGlobalContext from "@/context/globalContext";
 import { modalContext } from "@/context/modalContext";
@@ -20,17 +23,16 @@ import avatarList from "@/data/avatarList";
 // hooks
 import useImage from "@/hooks/useImage";
 
+// libaries
+import processService from "@/lib/processService";
+
 // modal
 import PostModal from "@/modals/PostModal";
 
 // types
 import type Og from "@/types/og";
-import type User from "@/types/user";
-import type Post from "@/types/post";
+import type IPost from "@/types/post";
 import type UrlCache from "@/types/UrlCache";
-
-// libaries
-import processService from "@/lib/processService";
 
 function getDomainFromUrl(url: string): string {
   let domain = "";
@@ -48,7 +50,7 @@ function getDomainFromUrl(url: string): string {
 }
 
 interface Props {
-  recipient?: User;
+  recipient_id?: string;
 }
 
 function checkOverlap(
@@ -78,7 +80,7 @@ function checkOgEquality(og1: Og, og2: Og): boolean {
   return _.isEqual(og1, og2);
 }
 
-const PostButton = ({ recipient }: Props) => {
+const PostButton = ({ recipient_id }: Props) => {
   const { user, mobile } = useGlobalContext();
   const {
     image,
@@ -89,9 +91,9 @@ const PostButton = ({ recipient }: Props) => {
     setErrorLoadingImage,
   } = useImage();
 
-  const [post, setPost] = useState<Post>({
+  const [post, setPost] = useState<IPost>({
     content: "",
-    recipient,
+    recipient_id,
     og: undefined,
   });
   const [modal, setModal] = useState(false);
@@ -108,6 +110,40 @@ const PostButton = ({ recipient }: Props) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const urlCacheRef = useRef<UrlCache>({});
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const [posts, setPosts] = useState<Array<IPost>>([]);
+
+  const submitPost = useCallback(async () => {
+    if (!post && !image && loading) return;
+    try {
+      setLoading(true);
+      const data = await processService("create post", {
+        post: { ...post, image },
+      });
+      const { success, error } = data;
+      if (success && data.post) {
+        setPosts([data.post, ...posts]);
+        setPost({ content: "", recipient_id, og: undefined });
+        removeImage();
+        setLoading(false);
+        setModal(false);
+      } else {
+        if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Failed to upload image") {
+          throw new Error("Failed to upload image");
+        } else if (error === "Failed to create post") {
+          throw new Error("Failed to create post");
+        } else {
+          throw new Error("Server error");
+        }
+      }
+    } catch (error) {
+      alert("Server error");
+      setLoading(false);
+      // logout();
+    }
+  }, [image, loading, post, posts, recipient_id, removeImage]);
 
   const adjustWidth = useCallback(() => {
     setScreenWidth(window.innerWidth);
@@ -296,7 +332,7 @@ const PostButton = ({ recipient }: Props) => {
             setPost,
             initialLoad,
             setInitialLoad,
-            recipient,
+            recipient_id,
             loadingOg,
             setLoadingOg,
             ogStack,
@@ -311,6 +347,7 @@ const PostButton = ({ recipient }: Props) => {
             setErrorLoadingImage,
             imageInputRef,
             urlCacheRef,
+            submitPost,
           }}
         >
           <PostModal />
@@ -352,6 +389,19 @@ const PostButton = ({ recipient }: Props) => {
         accept="image/png, image/jpeg"
         className="hidden"
       />
+      {posts &&
+        posts.map((post: IPost) => (
+          <Post
+            key={post._id}
+            _id={post._id!}
+            user_id={post.user_id}
+            recipient_id={post.recipient_id}
+            sharedPost_id={post.sharedPost_id}
+            content={post.content}
+            image={post.image}
+            og={post.og}
+          />
+        ))}
     </>
   );
 };

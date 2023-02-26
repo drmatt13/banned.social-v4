@@ -116,6 +116,26 @@ const eventbus = async (
         break;
 
       // *****************************
+      // *******  POST DB  ***********
+      // *****************************
+
+      // Creates a new post
+      // returns created post
+      // { post, image }
+      case "create post":
+        protectedRoute();
+        req = await axios.post(`${URL}/post/create_post`, body);
+        break;
+
+      // Get posts
+      // returns posts
+      // { user_id, recipient_id, sharedPost_id, limit, page }
+      case "get posts":
+        protectedRoute();
+        req = await axios.post(`${URL}/post/get_posts`, body);
+        break;
+
+      // *****************************
       // *******  DEFAULT  ***********
       // *****************************
 

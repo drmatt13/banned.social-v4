@@ -12,29 +12,29 @@ interface Props {
 
 const Modal = ({ children, visable = true }: Props) => {
   const { user, navButtonsVisable } = useGlobalContext();
-  const { modal, setModal } = useModalContext();
+  const { modal, setModal, loading } = useModalContext();
 
-  const eventListener = useCallback(
+  const keydownCallback = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === " " && e.target === document.body) {
         e.preventDefault();
       }
-      if (e.key === "Escape") setModal(false);
+      if (!loading && e.key === "Escape") setModal(false);
     },
-    [setModal]
+    [loading, setModal]
   );
 
   useEffect(() => {
-    if (modal) window.addEventListener("keydown", eventListener);
+    if (modal) window.addEventListener("keydown", keydownCallback);
     else {
-      window.removeEventListener("keydown", eventListener);
+      window.removeEventListener("keydown", keydownCallback);
       document.body.focus();
     }
     return () => {
-      window.removeEventListener("keydown", eventListener);
+      window.removeEventListener("keydown", keydownCallback);
       document.body.focus();
     };
-  }, [eventListener, modal]);
+  }, [keydownCallback, modal]);
 
   return !modal ? (
     <></>
@@ -66,7 +66,7 @@ const Modal = ({ children, visable = true }: Props) => {
         >
           <div
             className="absolute top-0 h-full w-full"
-            onClick={() => user?.avatar && setModal(false)}
+            onClick={() => user?.avatar && !loading && setModal(false)}
             onDragStart={(e) => e.preventDefault()}
             onDragCapture={(e) => e.preventDefault()}
             onDropCapture={(e) => e.preventDefault()}

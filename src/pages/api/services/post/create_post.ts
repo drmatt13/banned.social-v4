@@ -8,16 +8,18 @@ import AWS from "aws-sdk";
 
 // mongoose
 import connectDB from "@/lib/connectDB";
-import UserModel, { IUserModel } from "@/models/UserModel";
+import PostModel, { IPostModel } from "@/models/PostModel";
 
 export default connectDB(
-  async (req: ServiceRequest<"update avatar">, res: NextApiResponse) => {
+  async (req: ServiceRequest<"create post">, res: NextApiResponse) => {
     try {
-      let { _id, avatar, eventbusSecret } = req.body;
+      let { _id, eventbusSecret, post } = req.body;
+
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }
-      if (isBase64(avatar || "", { mimeRequired: true })) {
+
+      if (post?.image && isBase64(post?.image || "", { mimeRequired: true })) {
         try {
           AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
@@ -28,9 +30,9 @@ export default connectDB(
 
           const params = {
             Bucket: process.env.AWS_S3_BUCKET || "",
-            Key: `avatars/${_id}`,
+            Key: `post-images/${Date.now() + Math.random()}`,
             Body: Buffer.from(
-              avatar!.replace(/^data:image\/\w+;base64,/, ""),
+              post.image.replace(/^data:image\/\w+;base64,/, ""),
               "base64"
             ),
             ContentEncoding: "base64",
@@ -38,18 +40,21 @@ export default connectDB(
           };
 
           const upload = await s3.upload(params).promise();
-          avatar = upload.Location;
+          post.image = upload.Location;
         } catch (error) {
           throw new Error(serviceError.FailedToUploadImage);
         }
       }
-      const user: IUserModel | null = await UserModel.findOneAndUpdate(
-        { _id },
-        { avatar },
-        { new: true }
-      ).select("+avatar +username +admin");
-      if (user) {
-        return res.json({ success: true, user });
+      const newPost: IPostModel | null = await PostModel.create({
+        content: post?.content,
+        user_id: _id,
+        recipient_id: post?.recipient_id,
+        sharedPost_id: post?.sharedPost_id,
+        image: post?.image,
+        og: post?.og,
+      });
+      if (newPost) {
+        return res.json({ success: true, post: newPost });
       } else {
         throw new Error(serviceError.FailedToUpdateUser);
       }

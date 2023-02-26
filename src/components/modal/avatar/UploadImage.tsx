@@ -17,19 +17,15 @@ const UploadImage = ({
   loadingImage,
   removeImage,
   errorLoadingImage,
-  loading,
-  setLoading,
 }: {
   image: string;
   loadImage: (e: unknown) => void;
-  loading: boolean;
   loadingImage: boolean;
   removeImage: () => void;
   errorLoadingImage: boolean;
-  setLoading: (loading: boolean) => void;
 }) => {
   const { setUser, logout } = useGlobalContext();
-  const { setModal } = useModalContext();
+  const { setModal, loading, setLoading } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
@@ -55,6 +51,8 @@ const UploadImage = ({
           throw new Error("Unauthorized");
         } else if (error === "Failed to update user") {
           throw new Error("Failed to update user");
+        } else if (error === "Failed to upload image") {
+          throw new Error("Failed to upload image");
         } else {
           throw new Error("Server error");
         }

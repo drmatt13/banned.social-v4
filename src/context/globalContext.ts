@@ -1,5 +1,6 @@
 import { createContext, useContext } from "react";
 import type User from "../types/user";
+import type FeedCache from "../types/feedCache";
 
 type GlobalContext = {
   mobile: boolean | undefined;
@@ -17,6 +18,7 @@ type GlobalContext = {
   setNavContainerVisable: (navVisable: boolean) => void;
   navButtonsVisable: boolean;
   setNavButtonsVisable: (navVisable: boolean) => void;
+  feedCache: FeedCache;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -33,6 +35,7 @@ export const globalContext = createContext<GlobalContext>({
   setNavContainerVisable: () => {},
   navButtonsVisable: false,
   setNavButtonsVisable: () => {},
+  feedCache: {},
 });
 
 const useGlobalContext = () => useContext(globalContext);

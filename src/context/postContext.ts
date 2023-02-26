@@ -10,13 +10,12 @@ import {
 // types
 import type Og from "@/types/og";
 import type Post from "@/types/post";
-import type User from "@/types/user";
 import type UrlCache from "@/types/UrlCache";
 
 export type PostContext = {
   post: Post;
   setPost: Dispatch<SetStateAction<Post>>;
-  recipient?: User;
+  recipient_id?: string;
   initialLoad: boolean;
   setInitialLoad: Dispatch<SetStateAction<boolean>>;
   loadingOg: boolean;
@@ -33,12 +32,13 @@ export type PostContext = {
   removeImage: () => void;
   imageInputRef: RefObject<HTMLInputElement>;
   urlCacheRef: MutableRefObject<UrlCache>;
+  submitPost: () => void;
 };
 
 export const postContext = createContext<PostContext>({
-  post: { content: "", og: undefined, recipient: undefined },
+  post: { content: "", og: undefined, recipient_id: undefined },
   setPost: () => {},
-  recipient: undefined,
+  recipient_id: undefined,
   initialLoad: true,
   setInitialLoad: () => {},
   loadingOg: false,
@@ -55,6 +55,7 @@ export const postContext = createContext<PostContext>({
   removeImage: () => {},
   imageInputRef: { current: null },
   urlCacheRef: { current: {} },
+  submitPost: () => {},
 });
 
 const usePostContext = () => useContext(postContext);
