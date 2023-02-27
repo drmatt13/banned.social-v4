@@ -96,7 +96,7 @@ const Post = ({
             <img
               src={image}
               alt={image}
-              className="cursor-pointer select-none min-h-[15rem]"
+              className="cursor-pointer select-none min-h-[15rem] w-full"
               loading="lazy"
               onError={(e) => {
                 e.currentTarget.style.display = "none";
