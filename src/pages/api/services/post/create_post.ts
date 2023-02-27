@@ -1,7 +1,6 @@
 import { serviceError } from "@/lib/processService";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
-import isBase64 from "is-base64";
 
 // aws
 import AWS from "aws-sdk";
@@ -19,7 +18,7 @@ export default connectDB(
         throw new Error(serviceError.Unauthorized);
       }
 
-      if (post?.image && isBase64(post?.image || "", { mimeRequired: true })) {
+      if (post?.image && post.image) {
         try {
           AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
@@ -30,12 +29,8 @@ export default connectDB(
 
           const params = {
             Bucket: process.env.AWS_S3_BUCKET || "",
-            Key: `post-images/${Date.now() + Math.random()}`,
-            Body: Buffer.from(
-              post.image.replace(/^data:image\/\w+;base64,/, ""),
-              "base64"
-            ),
-            ContentEncoding: "base64",
+            Key: `post-images/${Date.now() + Math.random()}.jpg`,
+            Body: Buffer.from(post.image, "base64"),
             ContentType: "image/jpeg",
           };
 

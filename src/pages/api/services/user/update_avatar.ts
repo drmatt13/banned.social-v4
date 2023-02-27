@@ -1,7 +1,6 @@
 import { serviceError } from "@/lib/processService";
 import type ServiceRequest from "@/types/serviceRequest";
 import type { NextApiResponse } from "next";
-import isBase64 from "is-base64";
 
 // aws
 import AWS from "aws-sdk";
@@ -17,7 +16,7 @@ export default connectDB(
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }
-      if (isBase64(avatar || "", { mimeRequired: true })) {
+      if (avatar?.charAt(0) === "/") {
         try {
           AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
@@ -29,11 +28,7 @@ export default connectDB(
           const params = {
             Bucket: process.env.AWS_S3_BUCKET || "",
             Key: `avatars/${_id}`,
-            Body: Buffer.from(
-              avatar!.replace(/^data:image\/\w+;base64,/, ""),
-              "base64"
-            ),
-            ContentEncoding: "base64",
+            Body: Buffer.from(avatar, "base64"),
             ContentType: "image/jpeg",
           };
 
@@ -43,6 +38,7 @@ export default connectDB(
           throw new Error(serviceError.FailedToUploadImage);
         }
       }
+
       const user: IUserModel | null = await UserModel.findOneAndUpdate(
         { _id },
         { avatar },

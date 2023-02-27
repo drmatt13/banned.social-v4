@@ -10,6 +10,7 @@ import useModalContext from "@/context/modalContext";
 
 // libaries
 import processService from "@/lib/processService";
+import blobToBase64 from "@/lib/blobToBase64";
 
 const UploadImage = ({
   image,
@@ -18,7 +19,7 @@ const UploadImage = ({
   removeImage,
   errorLoadingImage,
 }: {
-  image: string;
+  image: Blob | undefined;
   loadImage: (e: unknown) => void;
   loadingImage: boolean;
   removeImage: () => void;
@@ -32,11 +33,12 @@ const UploadImage = ({
   const [initialLoad, setInitialLoad] = useState(true);
 
   const uploadImage = useCallback(async () => {
-    if (!image) return;
-    setLoading(true);
     try {
+      setLoading(true);
+      const base64 = await blobToBase64(image);
+      if (!base64) return;
       const data = await processService("update avatar", {
-        avatar: image,
+        avatar: base64,
       });
       const { user, success, error } = data;
       if (success && user) {
@@ -139,7 +141,7 @@ const UploadImage = ({
                 } bg-blue-500 dark:bg-blue-600 p-1 rounded-lg mx-2 aspect-square`}
               >
                 <img
-                  src={image}
+                  src={URL.createObjectURL(image as Blob)}
                   alt="preview"
                   className={`aspect-square w-48 object-cover object-center rounded-md bg-white select-none`}
                   onError={removeImage}

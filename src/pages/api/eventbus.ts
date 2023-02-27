@@ -25,6 +25,8 @@ const eventbus = async (
       throw new Error("No body");
     }
 
+    console.log(body);
+
     body._id = undefined;
     body.eventbusSecret = process.env.TOKEN_SECRET;
 

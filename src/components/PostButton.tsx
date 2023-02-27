@@ -25,6 +25,7 @@ import useImage from "@/hooks/useImage";
 
 // libaries
 import processService from "@/lib/processService";
+import blobToBase64 from "@/lib/blobToBase64";
 
 // modal
 import PostModal from "@/modals/PostModal";
@@ -117,8 +118,12 @@ const PostButton = ({ recipient_id }: Props) => {
     if (!post && !image && loading) return;
     try {
       setLoading(true);
+      const base64 = await blobToBase64(image);
       const data = await processService("create post", {
-        post: { ...post, image },
+        post: {
+          ...post,
+          image: base64,
+        },
       });
       const { success, error } = data;
       if (success && data.post) {
@@ -143,6 +148,7 @@ const PostButton = ({ recipient_id }: Props) => {
       setLoading(false);
       // logout();
     }
+    // console.log(new File([image!], "postImage"));
   }, [image, loading, post, posts, recipient_id, removeImage]);
 
   const adjustWidth = useCallback(() => {

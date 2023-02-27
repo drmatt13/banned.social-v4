@@ -6,23 +6,9 @@ import useGlobalContext from "@/context/globalContext";
 import usePostContext from "@/context/postContext";
 
 const PostImage = () => {
-  const { user, mobile } = useGlobalContext();
-  const { loading, setLoading } = useModalContext();
-  const {
-    initialLoad,
-    setInitialLoad,
-    post,
-    setPost,
-    recipient_id,
-    loadingOg,
-    setLoadingOg,
-    image,
-    ogStack,
-    setOgStack,
-    processUrl,
-    postStyle,
-    removeImage,
-  } = usePostContext();
+  const { mobile } = useGlobalContext();
+  const { loading } = useModalContext();
+  const { image, postStyle, removeImage } = usePostContext();
 
   return (
     <>
@@ -40,7 +26,7 @@ const PostImage = () => {
           <i className="fas fa-times text text-gray-800 w-5 h-5 flex justify-center items-center"></i>
         </div>
         <img
-          src={image}
+          src={URL.createObjectURL(image as Blob)}
           alt="image for upload"
           className={`${loading && "grayscale-[.5]"} ${
             postStyle === "desktop" ? "rounded-lg" : "rounded-md"

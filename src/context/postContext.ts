@@ -24,7 +24,7 @@ export type PostContext = {
   setOgStack: Dispatch<SetStateAction<Array<Og>>>;
   processUrl: (url: string) => void;
   postStyle: "mobile" | "desktop";
-  image: string;
+  image: Blob | undefined;
   loadImage: (e: unknown) => void;
   loadingImage: boolean;
   errorLoadingImage: boolean;
@@ -47,7 +47,7 @@ export const postContext = createContext<PostContext>({
   setOgStack: () => {},
   processUrl: () => {},
   postStyle: "mobile",
-  image: "",
+  image: undefined,
   loadImage: () => {},
   loadingImage: false,
   errorLoadingImage: false,

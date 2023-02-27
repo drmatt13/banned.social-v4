@@ -1,5 +1,19 @@
 import type Post from "./post";
 
+type _Overwrite<T, U> = U extends object
+  ? { [K in keyof T]: K extends keyof U ? _Overwrite<T[K], U[K]> : T[K] } & U
+  : U;
+
+type ExpandRecursively<T> = T extends Function
+  ? T
+  : T extends object
+  ? T extends infer O
+    ? { [K in keyof O]: ExpandRecursively<O[K]> }
+    : never
+  : T;
+
+type Overwrite<T, U> = ExpandRecursively<_Overwrite<T, U>>;
+
 // no_db
 interface GetOg {
   url: string;
@@ -38,7 +52,7 @@ interface UpdateAvatar {
 // post_db
 interface CreatePost {
   sharedPost_id?: Post;
-  post: Post;
+  post: Overwrite<Post, { image: string | undefined }>;
 }
 
 interface GetPosts {

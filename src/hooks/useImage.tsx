@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 
 import Resizer from "react-image-file-resizer";
-import isBase64 from "is-base64";
+// import isBase64 from "is-base64";
 
 const isChangeEvent = (
   e: unknown
@@ -20,7 +20,7 @@ function isValidImageFile(file: File): boolean {
 
 const useImage = () => {
   const [loadingImage, setLoadingImage] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<Blob | undefined>(undefined);
   const [errorLoadingImage, setErrorLoadingImage] = useState(false);
 
   const loadImage = useCallback((e: unknown) => {
@@ -48,16 +48,13 @@ const useImage = () => {
           (uri) => {
             resolve(uri);
           },
-          "base64"
+          "blob"
         );
       });
-      if (
-        typeof processedImage !== "string" ||
-        !isBase64(processedImage, { mimeRequired: true })
-      ) {
+      // processedImage
+      if (!(processedImage instanceof Blob)) {
         return setErrorLoadingImage(true);
       }
-      console.log(processedImage);
       setImage(processedImage);
       setLoadingImage(false);
     };
@@ -69,7 +66,7 @@ const useImage = () => {
 
   useEffect(() => {
     if (errorLoadingImage) {
-      setImage("");
+      setImage(undefined);
       setLoadingImage(false);
     }
   }, [errorLoadingImage]);
@@ -78,7 +75,7 @@ const useImage = () => {
     image,
     loadImage,
     loadingImage,
-    removeImage: () => setImage(""),
+    removeImage: () => setImage(undefined),
     errorLoadingImage,
     setErrorLoadingImage,
   };

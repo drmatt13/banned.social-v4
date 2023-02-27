@@ -6,7 +6,7 @@ interface Post {
   user_id?: string;
   recipient_id?: string;
   sharedPost_id?: string;
-  image?: string;
+  image?: Blob | string;
   og?: Og;
 }
 
