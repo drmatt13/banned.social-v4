@@ -25,7 +25,7 @@ interface Props {
 }
 
 const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
-  const { user, mobile, darkMode } = useGlobalContext();
+  const { user, mobile, darkMode, feedCache } = useGlobalContext();
   const { loading, setLoading } = useModalContext();
   const {
     initialLoad,
@@ -351,7 +351,11 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
                   ? "text-gray-500 dark:text-neutral-400 p-2"
                   : "text-neutral-600 dark:text-neutral-700 py-2 px-3.5"
               }`}
-            >{`What's on your mind, ${user?.username}?`}</div>
+            >
+              {!recipient_id || recipient_id === user?._id
+                ? `What's on your mind, ${user?.username}?`
+                : `Write something to ${feedCache[recipient_id]?.username}...`}
+            </div>
           )}
         </div>
       </div>

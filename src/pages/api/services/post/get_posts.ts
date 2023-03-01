@@ -9,7 +9,7 @@ import PostModel, { IPostModel } from "@/models/PostModel";
 export default connectDB(
   async (req: ServiceRequest<"get posts">, res: NextApiResponse) => {
     try {
-      let { _id, eventbusSecret, type, page, limit } = req.body;
+      let { _id, eventbusSecret, type, page, limit, recipient_id } = req.body;
 
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
@@ -34,10 +34,17 @@ export default connectDB(
           .skip((page - 1) * limit)
           .limit(limit);
       }
-
-      // if no more posts
-      if (posts.length === 0) {
-        throw new Error(serviceError.NoMorePosts);
+      // get user posts
+      else if (type === "user") {
+        if (!_id) {
+          throw new Error(serviceError.InvalidUserId);
+        }
+        posts = await PostModel.find({
+          $or: [{ user_id: recipient_id }, { recipient_id }],
+        })
+          .sort({ createdAt: -1 })
+          .skip((page - 1) * limit)
+          .limit(limit);
       }
 
       return res.json({ posts, success: true });

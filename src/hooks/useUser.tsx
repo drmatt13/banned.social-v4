@@ -1,55 +1,54 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import Cookies from "js-cookie";
-import type User from "@/types/user";
+import { useState, useEffect, useCallback } from "react";
 
 // context
 import useGlobalContext from "@/context/globalContext";
 
-// utils
+// libraries
 import processService from "@/lib/processService";
 
-const useUser = (user: User, setUser: (user: User) => void): boolean => {
-  const { logout } = useGlobalContext();
+// types
+import type User from "@/types/user";
+
+interface Props {
+  _id?: string;
+}
+
+const useUser = ({ _id }: Props) => {
+  const { setFeedCache, user } = useGlobalContext();
+
+  const [userState, setUser] = useState<User>(undefined);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+
+  const getUser = useCallback(
+    async (defaultUser: User) => {
+      if (!_id) return;
+      setLoading(true);
+      if (defaultUser && defaultUser._id === _id) {
+        setUser(defaultUser);
+        setLoading(false);
+        return;
+      }
+      const data = await processService("get user", {
+        _id,
+      });
+      const { user } = data;
+      if (user) {
+        setFeedCache((prev) => ({
+          ...prev,
+          [user._id]: { avatar: user.avatar, username: user.username },
+        }));
+        setUser(user);
+        setLoading(false);
+      }
+    },
+    [_id, setFeedCache]
+  );
 
   useEffect(() => {
-    const checkCredentials = async () => {
-      // check if no token cookie exists
-      if (!Cookies.get("token")) return setLoading(false);
-      // check if token cookie is valid and update current user
-      try {
-        const res = await processService("get user", undefined);
-        if (res.user) {
-          setUser(res.user);
-          setLoading(false);
-        } else {
-          Cookies.remove("token");
-          Cookies.remove("next-auth.session-token");
-          Cookies.remove("next-auth.callback-url");
-          Cookies.remove("next-auth.csrf-token");
-          window.location.replace("/login");
-        }
-      } catch (error) {
-        alert("something went wrong");
-        Cookies.remove("token");
-        Cookies.remove("next-auth.session-token");
-        Cookies.remove("next-auth.callback-url");
-        Cookies.remove("next-auth.csrf-token");
-        window.location.replace("/login");
-      }
-    };
+    if (_id) getUser(user);
+  }, [getUser, _id, user]);
 
-    const route = router.pathname.split("/")[1] || "/";
-    if (!user && !["login", "signup", "oauth"].includes(route)) {
-      checkCredentials();
-    } else {
-      setLoading(false);
-    }
-  }, [router.pathname, setUser, user]);
-
-  return loading;
+  return { user: userState, loading };
 };
 
 export default useUser;

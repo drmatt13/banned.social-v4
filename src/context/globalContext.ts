@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import type User from "../types/user";
 import type FeedCache from "../types/feedCache";
 
@@ -6,19 +6,20 @@ type GlobalContext = {
   mobile: boolean | undefined;
   user: User;
   darkMode: boolean;
-  setDarkMode: (darkMode: boolean) => void;
+  setDarkMode: Dispatch<SetStateAction<boolean>>;
   toggleDarkMode: () => void;
-  setUser: (user: User) => void;
+  setUser: Dispatch<SetStateAction<User>>;
   logout: (
     href?: string | React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => Promise<void>;
   loggingOut: boolean;
-  setLoggingOut: (loggingOut: boolean) => void;
+  setLoggingOut: Dispatch<SetStateAction<boolean>>;
   navContainerVisable: boolean;
-  setNavContainerVisable: (navVisable: boolean) => void;
+  setNavContainerVisable: Dispatch<SetStateAction<boolean>>;
   navButtonsVisable: boolean;
-  setNavButtonsVisable: (navVisable: boolean) => void;
+  setNavButtonsVisable: Dispatch<SetStateAction<boolean>>;
   feedCache: FeedCache;
+  setFeedCache: Dispatch<SetStateAction<FeedCache>>;
   updateFeedCache: (users: string[]) => Promise<void>;
 };
 
@@ -37,6 +38,7 @@ export const globalContext = createContext<GlobalContext>({
   navButtonsVisable: false,
   setNavButtonsVisable: () => {},
   feedCache: {},
+  setFeedCache: () => {},
   updateFeedCache: () => Promise.resolve(),
 });
 

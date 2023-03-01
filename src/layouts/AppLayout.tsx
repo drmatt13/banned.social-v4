@@ -11,7 +11,7 @@ import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 import useGlobalContext from "@/context/globalContext";
 
 // hooks
-import useUser from "@/hooks/useUser";
+import useVerifyUser from "@/hooks/useVerifyUser";
 
 // layouts
 import Navbar from "@/layouts/Navbar";
@@ -26,7 +26,7 @@ const AppLayout = ({ children }: Props) => {
   const router = useRouter();
   const { loggingOut, user, setUser, setNavButtonsVisable } =
     useGlobalContext();
-  const loading = useUser(user, setUser);
+  const loading = useVerifyUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(false);
   const [modal, setModal] = useState(false);
 

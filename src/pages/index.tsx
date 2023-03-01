@@ -69,7 +69,7 @@ const Home: NextPage = () => {
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
           <div>
             <PostButton />
-            <NewsFeed />
+            <NewsFeed type="global" />
           </div>
         </div>
         <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">

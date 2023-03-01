@@ -13,7 +13,12 @@ import processService from "@/lib/processService";
 // types
 import type IPost from "@/types/post";
 
-const NewsFeed = () => {
+interface Props {
+  type: "global" | "friends" | "user";
+  recipient_id?: string;
+}
+
+const NewsFeed = ({ type, recipient_id }: Props) => {
   const { feedCache, updateFeedCache } = useGlobalContext();
 
   const [page, setPage] = useState(1);
@@ -28,7 +33,8 @@ const NewsFeed = () => {
       const data = await processService("get posts", {
         page,
         limit: 10,
-        type: "global",
+        type: type,
+        recipient_id,
       });
       const { success, error } = data;
       if (!success || !data.posts) {
@@ -46,6 +52,8 @@ const NewsFeed = () => {
       }
       setPosts([...posts, ...data.posts]);
       setPage(page + 1);
+
+      // update feed cache
       const userCache = new Set();
       data.posts.forEach((post: IPost) => {
         if (!feedCache[post.user_id!]) userCache.add(post.user_id);
@@ -58,11 +66,17 @@ const NewsFeed = () => {
       if (users.length > 0) {
         await updateFeedCache(users);
       }
+      // get aggregated data for posts { likes, comments, shares }
+      //
+      //
+      //
+      //
+      //
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-  }, [feedCache, loading, page, posts, updateFeedCache]);
+  }, [feedCache, loading, page, posts, type, updateFeedCache]);
 
   useEffect(() => {
     if (initialLoad) getPosts();
@@ -84,10 +98,6 @@ const NewsFeed = () => {
             og={post.og}
           />
         ))}
-
-      <div className="relative h-28 mb-5">
-        <Loading />
-      </div>
     </>
   );
 };

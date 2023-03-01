@@ -21,7 +21,6 @@ import type { AppType } from "next/dist/shared/lib/utils";
 import type { Session } from "next-auth";
 import type User from "@/types/user";
 import type FeedCache from "@/types/feedCache";
-import FeedUser from "@/types/feedUser";
 
 const MyApp: AppType<{
   session: Session;
@@ -128,6 +127,7 @@ const MyApp: AppType<{
             navButtonsVisable,
             setNavButtonsVisable,
             feedCache,
+            setFeedCache,
             updateFeedCache,
           }}
         >
@@ -155,6 +155,7 @@ const MyApp: AppType<{
           navButtonsVisable,
           setNavButtonsVisable,
           feedCache,
+          setFeedCache,
           updateFeedCache,
         }}
       >

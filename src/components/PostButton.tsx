@@ -82,7 +82,7 @@ function checkOgEquality(og1: Og, og2: Og): boolean {
 }
 
 const PostButton = ({ recipient_id }: Props) => {
-  const { user, mobile } = useGlobalContext();
+  const { user, mobile, feedCache } = useGlobalContext();
   const {
     image,
     loadImage,
@@ -379,12 +379,12 @@ const PostButton = ({ recipient_id }: Props) => {
         >
           <div className="absolute h-full w-full top-0 left-0 flex items-center text-gray-600 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white hover:transition-colors hover:duration-200 ease-out truncate">
             <div className="truncate ml-4 mr-4">
-              {parseHTML(post.content).trim() !== ""
-                ? parseHTML(post.content)
-                : `What's on your mind, 
-            ${
-              user!.username[0]?.toUpperCase() + user!.username!.substring(1)
-            }?`}
+              {!recipient_id || recipient_id === user?._id
+                ? parseHTML(post.content).trim() !== ""
+                  ? parseHTML(post.content)
+                  : `What's on your mind, 
+            ${user!.username[0] + user!.username!.substring(1)}?`
+                : `Write something to ${feedCache[recipient_id]?.username}...`}
             </div>
           </div>
         </div>

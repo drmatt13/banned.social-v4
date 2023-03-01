@@ -93,22 +93,26 @@ const Post = ({
           <div className="flex-1 flex font-xs font-medium h-10">
             <div className="flex-1 flex flex-col self-center">
               <div className="flex">
-                <span className="cursor-pointer mr-2">{postUser.username}</span>{" "}
-                {postRecipient && (
-                  <>
-                    <span className="mr-2">
-                      <i
-                        className="fa-solid fa-angle-right"
-                        style={{
-                          fontSize: "0.75rem",
-                        }}
-                      />
-                    </span>
-                    <span className="cursor-pointer">
-                      {postRecipient.username}
-                    </span>
-                  </>
-                )}
+                <Link href={user_id!}>
+                  <span className="cursor-pointer mr-2">
+                    {postUser.username}
+                  </span>{" "}
+                  {postRecipient && (
+                    <>
+                      <span className="mr-2">
+                        <i
+                          className="fa-solid fa-angle-right"
+                          style={{
+                            fontSize: "0.75rem",
+                          }}
+                        />
+                      </span>
+                      <span className="cursor-pointer">
+                        {postRecipient.username}
+                      </span>
+                    </>
+                  )}
+                </Link>
               </div>
               <div className="flex h-full items-center text-xs font-light opacity-75">
                 February 24 at 12:56 PM

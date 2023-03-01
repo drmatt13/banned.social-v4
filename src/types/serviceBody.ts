@@ -61,9 +61,10 @@ interface CreatePost {
 }
 
 interface GetPosts {
+  recipient_id?: string;
   page: number;
   limit: number;
-  type: "global" | "friends";
+  type: "global" | "friends" | "user";
 }
 
 type ServiceBody<T> =
