@@ -33,7 +33,7 @@ import PostModal from "@/modals/PostModal";
 // types
 import type Og from "@/types/og";
 import type IPost from "@/types/post";
-import type UrlCache from "@/types/urlCache";
+// import UrlCache from "@/types/urlCache";
 
 function getDomainFromUrl(url: string): string {
   let domain = "";
@@ -109,7 +109,7 @@ const PostButton = ({ recipient_id }: Props) => {
   const deferredScreenWidth = useDeferredValue(screenWidth);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const urlCacheRef = useRef<UrlCache>({});
+  const urlCacheRef = useRef<any>({});
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [posts, setPosts] = useState<Array<IPost>>([]);
