@@ -4,6 +4,9 @@ import { useState, useEffect, useCallback } from "react";
 import Post from "@/components/Post";
 import Loading from "@/components/Loading";
 
+// context
+import useGlobalContext from "@/context/globalContext";
+
 // libaries
 import processService from "@/lib/processService";
 
@@ -11,6 +14,8 @@ import processService from "@/lib/processService";
 import type IPost from "@/types/post";
 
 const NewsFeed = () => {
+  const { feedCache, updateFeedCache } = useGlobalContext();
+
   const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [loading, setLoading] = useState(false);
@@ -26,11 +31,7 @@ const NewsFeed = () => {
         type: "global",
       });
       const { success, error } = data;
-      if (success && data.posts) {
-        console.log(data.posts);
-        setPosts([...posts, ...data.posts]);
-        setPage(page + 1);
-      } else {
+      if (!success || !data.posts) {
         if (error === "Failed to get posts") {
           throw new Error("Failed to get posts");
         } else if (error === "No more posts") {
@@ -40,15 +41,28 @@ const NewsFeed = () => {
           throw new Error("Unauthorized");
         } else if (error === "Server Error") {
           throw new Error("Server Error");
-        } else {
-          throw new Error("Unknown Error");
         }
+        throw new Error("Unknown Error");
+      }
+      setPosts([...posts, ...data.posts]);
+      setPage(page + 1);
+      const userCache = new Set();
+      data.posts.forEach((post: IPost) => {
+        if (!feedCache[post.user_id!]) userCache.add(post.user_id);
+        if (post.recipient_id && !feedCache[post.recipient_id])
+          userCache.add(post.recipient_id);
+        if (post.sharedPost_id && !feedCache[post.sharedPost_id])
+          userCache.add(post.sharedPost_id);
+      });
+      const users = Array.from(userCache) as string[];
+      if (users.length > 0) {
+        await updateFeedCache(users);
       }
     } catch (error) {
       console.log(error);
     }
     setLoading(false);
-  }, [loading, page, posts]);
+  }, [feedCache, loading, page, posts, updateFeedCache]);
 
   useEffect(() => {
     if (initialLoad) getPosts();

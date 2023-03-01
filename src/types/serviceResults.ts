@@ -4,6 +4,7 @@ import { serviceError } from "@/lib/processService";
 import type User from "@/types/user";
 import type Og from "@/types/og";
 import type Post from "@/types/post";
+import FeedCache from "./feedCache";
 
 type UniversalTypeError =
   | typeof serviceError.Unauthorized
@@ -66,6 +67,13 @@ type Type<T> =
           | typeof serviceError.FailedToUpdateUser
           | typeof serviceError.FailedToUploadImage
           | UniversalTypeError;
+      }
+    : T extends "update feed cache"
+    ? {
+        users?: {
+          [key: string]: { _id: string; username: string; avatar: string };
+        };
+        error?: UniversalTypeError;
       }
     : // post_db
     T extends "create post"

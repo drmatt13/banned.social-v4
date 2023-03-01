@@ -25,8 +25,6 @@ const eventbus = async (
       throw new Error("No body");
     }
 
-    console.log(body);
-
     body._id = undefined;
     body.eventbusSecret = process.env.TOKEN_SECRET;
 
@@ -115,6 +113,14 @@ const eventbus = async (
       case "update avatar":
         protectedRoute();
         req = await axios.post(`${URL}/user/update_avatar`, body);
+        break;
+
+      // Update user feed cache
+      // returns partial users for thr cache
+      // { users: users[] }
+      case "update feed cache":
+        protectedRoute();
+        req = await axios.post(`${URL}/user/update_feed_cache`, body);
         break;
 
       // *****************************

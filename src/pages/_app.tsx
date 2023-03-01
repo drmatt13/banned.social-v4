@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, signOut } from "next-auth/react";
 import Cookie from "js-cookie";
@@ -13,11 +13,15 @@ import { globalContext } from "@/context/globalContext";
 // global styles
 import "@/styles/globals.scss";
 
+// libraries
+import processService from "@/lib/processService";
+
 // types
 import type { AppType } from "next/dist/shared/lib/utils";
 import type { Session } from "next-auth";
 import type User from "@/types/user";
 import type FeedCache from "@/types/feedCache";
+import FeedUser from "@/types/feedUser";
 
 const MyApp: AppType<{
   session: Session;
@@ -29,7 +33,26 @@ const MyApp: AppType<{
   const [loggingOut, setLoggingOut] = useState(false);
   const [navContainerVisable, setNavContainerVisable] = useState(true);
   const [navButtonsVisable, setNavButtonsVisable] = useState(false);
-  const [feedCache] = useState<FeedCache>({});
+  const [feedCache, setFeedCache] = useState<FeedCache>({});
+
+  const updateFeedCache = useCallback(async (users: string[]) => {
+    const data = await processService("update feed cache", {
+      users,
+    });
+    if (!data.users) return;
+    // transform data.users into an object with the user id as the key
+    let newFeedCache: FeedCache = {};
+    for (const key in data.users) {
+      if (data.users[key]?._id) {
+        newFeedCache[data.users[key]!._id] = {
+          username: data.users[key]!.username,
+          avatar: data.users[key]!.avatar,
+        };
+      }
+      // console.log({ ...feedCache, ...newFeedCache });
+      setFeedCache((prev) => ({ ...prev, ...newFeedCache }));
+    }
+  }, []);
 
   useEffect(() => {
     if (
@@ -105,6 +128,7 @@ const MyApp: AppType<{
             navButtonsVisable,
             setNavButtonsVisable,
             feedCache,
+            updateFeedCache,
           }}
         >
           <AppLayout>
@@ -131,6 +155,7 @@ const MyApp: AppType<{
           navButtonsVisable,
           setNavButtonsVisable,
           feedCache,
+          updateFeedCache,
         }}
       >
         <AppLayout>

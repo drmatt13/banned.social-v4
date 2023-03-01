@@ -33,7 +33,7 @@ import PostModal from "@/modals/PostModal";
 // types
 import type Og from "@/types/og";
 import type IPost from "@/types/post";
-import type UrlCache from "@/types/UrlCache";
+import type UrlCache from "@/types/urlCache";
 
 function getDomainFromUrl(url: string): string {
   let domain = "";

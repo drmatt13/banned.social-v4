@@ -15,7 +15,7 @@ interface Props {
 }
 
 const UpdateAvatarModal = ({ modal, setModal }: Props) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   return (
     <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>

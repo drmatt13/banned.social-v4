@@ -9,6 +9,7 @@ type Service =
   | "oauth"
   | "register"
   | "update avatar"
+  | "update feed cache"
   // post_db
   | "create post"
   | "delete post" //

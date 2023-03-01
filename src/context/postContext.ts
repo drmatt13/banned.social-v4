@@ -10,7 +10,7 @@ import {
 // types
 import type Og from "@/types/og";
 import type Post from "@/types/post";
-import type UrlCache from "@/types/UrlCache";
+import type UrlCache from "@/types/urlCache";
 
 export type PostContext = {
   post: Post;

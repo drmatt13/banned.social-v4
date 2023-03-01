@@ -61,7 +61,7 @@ const Modal = ({ children, visable = true }: Props) => {
               ? "bg-black/20 dark:bg-black/40"
               : "bg-black/[15%] dark:bg-transparent"
           } ${
-            !navButtonsVisable && "z-50"
+            !navButtonsVisable && "z-10"
           } fixed flex justify-center items-center h-screen overflow-y-auto w-screen top-0 left-0 text-black`}
         >
           <div

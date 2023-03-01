@@ -1,3 +1,4 @@
+import type FeedUser from "./feedUser";
 import type Post from "./post";
 
 type _Overwrite<T, U> = U extends object
@@ -49,6 +50,10 @@ interface UpdateAvatar {
   avatar: string;
 }
 
+interface UpdateFeedCache {
+  users: string[];
+}
+
 // post_db
 interface CreatePost {
   sharedPost_id?: Post;
@@ -78,6 +83,8 @@ type ServiceBody<T> =
     ? Register
     : T extends "update avatar"
     ? UpdateAvatar
+    : T extends "update feed cache"
+    ? UpdateFeedCache
     : // post_db
     T extends "create post"
     ? CreatePost

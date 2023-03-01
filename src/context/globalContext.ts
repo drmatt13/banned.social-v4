@@ -19,6 +19,7 @@ type GlobalContext = {
   navButtonsVisable: boolean;
   setNavButtonsVisable: (navVisable: boolean) => void;
   feedCache: FeedCache;
+  updateFeedCache: (users: string[]) => Promise<void>;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -36,6 +37,7 @@ export const globalContext = createContext<GlobalContext>({
   navButtonsVisable: false,
   setNavButtonsVisable: () => {},
   feedCache: {},
+  updateFeedCache: () => Promise.resolve(),
 });
 
 const useGlobalContext = () => useContext(globalContext);
