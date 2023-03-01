@@ -10,7 +10,7 @@ import {
 // types
 import type Og from "@/types/og";
 import type Post from "@/types/post";
-import type UrlCache from "@/types/urlCache";
+// import type UrlCache from "@/types/urlCache";
 
 export type PostContext = {
   post: Post;
@@ -31,7 +31,7 @@ export type PostContext = {
   setErrorLoadingImage: Dispatch<SetStateAction<boolean>>;
   removeImage: () => void;
   imageInputRef: RefObject<HTMLInputElement>;
-  urlCacheRef: MutableRefObject<UrlCache>;
+  urlCacheRef: MutableRefObject<any>;
   submitPost: () => void;
 };
 
