@@ -76,7 +76,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
       console.log(error);
     }
     setLoading(false);
-  }, [feedCache, loading, page, posts, type, updateFeedCache]);
+  }, [feedCache, loading, page, posts, recipient_id, type, updateFeedCache]);
 
   useEffect(() => {
     if (initialLoad) getPosts();
