@@ -11,6 +11,7 @@ import _ from "lodash";
 
 // components
 import Post from "@/components/Post";
+import UserAvatarMini from "@/components/UserAvatarMini";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -360,19 +361,7 @@ const PostButton = ({ recipient_id }: Props) => {
         </postContext.Provider>
       </modalContext.Provider>
       <div className="w-full text-sm flex bg-light-secondary dark:bg-dark-secondary rounded-lg px-4 py-3 mb-5 border dark:border-dark-border shadow-sm dark:shadow-dark-border select-none">
-        <div className="overflow-hidden mr-3 h-10 w-10 rounded-full ">
-          <Link href={`/${user?._id}`}>
-            <img
-              className="h-full w-full rounded-full border border-light-border dark:border-white/25 cursor-pointer hover:brightness-[98%]"
-              src={
-                avatarList[user?.avatar!]
-                  ? `data:image/jpg;base64, ${avatarList[user?.avatar!]}`
-                  : user?.avatar
-              }
-              alt={user?.avatar}
-            />
-          </Link>
-        </div>
+        <UserAvatarMini id={user?._id!} user={user} />
         <div
           onClick={() => setModal(true)}
           className="relative flex-1 h-10 rounded-full bg-light-primary dark:bg-dark-form border dark:border-gray-900/50 hover:bg-stone-200 dark:hover:bg-white/25 cursor-pointer hover:transition-colors hover:duration-200 ease-out group"

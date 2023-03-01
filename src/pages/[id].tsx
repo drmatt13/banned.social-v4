@@ -13,6 +13,12 @@ const UserProfile = () => {
   const { id } = router.query;
   const { user, loading } = useUser({ _id: (id as string) || undefined });
 
+  useEffect(() => {
+    // whenever the router.query.id changes, rerender only this component
+    if (!id) return;
+    router.replace(router.asPath);
+  }, [id, router]);
+
   return (
     <div className="mt-28 h-screen">
       {loading || !id ? (

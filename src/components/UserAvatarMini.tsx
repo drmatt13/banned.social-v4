@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 // data
 import avatarList from "@/data/avatarList";
@@ -16,6 +17,8 @@ interface Props {
 }
 
 const UserAvatarMini = ({ id, user }: Props) => {
+  const router = useRouter();
+
   return (
     <>
       <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
@@ -29,6 +32,7 @@ const UserAvatarMini = ({ id, user }: Props) => {
             }
             alt={user?.avatar}
             loading="lazy"
+            // onClick={() => router.push(`/${id}`)}
           />
         </Link>
       </div>
