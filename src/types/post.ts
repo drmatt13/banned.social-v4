@@ -8,6 +8,8 @@ interface Post {
   sharedPost_id?: string;
   image?: Blob | string;
   og?: Og;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export default Post;

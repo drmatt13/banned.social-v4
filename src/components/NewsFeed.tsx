@@ -12,6 +12,7 @@ import processService from "@/lib/processService";
 
 // types
 import type IPost from "@/types/post";
+import type AggregatedData from "@/types/AggregatedData";
 
 interface Props {
   type: "global" | "friends" | "user";
@@ -25,6 +26,11 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [aggregatedData, setAggregatedData] = useState<AggregatedData>({
+    likes: 0,
+    comments: 0,
+    shares: 0,
+  });
 
   const getPosts = useCallback(async () => {
     if (loading) return;
@@ -96,6 +102,9 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
             content={post.content}
             image={post.image}
             og={post.og}
+            createdAt={post.createdAt}
+            updatedAt={post.updatedAt}
+            aggregatedData={aggregatedData}
           />
         ))}
     </>

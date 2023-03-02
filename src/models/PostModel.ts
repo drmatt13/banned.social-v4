@@ -12,6 +12,7 @@ export interface IPostModel extends Document {
   image?: string;
   og?: Og;
   createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const PostSchema = new Schema<IPostModel>({
@@ -37,7 +38,10 @@ const PostSchema = new Schema<IPostModel>({
   createdAt: {
     type: Date,
     default: Date.now,
-    select: false,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
   },
 });
 

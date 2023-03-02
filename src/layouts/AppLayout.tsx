@@ -27,8 +27,12 @@ const AppLayout = ({ children }: Props) => {
   const { loggingOut, user, setUser, setNavButtonsVisable } =
     useGlobalContext();
   const loading = useVerifyUser(user, setUser);
-  const [showNavbar, setShowNavbar] = useState(false);
+  const [showNavbar, setShowNavbar] = useState(true);
   const [modal, setModal] = useState(false);
+
+  // useEffect(() => {
+  //   console.log("testlayout");
+  // }, []);
 
   useEffect(() => {
     if (!loading) {

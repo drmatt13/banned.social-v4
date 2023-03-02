@@ -26,7 +26,6 @@ const Home: NextPage = () => {
         640px
         900px
         1100px
-
       */}
       <style jsx>{`
         .container-1,

@@ -21,10 +21,10 @@ const UserAvatarMini = ({ id, user }: Props) => {
 
   return (
     <>
-      <div className="overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
+      <div className="h-10 w-10 overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer">
         <Link href={id}>
           <img
-            className="h-10 w-10 hover:brightness-[98%] select-none"
+            className="hover:brightness-[98%] select-none object-cover"
             src={
               avatarList[user?.avatar!]
                 ? `data:image/jpg;base64, ${avatarList[user?.avatar!]}`

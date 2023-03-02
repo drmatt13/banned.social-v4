@@ -395,6 +395,9 @@ const PostButton = ({ recipient_id }: Props) => {
             content={post.content}
             image={post.image}
             og={post.og}
+            // aggregatedData={aggregatedData}
+            createdAt={post.createdAt}
+            updatedAt={post.updatedAt}
           />
         ))}
     </>

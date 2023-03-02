@@ -10,11 +10,13 @@ import useGlobalContext from "@/context/globalContext";
 
 // libraries
 import validateUrl from "@/lib/validateUrl";
+import formatDate from "@/lib/formatDate";
 
 // types
 import type IPost from "@/types/post";
 import type FeedUser from "@/types/feedUser";
 import type Og from "@/types/og";
+import type AggregatedData from "@/types/AggregatedData";
 
 const Post = ({
   _id,
@@ -24,7 +26,10 @@ const Post = ({
   content,
   image,
   og,
-}: IPost) => {
+  createdAt,
+  updatedAt,
+  aggregatedData,
+}: IPost & { aggregatedData?: AggregatedData }) => {
   const { feedCache, user, mobile } = useGlobalContext();
 
   const [PostContentElement, setPostContentElement] = useState(<></>);
@@ -91,31 +96,33 @@ const Post = ({
         <div className="mx-4 flex items-start mb-2">
           <UserAvatarMini id={user_id!} user={postUser} />
           <div className="flex-1 flex font-xs font-medium h-10">
-            <div className="flex-1 flex flex-col self-center">
+            <div className="flex-1 flex flex-col">
               <div className="flex">
                 <Link href={user_id!}>
-                  <span className="cursor-pointer mr-2">
+                  <span className="mr-2 hover:underline">
                     {postUser.username}
                   </span>{" "}
-                  {postRecipient && (
-                    <>
-                      <span className="mr-2">
-                        <i
-                          className="fa-solid fa-angle-right"
-                          style={{
-                            fontSize: "0.75rem",
-                          }}
-                        />
-                      </span>
-                      <span className="cursor-pointer">
+                </Link>
+                {postRecipient && postUser !== postRecipient && (
+                  <>
+                    <span className="mr-2">
+                      <i
+                        className="fa-solid fa-angle-right"
+                        style={{
+                          fontSize: "0.75rem",
+                        }}
+                      />
+                    </span>
+                    <Link href={recipient_id!}>
+                      <span className="hover:underline">
                         {postRecipient.username}
                       </span>
-                    </>
-                  )}
-                </Link>
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="flex h-full items-center text-xs font-light opacity-75">
-                February 24 at 12:56 PM
+                {updatedAt && <>{formatDate(updatedAt)}</>}
               </div>
             </div>
             <div className="h-full flex justify-center items-center">

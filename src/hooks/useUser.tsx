@@ -23,11 +23,11 @@ const useUser = ({ _id }: Props) => {
     async (defaultUser: User) => {
       if (!_id) return;
       setLoading(true);
-      if (defaultUser && defaultUser._id === _id) {
-        setUser(defaultUser);
-        setLoading(false);
-        return;
-      }
+      // if (defaultUser && defaultUser._id === _id) {
+      //   setUser(defaultUser);
+      //   setLoading(false);
+      //   return;
+      // }
       const data = await processService("get user", {
         _id,
       });

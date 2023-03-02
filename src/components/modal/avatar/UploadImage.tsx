@@ -25,7 +25,7 @@ const UploadImage = ({
   removeImage: () => void;
   errorLoadingImage: boolean;
 }) => {
-  const { setUser, logout } = useGlobalContext();
+  const { setUser, logout, setFeedCache } = useGlobalContext();
   const { setModal, loading, setLoading } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -42,6 +42,12 @@ const UploadImage = ({
       });
       const { user, success, error } = data;
       if (success && user) {
+        setFeedCache((prev) => {
+          return {
+            ...prev,
+            [user._id]: { avatar: user.avatar, username: user.username },
+          };
+        });
         setUser({
           ...user,
           avatar: user.avatar,
@@ -63,7 +69,7 @@ const UploadImage = ({
       alert("Upload error, please try again or a different image :(");
       setLoading(false);
     }
-  }, [image, setLoading, setModal, setUser]);
+  }, [image, setFeedCache, setLoading, setModal, setUser]);
 
   useEffect(() => {
     const input = inputRef.current;

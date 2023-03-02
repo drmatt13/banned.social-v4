@@ -25,7 +25,8 @@ const SelectAvatar = ({
   avatar: string | undefined;
   setAvatar: (avatar: string | undefined) => void;
 }) => {
-  const { user, setUser, logout, darkMode, mobile } = useGlobalContext();
+  const { user, setUser, logout, darkMode, mobile, setFeedCache } =
+    useGlobalContext();
   const { setModal, loading, setLoading } = useModalContext();
 
   const updateAvatar = useCallback(async () => {
@@ -37,6 +38,12 @@ const SelectAvatar = ({
       });
       const { user, success, error } = data;
       if (success && user) {
+        setFeedCache((prev) => {
+          return {
+            ...prev,
+            [user._id]: { avatar: user.avatar, username: user.username },
+          };
+        });
         setUser(user);
         setModal(false);
         setLoading(false);
@@ -54,7 +61,7 @@ const SelectAvatar = ({
       setLoading(false);
       logout();
     }
-  }, [avatar, logout, setLoading, setModal, setUser]);
+  }, [avatar, logout, setFeedCache, setLoading, setModal, setUser]);
 
   useEffect(() => {
     setAvatar(avatar ? avatar : user?.avatar ? user.avatar : undefined);

@@ -4,7 +4,6 @@ import { serviceError } from "@/lib/processService";
 import type User from "@/types/user";
 import type Og from "@/types/og";
 import type Post from "@/types/post";
-import FeedCache from "./feedCache";
 
 type UniversalTypeError =
   | typeof serviceError.Unauthorized

@@ -34,6 +34,10 @@ const MyApp: AppType<{
   const [navButtonsVisable, setNavButtonsVisable] = useState(false);
   const [feedCache, setFeedCache] = useState<FeedCache>({});
 
+  // useEffect(() => {
+  //   console.log("testapp");
+  // }, []);
+
   const updateFeedCache = useCallback(async (users: string[]) => {
     const data = await processService("update feed cache", {
       users,
