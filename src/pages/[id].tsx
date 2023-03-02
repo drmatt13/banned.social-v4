@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -6,10 +7,18 @@ import Head from "next/head";
 import NewsFeed from "@/components/NewsFeed";
 import PostButton from "@/components/PostButton";
 
+// context
+import useGlobalContext from "@/context/globalContext";
+
+// data
+import avatarList from "@/data/avatarList";
+
 // hooks
 import useUser from "@/hooks/useUser";
 
 const UserProfile = () => {
+  const { feedCache } = useGlobalContext();
+
   const router = useRouter();
   const { id } = router.query;
   const { user, loading } = useUser({ _id: (id as string) || undefined });
@@ -69,7 +78,7 @@ const UserProfile = () => {
           }
         }
       `}</style>
-      <div className="absolute flex top-0 pt-20 sm:pt-28 w-full">
+      <div className="absolute flex top-0 pt-20 sm:pt-28 w-full min-h-[105vh]">
         <div className="select-none container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-1
         </div>
@@ -78,6 +87,40 @@ const UserProfile = () => {
             <>loading</>
           ) : (
             <div>
+              <div className="w-full flex flex-col items-center select-none">
+                <div className="mb-5 h-40 w-40 rounded-full border-4 border-blue-500 dark:border-dark-secondary cursor-pointer overflow-hidden">
+                  <img
+                    className="h-full w-full hover:brightness-[98%] select-none object-cover"
+                    src={
+                      avatarList[feedCache[id as string]?.avatar!]
+                        ? `data:image/jpg;base64, ${
+                            avatarList[feedCache[id as string]?.avatar!]
+                          }`
+                        : feedCache[id as string]?.avatar!
+                    }
+                    alt={feedCache[id as string]?.avatar!}
+                    loading="lazy"
+                    // onClick={() => router.push(`/${id}`)}
+                  />
+                </div>
+                <div className="text-xl font-bold mb-5">
+                  {feedCache[id as string]?.username!}
+                </div>
+                <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Add Friend
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Message
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Report Profile
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out">
+                    Block
+                  </div>
+                </div>
+              </div>
               <PostButton recipient_id={id as string} />
               <NewsFeed type="user" recipient_id={id as string} />
             </div>

@@ -61,7 +61,7 @@ const Home: NextPage = () => {
           }
         }
       `}</style>
-      <div className="absolute flex top-0 pt-20 sm:pt-28 w-full">
+      <div className="absolute flex top-0 pt-20 sm:pt-28 w-full min-h-[105vh]">
         <div className="select-none container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-1
         </div>
