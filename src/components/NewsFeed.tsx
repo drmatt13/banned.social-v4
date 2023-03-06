@@ -123,13 +123,14 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   }, [router.query]);
 
   useEffect(() => {
+    if (initialLoad || page === 1) return;
     const mainContainer = document.getElementById("__next");
     const firstChild = mainContainer?.firstChild as HTMLDivElement;
     firstChild.addEventListener("scroll", scrollListener);
     return () => {
       firstChild.removeEventListener("scroll", scrollListener);
     };
-  }, [scrollListener]);
+  }, [initialLoad, page, scrollListener]);
 
   useEffect(() => {
     setPage(1);
@@ -140,10 +141,11 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   }, [router.asPath]);
 
   useEffect(() => {
-    if (initialLoad) {
+    if (initialLoad && page === 1) {
+      setInitialLoad(false);
       getPosts();
     }
-  }, [getPosts, initialLoad]);
+  }, [getPosts, initialLoad, page]);
 
   return (
     <>
