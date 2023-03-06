@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
@@ -16,20 +16,22 @@ import avatarList from "@/data/avatarList";
 // hooks
 import useUser from "@/hooks/useUser";
 
+// modals
+import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
+
 const UserProfile = () => {
-  const { feedCache } = useGlobalContext();
+  const { feedCache, mobile, user } = useGlobalContext();
 
   const router = useRouter();
   const { id } = router.query;
-  const { user, loading } = useUser({ _id: (id as string) || undefined });
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
-    // whenever the router.query.id changes, rerender only this component
-    // if (!id) return;
-    // router.replace(router.asPath);
-    console.log(user);
-    // console.log(id);
-  }, [user]);
+    const mainContainer = document.getElementById("__next");
+    const firstChild = mainContainer?.firstChild;
+    (firstChild as any).scrollTo(0, 0);
+    if (id !== user?._id) setModal(false);
+  }, [id, router.asPath, user?._id]);
 
   return (
     <>
@@ -83,53 +85,65 @@ const UserProfile = () => {
           container-1
         </div>
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
-          {loading || !id ? (
-            <>loading</>
-          ) : (
-            <div>
-              <div className="w-full flex flex-col items-center select-none">
+          <div>
+            <div className="w-full flex flex-col items-center select-none">
+              <div className="relative">
                 <div className="mb-5 h-40 w-40 rounded-full border-4 border-blue-500 dark:border-dark-secondary cursor-pointer overflow-hidden">
                   <img
                     className="h-full w-full hover:brightness-[98%] select-none object-cover"
                     src={
                       avatarList[feedCache[id as string]?.avatar!]
-                        ? `data:image/jpg;base64, ${
-                            avatarList[feedCache[id as string]?.avatar!]
-                          }`
+                        ? `/images/avatars-full/${feedCache[id as string]
+                            ?.avatar!}.jpg`
                         : feedCache[id as string]?.avatar!
                     }
                     alt={feedCache[id as string]?.avatar!}
                     loading="lazy"
-                    // onClick={() => router.push(`/${id}`)}
                   />
                 </div>
-                <div className="text-xl font-bold mb-5">
-                  {feedCache[id as string]?.username!}
+
+                {id === user?._id && (
+                  <div className="absolute right-0 top-0 translate-x-full">
+                    <i
+                      className={`${
+                        mobile
+                          ? "active:text-black dark:active:text-white"
+                          : "hover:text-black dark:hover:text-white"
+                      } fa-regular fa-pen-to-square text-xl -translate-x-1/2 text-black/75 dark:text-dark-form cursor-pointer transition-colors ease-out`}
+                      onClick={() => setModal(true)}
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="text-xl font-bold mb-5">
+                {feedCache[id as string]?.username!}
+              </div>
+              <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
+                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                  Add Friend
                 </div>
-                <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
-                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                    Add Friend
-                  </div>
-                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                    Message
-                  </div>
-                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                    Report Profile
-                  </div>
-                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out">
-                    Block
-                  </div>
+                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                  Message
+                </div>
+                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                  Report Profile
+                </div>
+                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out">
+                  Block
                 </div>
               </div>
-              <PostButton recipient_id={id as string} />
-              <NewsFeed type="user" recipient_id={id as string} />
             </div>
-          )}
+            <PostButton recipient_id={id as string} />
+            <NewsFeed type="user" recipient_id={id as string} />
+          </div>
         </div>
         <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-3
         </div>
       </div>
+      {id === user?._id && (
+        <UpdateAvatarModal modal={modal} setModal={setModal} />
+      )}
     </>
   );
 };

@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import { useState } from "react";
-import type User from "@/types/user";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Head from "next/head";
 // import Link from "next/link";
 
@@ -13,6 +13,17 @@ import useGlobalContext from "@/context/globalContext";
 
 const Home: NextPage = () => {
   const { logout, setUser, user } = useGlobalContext();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    // reset scroll position on page change (only on client side)
+    const mainContainer = document.getElementById("__next");
+    // get first child of main container
+    const firstChild = mainContainer?.firstChild;
+    // scroll to top of first child
+    (firstChild as any).scrollTo(0, 0);
+  }, [router.asPath]);
 
   return (
     <>

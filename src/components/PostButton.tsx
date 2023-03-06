@@ -6,7 +6,7 @@ import {
   useEffect,
   useDeferredValue,
 } from "react";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import _ from "lodash";
 
 // components
@@ -19,7 +19,7 @@ import { modalContext } from "@/context/modalContext";
 import { postContext } from "@/context/postContext";
 
 // data
-import avatarList from "@/data/avatarList";
+// import avatarList from "@/data/avatarList";
 
 // hooks
 import useImage from "@/hooks/useImage";
@@ -83,6 +83,7 @@ function checkOgEquality(og1: Og, og2: Og): boolean {
 }
 
 const PostButton = ({ recipient_id }: Props) => {
+  const router = useRouter();
   const { user, mobile, feedCache } = useGlobalContext();
   const {
     image,
@@ -299,6 +300,14 @@ const PostButton = ({ recipient_id }: Props) => {
     }
   }, [urlsProcessing]);
 
+  useEffect(() => {
+    setPost({
+      content: "",
+      recipient_id,
+      og: undefined,
+    });
+  }, [recipient_id, router.asPath]);
+
   const parseHTML = useCallback((html: string) => {
     const div = document.createElement("div");
     div.innerHTML = html.replace(/<[^>]+>/gi, " ");
@@ -368,10 +377,10 @@ const PostButton = ({ recipient_id }: Props) => {
         >
           <div className="absolute h-full w-full top-0 left-0 flex items-center text-gray-600 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white hover:transition-colors hover:duration-200 ease-out truncate">
             <div className="truncate ml-4 mr-4">
-              {!recipient_id || recipient_id === user?._id
-                ? parseHTML(post.content).trim() !== ""
-                  ? parseHTML(post.content)
-                  : `What's on your mind, 
+              {parseHTML(post.content).trim() !== ""
+                ? parseHTML(post.content)
+                : !recipient_id || recipient_id === user?._id
+                ? `What's on your mind, 
             ${user!.username[0] + user!.username!.substring(1)}?`
                 : `Write something to ${feedCache[recipient_id]?.username}...`}
             </div>

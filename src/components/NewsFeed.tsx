@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
 
 // components
 import Post from "@/components/Post";
@@ -20,6 +21,8 @@ interface Props {
 }
 
 const NewsFeed = ({ type, recipient_id }: Props) => {
+  const router = useRouter();
+
   const { feedCache, updateFeedCache } = useGlobalContext();
 
   const [page, setPage] = useState(1);
@@ -56,8 +59,11 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         }
         throw new Error("Unknown Error");
       }
-      setPosts([...posts, ...data.posts]);
+      setPosts((posts) => {
+        return [...posts, ...(data.posts as Array<IPost>)];
+      });
       setPage(page + 1);
+      // console.log(recipient_id, data);
 
       // update feed cache
       const userCache = new Set();
@@ -82,12 +88,32 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
       console.log(error);
     }
     setLoading(false);
-  }, [feedCache, loading, page, posts, recipient_id, type, updateFeedCache]);
+  }, [feedCache, loading, page, recipient_id, type, updateFeedCache]);
 
   useEffect(() => {
-    if (initialLoad) getPosts();
+    if (initialLoad) {
+      getPosts();
+    }
     setInitialLoad(false);
-  }, [getPosts, initialLoad, loading]);
+  }, [getPosts, initialLoad]);
+
+  // reset initial load when route changes
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+    setInitialLoad(true);
+  }, [router.asPath]);
+
+  // if router changes, reset page and posts
+  useEffect(() => {
+    // reset scroll position on page change (only on client side)
+    const mainContainer = document.getElementById("__next");
+    // get first child of main container
+    const firstChild = mainContainer?.firstChild;
+    // scroll to top of first child
+    (firstChild as any).scrollTo({ top: 0, behavior: "smooth" });
+    // when route changes, scroll to top of page
+  }, [router.query]);
 
   return (
     <>
@@ -95,7 +121,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         posts.map((post: IPost) => (
           <Post
             key={post._id}
-            _id={post._id!}
+            _id={post._id}
             user_id={post.user_id}
             recipient_id={post.recipient_id}
             sharedPost_id={post.sharedPost_id}

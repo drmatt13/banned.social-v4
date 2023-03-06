@@ -46,7 +46,6 @@ export default connectDB(
           .skip((page - 1) * limit)
           .limit(limit);
       }
-
       return res.json({ posts, success: true });
     } catch (error) {
       return res.json({ error: (error as any).message, success: false });
