@@ -50,9 +50,6 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
       if (!success || !data.posts) {
         if (error === "Failed to get posts") {
           throw new Error("Failed to get posts");
-        } else if (error === "No more posts") {
-          console.log("No more posts");
-          setLoading(false);
         } else if (error === "Unauthorized") {
           throw new Error("Unauthorized");
         } else if (error === "Server Error") {
@@ -85,18 +82,44 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
       //
       //
       //
+      if (data.posts.length < 15) {
+        setNoMorePosts(true);
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
-    setLoading(false);
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, [feedCache, loading, page, recipient_id, type, updateFeedCache]);
 
+  const scrollListener = useCallback(
+    async (e: Event) => {
+      const scrollHeight = (e.target as HTMLDivElement).scrollHeight;
+      const offsetHeight = (e.target as HTMLDivElement).offsetHeight;
+      const scrollTop = (e.target as HTMLDivElement).scrollTop;
+      if (Math.floor(scrollHeight - (offsetHeight + scrollTop)) < 300) {
+        getPosts();
+      }
+    },
+    [getPosts]
+  );
+
   useEffect(() => {
-    if (initialLoad) {
-      getPosts();
-    }
-    setInitialLoad(false);
-  }, [getPosts, initialLoad]);
+    const mainContainer = document.getElementById("__next");
+    const firstChild = mainContainer?.firstChild as HTMLDivElement;
+    firstChild.scrollTo({ top: 0, behavior: "smooth" });
+  }, [router.query]);
+
+  useEffect(() => {
+    const mainContainer = document.getElementById("__next");
+    const firstChild = mainContainer?.firstChild as HTMLDivElement;
+    firstChild.addEventListener("scroll", scrollListener);
+    return () => {
+      firstChild.removeEventListener("scroll", scrollListener);
+    };
+  }, [scrollListener]);
 
   useEffect(() => {
     setPage(1);
@@ -105,10 +128,11 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   }, [router.asPath]);
 
   useEffect(() => {
-    const mainContainer = document.getElementById("__next");
-    const firstChild = mainContainer?.firstChild;
-    (firstChild as any).scrollTo({ top: 0, behavior: "smooth" });
-  }, [router.query]);
+    if (initialLoad) {
+      getPosts();
+    }
+    setInitialLoad(false);
+  }, [getPosts, initialLoad]);
 
   return (
     <>
@@ -130,11 +154,15 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         ))}
       {!noMorePosts && (
         <>
-          <LoadingPosts />
-          <LoadingPosts />
-          <LoadingPosts />
-          <LoadingPosts />
-          <LoadingPosts />
+          {loading && (
+            <>
+              <LoadingPosts />
+              <LoadingPosts />
+              <LoadingPosts />
+              <LoadingPosts />
+              <LoadingPosts />
+            </>
+          )}
         </>
       )}
     </>
