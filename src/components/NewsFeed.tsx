@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 // components
 import Post from "@/components/Post";
-import Loading from "@/components/Loading";
+import LoadingPosts from "@/components/LoadingPosts";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -29,6 +29,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
+  const [noMorePosts, setNoMorePosts] = useState(false);
   const [aggregatedData, setAggregatedData] = useState<AggregatedData>({
     likes: 0,
     comments: 0,
@@ -41,7 +42,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     try {
       const data = await processService("get posts", {
         page,
-        limit: 10,
+        limit: 15,
         type: type,
         recipient_id,
       });
@@ -97,22 +98,16 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     setInitialLoad(false);
   }, [getPosts, initialLoad]);
 
-  // reset initial load when route changes
   useEffect(() => {
     setPage(1);
     setPosts([]);
     setInitialLoad(true);
   }, [router.asPath]);
 
-  // if router changes, reset page and posts
   useEffect(() => {
-    // reset scroll position on page change (only on client side)
     const mainContainer = document.getElementById("__next");
-    // get first child of main container
     const firstChild = mainContainer?.firstChild;
-    // scroll to top of first child
     (firstChild as any).scrollTo({ top: 0, behavior: "smooth" });
-    // when route changes, scroll to top of page
   }, [router.query]);
 
   return (
@@ -133,6 +128,15 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
             aggregatedData={aggregatedData}
           />
         ))}
+      {!noMorePosts && (
+        <>
+          <LoadingPosts />
+          <LoadingPosts />
+          <LoadingPosts />
+          <LoadingPosts />
+          <LoadingPosts />
+        </>
+      )}
     </>
   );
 };

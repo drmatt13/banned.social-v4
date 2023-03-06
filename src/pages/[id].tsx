@@ -109,7 +109,7 @@ const UserProfile = () => {
                         mobile
                           ? "active:text-black dark:active:text-white"
                           : "hover:text-black dark:hover:text-white"
-                      } fa-regular fa-pen-to-square text-xl -translate-x-1/2 text-black/75 dark:text-dark-form cursor-pointer transition-colors ease-out`}
+                      } fa-regular fa-pen-to-square text-xl -translate-x-1/2 text-neutral-700 dark:text-dark-form cursor-pointer transition-colors ease-out`}
                       onClick={() => setModal(true)}
                     />
                   </div>
@@ -118,20 +118,22 @@ const UserProfile = () => {
               <div className="text-xl font-bold mb-5">
                 {feedCache[id as string]?.username!}
               </div>
-              <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
-                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                  Add Friend
+              {id !== user?._id && (
+                <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Add Friend
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Message
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
+                    Report Profile
+                  </div>
+                  <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out">
+                    Block
+                  </div>
                 </div>
-                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                  Message
-                </div>
-                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
-                  Report Profile
-                </div>
-                <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out">
-                  Block
-                </div>
-              </div>
+              )}
             </div>
             <PostButton recipient_id={id as string} />
             <NewsFeed type="user" recipient_id={id as string} />
