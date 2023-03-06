@@ -11,6 +11,7 @@ export default connectDB(
     try {
       let { _id, eventbusSecret, type, page, limit, recipient_id } = req.body;
 
+      console.log(type, page, limit, recipient_id);
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }

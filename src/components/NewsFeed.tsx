@@ -37,8 +37,9 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   });
 
   const getPosts = useCallback(async () => {
-    if (loading) return;
+    if (loading || (initialLoad && page > 1)) return;
     setLoading(true);
+    setInitialLoad(false);
     try {
       const data = await processService("get posts", {
         page,
@@ -57,6 +58,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         }
         throw new Error("Unknown Error");
       }
+      console.log(data.posts);
       setPosts((posts) => {
         return [...posts, ...(data.posts as Array<IPost>)];
       });
@@ -89,10 +91,18 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     } catch (error) {
       console.log(error);
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, [feedCache, loading, page, recipient_id, type, updateFeedCache]);
+    // setTimeout(() => {
+    setLoading(false);
+    // }, 1000);
+  }, [
+    feedCache,
+    initialLoad,
+    loading,
+    page,
+    recipient_id,
+    type,
+    updateFeedCache,
+  ]);
 
   const scrollListener = useCallback(
     async (e: Event) => {
@@ -124,6 +134,8 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   useEffect(() => {
     setPage(1);
     setPosts([]);
+    setLoading(false);
+    setNoMorePosts(false);
     setInitialLoad(true);
   }, [router.asPath]);
 
@@ -131,7 +143,6 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     if (initialLoad) {
       getPosts();
     }
-    setInitialLoad(false);
   }, [getPosts, initialLoad]);
 
   return (
