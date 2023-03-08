@@ -14,7 +14,7 @@ import useGlobalContext from "@/context/globalContext";
 import avatarList from "@/data/avatarList";
 
 // hooks
-import useUser from "@/hooks/useUser";
+// import useUser from "@/hooks/useUser";
 
 // modals
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
@@ -25,13 +25,17 @@ const UserProfile = () => {
   const router = useRouter();
   const { id } = router.query;
   const [modal, setModal] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    const mainContainer = document.getElementById("__next");
-    const firstChild = mainContainer?.firstChild;
-    (firstChild as any).scrollTo(0, 0);
-    if (id !== user?._id) setModal(false);
-  }, [id, router.asPath, user?._id]);
+    if (page !== 1) setPage(1);
+    else {
+      const mainContainer = document.getElementById("__next");
+      const firstChild = mainContainer?.firstChild;
+      (firstChild as any).scrollTo(0, 0);
+      if (id !== user?._id) setModal(false);
+    }
+  }, [id, router.asPath, user?._id, page]);
 
   return (
     <>
@@ -86,16 +90,18 @@ const UserProfile = () => {
         </div>
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
           <div>
-            <div className="w-full flex flex-col items-center select-none">
-              <div className="relative">
+            <div className="w-full flex flex-col items-center">
+              <div className="relative select-none">
                 <div className="mb-5 h-40 w-40 rounded-full border-4 border-blue-500 dark:border-dark-secondary cursor-pointer overflow-hidden">
                   <img
-                    className="h-full w-full hover:brightness-[98%] select-none object-cover"
+                    className="h-full w-full hover:brightness-[98%] object-cover"
                     src={
                       avatarList[feedCache[id as string]?.avatar!]
                         ? `/images/avatars-full/${feedCache[id as string]
                             ?.avatar!}.jpg`
-                        : feedCache[id as string]?.avatar!
+                        : `https://social-media-8434-1348-6435.s3.us-east-1.amazonaws.com/avatars/${feedCache[
+                            id as string
+                          ]?.avatar!}`
                     }
                     alt={feedCache[id as string]?.avatar!}
                     loading="lazy"
@@ -119,7 +125,7 @@ const UserProfile = () => {
                 {feedCache[id as string]?.username!}
               </div>
               {id !== user?._id && (
-                <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white">
+                <div className="flex w-full max-w-[90vw] mb-5 text-[.7rem] sm:text-sm text-white select-none">
                   <div className="cursor-pointer bg-blue-500 dark:bg-dark-secondary hover:bg-blue-600 dark:hover:bg-dark-form flex-1 flex justify-center items-center rounded transition-colors ease-out py-2 mr-2">
                     Add Friend
                   </div>
@@ -136,7 +142,12 @@ const UserProfile = () => {
               )}
             </div>
             <PostButton recipient_id={id as string} />
-            <NewsFeed type="user" recipient_id={id as string} />
+            <NewsFeed
+              type="user"
+              recipient_id={id as string}
+              page={page}
+              setPage={setPage}
+            />
           </div>
         </div>
         <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">

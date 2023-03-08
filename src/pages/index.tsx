@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Head from "next/head";
 // import Link from "next/link";
 
@@ -16,14 +16,16 @@ const Home: NextPage = () => {
 
   const router = useRouter();
 
+  const [page, setPage] = useState(1);
+
   useEffect(() => {
-    // reset scroll position on page change (only on client side)
-    const mainContainer = document.getElementById("__next");
-    // get first child of main container
-    const firstChild = mainContainer?.firstChild;
-    // scroll to top of first child
-    (firstChild as any).scrollTo(0, 0);
-  }, [router.asPath]);
+    if (page !== 1) setPage(1);
+    else {
+      const mainContainer = document.getElementById("__next");
+      const firstChild = mainContainer?.firstChild;
+      (firstChild as any).scrollTo(0, 0);
+    }
+  }, [page, router.asPath]);
 
   return (
     <>
@@ -79,7 +81,7 @@ const Home: NextPage = () => {
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
           <div>
             <PostButton />
-            <NewsFeed type="global" />
+            <NewsFeed type="global" page={page} setPage={setPage} />
           </div>
         </div>
         <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">

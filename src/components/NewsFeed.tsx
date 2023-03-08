@@ -1,4 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  SetStateAction,
+  Dispatch,
+} from "react";
 import { useRouter } from "next/router";
 
 // components
@@ -18,14 +24,15 @@ import type AggregatedData from "@/types/AggregatedData";
 interface Props {
   type: "global" | "friends" | "user";
   recipient_id?: string;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
 }
 
-const NewsFeed = ({ type, recipient_id }: Props) => {
+const NewsFeed = ({ type, recipient_id, page, setPage }: Props) => {
   const router = useRouter();
 
   const { feedCache, updateFeedCache } = useGlobalContext();
 
-  const [page, setPage] = useState(1);
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -58,12 +65,12 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         }
         throw new Error("Unknown Error");
       }
-      console.log(data.posts);
+
       setPosts((posts) => {
         return [...posts, ...(data.posts as Array<IPost>)];
       });
       setPage(page + 1);
-      // console.log(recipient_id, data);
+      console.log(recipient_id || "global", data.posts);
 
       // update feed cache
       const userCache = new Set();
@@ -100,21 +107,25 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     loading,
     page,
     recipient_id,
+    setPage,
     type,
     updateFeedCache,
   ]);
 
-  const scrollListener = useCallback(
-    async (e: Event) => {
-      const scrollHeight = (e.target as HTMLDivElement).scrollHeight;
-      const offsetHeight = (e.target as HTMLDivElement).offsetHeight;
-      const scrollTop = (e.target as HTMLDivElement).scrollTop;
-      if (Math.floor(scrollHeight - (offsetHeight + scrollTop)) < 300) {
-        getPosts();
-      }
-    },
-    [getPosts]
-  );
+  useEffect(() => {
+    setPage(1);
+    setPosts([]);
+    setLoading(false);
+    setNoMorePosts(false);
+    setInitialLoad(true);
+  }, [router.asPath, setPage]);
+
+  useEffect(() => {
+    if (initialLoad && page === 1) {
+      setInitialLoad(false);
+      getPosts();
+    }
+  }, [getPosts, initialLoad, page]);
 
   useEffect(() => {
     const mainContainer = document.getElementById("__next");
@@ -123,28 +134,23 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   }, [router.query]);
 
   useEffect(() => {
-    if (initialLoad || page === 1) return;
+    const scrollListener = async (e: Event) => {
+      const scrollHeight = (e.target as HTMLDivElement).scrollHeight;
+      const offsetHeight = (e.target as HTMLDivElement).offsetHeight;
+      const scrollTop = (e.target as HTMLDivElement).scrollTop;
+      if (
+        !initialLoad &&
+        Math.floor(scrollHeight - (offsetHeight + scrollTop)) < 300
+      ) {
+        getPosts();
+      }
+    };
     const mainContainer = document.getElementById("__next");
     const firstChild = mainContainer?.firstChild as HTMLDivElement;
     firstChild.addEventListener("scroll", scrollListener);
     return () => {
       firstChild.removeEventListener("scroll", scrollListener);
     };
-  }, [initialLoad, page, scrollListener]);
-
-  useEffect(() => {
-    setPage(1);
-    setPosts([]);
-    setLoading(false);
-    setNoMorePosts(false);
-    setInitialLoad(true);
-  }, [router.asPath]);
-
-  useEffect(() => {
-    if (initialLoad && page === 1) {
-      setInitialLoad(false);
-      getPosts();
-    }
   }, [getPosts, initialLoad, page]);
 
   return (

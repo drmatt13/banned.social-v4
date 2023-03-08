@@ -5,18 +5,24 @@ import type { NextApiResponse } from "next";
 // aws
 import AWS from "aws-sdk";
 
+// data
+import avatarList from "@/data/avatarList";
+
 // mongoose
 import connectDB from "@/lib/connectDB";
 import UserModel, { IUserModel } from "@/models/UserModel";
 
+// sharp
+import sharp from "sharp";
+
 export default connectDB(
   async (req: ServiceRequest<"update avatar">, res: NextApiResponse) => {
     try {
-      let { _id, avatar, eventbusSecret } = req.body;
+      let { _id, prevAvatar, avatar, eventbusSecret } = req.body;
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }
-      if (avatar?.charAt(0) === "/") {
+      if (!avatarList[prevAvatar || ""] || avatar?.charAt(0) === "/") {
         try {
           AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
@@ -25,15 +31,51 @@ export default connectDB(
             secretAccessKey: process.env.AWS_USER_SECRET,
           });
 
-          const params = {
-            Bucket: process.env.AWS_S3_BUCKET || "",
-            Key: `avatars/${_id}`,
-            Body: Buffer.from(avatar, "base64"),
-            ContentType: "image/jpeg",
-          };
+          if (!avatarList[prevAvatar || ""]) {
+            await s3
+              .deleteObject({
+                Bucket: process.env.AWS_S3_BUCKET || "",
+                Key: `avatars-mini/${prevAvatar}`,
+              })
+              .promise();
+            await s3
+              .deleteObject({
+                Bucket: process.env.AWS_S3_BUCKET || "",
+                Key: `avatars/${prevAvatar}`,
+              })
+              .promise();
+          }
 
-          const upload = await s3.upload(params).promise();
-          avatar = upload.Location;
+          const avatarName = `${_id}-${Date.now()}`;
+
+          if (avatar?.charAt(0) === "/") {
+            await s3
+              .upload({
+                Bucket: process.env.AWS_S3_BUCKET || "",
+                Key: `avatars/${avatarName}`,
+                Body: Buffer.from(avatar, "base64"),
+                ContentType: "image/jpeg",
+              })
+              .promise();
+
+            // resize avatar to 100x100 and upload to s3
+            await s3
+              .upload({
+                Bucket: process.env.AWS_S3_BUCKET || "",
+                Key: `avatars-mini/${avatarName}`,
+                Body: await sharp(Buffer.from(avatar, "base64"))
+                  .resize(40, 40, {
+                    fit: "cover",
+                    position: "center",
+                  })
+                  .toFormat("jpeg")
+                  .toBuffer(),
+                ContentType: "image/jpeg",
+              })
+              .promise();
+
+            avatar = avatarName;
+          }
         } catch (error) {
           throw new Error(serviceError.FailedToUploadImage);
         }

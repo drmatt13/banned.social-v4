@@ -36,7 +36,7 @@ const PostHeader = () => {
                   src={
                     avatarList[user?.avatar!]
                       ? `data:image/jpg;base64, ${avatarList[user?.avatar!]}`
-                      : user?.avatar
+                      : `https://social-media-8434-1348-6435.s3.us-east-1.amazonaws.com/avatars-mini/${user?.avatar}`
                   }
                   alt={user?.avatar}
                 />

@@ -48,6 +48,7 @@ interface Register {
 
 interface UpdateAvatar {
   avatar: string;
+  prevAvatar?: string;
 }
 
 interface UpdateFeedCache {

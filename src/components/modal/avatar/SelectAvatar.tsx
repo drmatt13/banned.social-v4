@@ -18,6 +18,9 @@ import processService from "@/lib/processService";
 // styles
 import styles from "@/styles/scrollbar.module.scss";
 
+// types
+import User from "@/types/user";
+
 const SelectAvatar = ({
   avatar,
   setAvatar,
@@ -29,39 +32,43 @@ const SelectAvatar = ({
     useGlobalContext();
   const { setModal, loading, setLoading } = useModalContext();
 
-  const updateAvatar = useCallback(async () => {
-    if (!avatar) return;
-    try {
-      setLoading(true);
-      const data = await processService("update avatar", {
-        avatar,
-      });
-      const { user, success, error } = data;
-      if (success && user) {
-        setFeedCache((prev) => {
-          return {
-            ...prev,
-            [user._id]: { avatar: user.avatar, username: user.username },
-          };
+  const updateAvatar = useCallback(
+    async (currentUser: User) => {
+      if (!avatar) return;
+      try {
+        setLoading(true);
+        const data = await processService("update avatar", {
+          avatar,
+          prevAvatar: currentUser?.avatar,
         });
-        setUser(user);
-        setModal(false);
-        setLoading(false);
-      } else {
-        if (error === "Unauthorized") {
-          throw new Error("Unauthorized");
-        } else if (error === "Failed to update user") {
-          throw new Error("Failed to update user");
+        const { user, success, error } = data;
+        if (success && user) {
+          setFeedCache((prev) => {
+            return {
+              ...prev,
+              [user._id]: { avatar: user.avatar, username: user.username },
+            };
+          });
+          setUser(user);
+          setModal(false);
+          setLoading(false);
         } else {
-          throw new Error("Server error");
+          if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Failed to update user") {
+            throw new Error("Failed to update user");
+          } else {
+            throw new Error("Server error");
+          }
         }
+      } catch (error) {
+        alert("Server error");
+        setLoading(false);
+        logout();
       }
-    } catch (error) {
-      alert("Server error");
-      setLoading(false);
-      logout();
-    }
-  }, [avatar, logout, setFeedCache, setLoading, setModal, setUser]);
+    },
+    [avatar, logout, setFeedCache, setLoading, setModal, setUser]
+  );
 
   useEffect(() => {
     setAvatar(avatar ? avatar : user?.avatar ? user.avatar : undefined);
@@ -123,7 +130,7 @@ const SelectAvatar = ({
       </div>
       <BigSubmitButton
         disabled={loading || user?.avatar === avatar || !avatar}
-        onClick={updateAvatar}
+        onClick={() => updateAvatar(user)}
         value={user?.avatar ? "Update Avatar" : "Select Avatar"}
       />
     </div>

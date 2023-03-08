@@ -12,6 +12,9 @@ import useModalContext from "@/context/modalContext";
 import processService from "@/lib/processService";
 import blobToBase64 from "@/lib/blobToBase64";
 
+// types
+import User from "@/types/user";
+
 const UploadImage = ({
   image,
   loadImage,
@@ -25,51 +28,56 @@ const UploadImage = ({
   removeImage: () => void;
   errorLoadingImage: boolean;
 }) => {
-  const { setUser, logout, setFeedCache } = useGlobalContext();
+  const { setUser, logout, setFeedCache, user } = useGlobalContext();
   const { setModal, loading, setLoading } = useModalContext();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropRef = useRef<HTMLDivElement>(null);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  const uploadImage = useCallback(async () => {
-    try {
-      setLoading(true);
-      const base64 = await blobToBase64(image);
-      if (!base64) return;
-      const data = await processService("update avatar", {
-        avatar: base64,
-      });
-      const { user, success, error } = data;
-      if (success && user) {
-        setFeedCache((prev) => {
-          return {
-            ...prev,
-            [user._id]: { avatar: user.avatar, username: user.username },
-          };
+  const uploadImage = useCallback(
+    async (currentUser: User) => {
+      try {
+        setLoading(true);
+
+        const base64 = await blobToBase64(image);
+        if (!base64) return;
+        const data = await processService("update avatar", {
+          avatar: base64,
+          prevAvatar: currentUser?.avatar,
         });
-        setUser({
-          ...user,
-          avatar: user.avatar,
-        });
-        setLoading(false);
-        setModal(false);
-      } else {
-        if (error === "Unauthorized") {
-          throw new Error("Unauthorized");
-        } else if (error === "Failed to update user") {
-          throw new Error("Failed to update user");
-        } else if (error === "Failed to upload image") {
-          throw new Error("Failed to upload image");
+        const { user, success, error } = data;
+        if (success && user) {
+          setFeedCache((prev) => {
+            return {
+              ...prev,
+              [user._id]: { avatar: user.avatar, username: user.username },
+            };
+          });
+          setUser({
+            ...user,
+            avatar: user.avatar,
+          });
+          setLoading(false);
+          setModal(false);
         } else {
-          throw new Error("Server error");
+          if (error === "Unauthorized") {
+            throw new Error("Unauthorized");
+          } else if (error === "Failed to update user") {
+            throw new Error("Failed to update user");
+          } else if (error === "Failed to upload image") {
+            throw new Error("Failed to upload image");
+          } else {
+            throw new Error("Server error");
+          }
         }
+      } catch (error) {
+        alert("Upload error, please try again or a different image :(");
+        setLoading(false);
       }
-    } catch (error) {
-      alert("Upload error, please try again or a different image :(");
-      setLoading(false);
-    }
-  }, [image, setFeedCache, setLoading, setModal, setUser]);
+    },
+    [image, setFeedCache, setLoading, setModal, setUser]
+  );
 
   useEffect(() => {
     const input = inputRef.current;
@@ -204,7 +212,7 @@ const UploadImage = ({
       </div>
       <BigSubmitButton
         disabled={loading || !image}
-        onClick={uploadImage}
+        onClick={() => uploadImage(user)}
         value="Upload Image"
       />
       <input
