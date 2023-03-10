@@ -2,6 +2,7 @@ import {
   useState,
   useEffect,
   useCallback,
+  useRef,
   SetStateAction,
   Dispatch,
 } from "react";
@@ -24,19 +25,20 @@ import type AggregatedData from "@/types/AggregatedData";
 interface Props {
   type: "global" | "friends" | "user";
   recipient_id?: string;
-  page: number;
-  setPage: Dispatch<SetStateAction<number>>;
 }
 
-const NewsFeed = ({ type, recipient_id, page, setPage }: Props) => {
+const NewsFeed = ({ type, recipient_id }: Props) => {
   const router = useRouter();
 
   const { feedCache, updateFeedCache } = useGlobalContext();
+
+  const newsfeedResetFlag = useRef(false);
 
   const [posts, setPosts] = useState<Array<IPost>>([]);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
   const [noMorePosts, setNoMorePosts] = useState(false);
+  const [page, setPage] = useState(1);
   const [aggregatedData, setAggregatedData] = useState<AggregatedData>({
     likes: 0,
     comments: 0,
@@ -70,7 +72,7 @@ const NewsFeed = ({ type, recipient_id, page, setPage }: Props) => {
         return [...posts, ...(data.posts as Array<IPost>)];
       });
       setPage(page + 1);
-      console.log(recipient_id || "global", data.posts);
+      // console.log(recipient_id || "global", data.posts);
 
       // update feed cache
       const userCache = new Set();
@@ -118,10 +120,12 @@ const NewsFeed = ({ type, recipient_id, page, setPage }: Props) => {
     setLoading(false);
     setNoMorePosts(false);
     setInitialLoad(true);
+    newsfeedResetFlag.current = true;
   }, [router.asPath, setPage]);
 
   useEffect(() => {
     if (initialLoad && page === 1) {
+      newsfeedResetFlag.current = false;
       setInitialLoad(false);
       getPosts();
     }
@@ -139,9 +143,11 @@ const NewsFeed = ({ type, recipient_id, page, setPage }: Props) => {
       const offsetHeight = (e.target as HTMLDivElement).offsetHeight;
       const scrollTop = (e.target as HTMLDivElement).scrollTop;
       if (
+        !newsfeedResetFlag.current &&
         !initialLoad &&
         Math.floor(scrollHeight - (offsetHeight + scrollTop)) < 300
       ) {
+        // console.log("get more posts");
         getPosts();
       }
     };

@@ -320,11 +320,17 @@ const PostButton = ({ recipient_id }: Props) => {
 
   useEffect(() => {
     // if user tries to leave page with unsaved changes, prompt them
+    let flag = false;
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (post.content === "" && !image) {
+      if ((post.content === "" && !image) || flag) {
         e.preventDefault();
+        return;
       }
+      flag = true;
       e.returnValue = "Changes you made may not be saved.";
+      setTimeout(() => {
+        flag = false;
+      }, 100);
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {

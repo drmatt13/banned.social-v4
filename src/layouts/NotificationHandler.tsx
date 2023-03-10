@@ -40,7 +40,7 @@ const NotificationHandler = ({ children }: Props) => {
   useEffect(() => {
     if (isActive && !socket && !socketFlag.current) {
       const ws = new WebSocket(
-        `wss://rix0eqrw03.execute-api.us-east-1.amazonaws.com/production`
+        process.env.NEXT_PUBLIC_AWS_APIGATEWAY_WEBSOCKET as string
       );
       ws.onopen = () => {
         console.log("Connected to WebSocket");

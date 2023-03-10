@@ -13,9 +13,6 @@ import useGlobalContext from "@/context/globalContext";
 // data
 import avatarList from "@/data/avatarList";
 
-// hooks
-// import useUser from "@/hooks/useUser";
-
 // modals
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 
@@ -25,17 +22,13 @@ const UserProfile = () => {
   const router = useRouter();
   const { id } = router.query;
   const [modal, setModal] = useState(false);
-  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    if (page !== 1) setPage(1);
-    else {
-      const mainContainer = document.getElementById("__next");
-      const firstChild = mainContainer?.firstChild;
-      (firstChild as any).scrollTo(0, 0);
-      if (id !== user?._id) setModal(false);
-    }
-  }, [id, router.asPath, user?._id, page]);
+    const mainContainer = document.getElementById("__next");
+    const firstChild = mainContainer?.firstChild;
+    (firstChild as any).scrollTo(0, 0);
+    if (id !== user?._id) setModal(false);
+  }, [router.asPath, id, user?._id]);
 
   return (
     <>
@@ -142,12 +135,7 @@ const UserProfile = () => {
               )}
             </div>
             <PostButton recipient_id={id as string} />
-            <NewsFeed
-              type="user"
-              recipient_id={id as string}
-              page={page}
-              setPage={setPage}
-            />
+            <NewsFeed type="user" recipient_id={id as string} />
           </div>
         </div>
         <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
