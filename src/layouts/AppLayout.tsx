@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
 
 // components
@@ -17,6 +17,7 @@ import useVerifyUser from "@/hooks/useVerifyUser";
 import Navbar from "@/layouts/Navbar";
 import UnprotectedNavbar from "@/layouts/UnprotectedNavbar";
 import StaticBackground from "@/layouts/StaticBackground";
+import NotificationHandler from "@/layouts/NotificationHandler";
 
 interface Props {
   children: React.ReactNode;
@@ -29,10 +30,6 @@ const AppLayout = ({ children }: Props) => {
   const loading = useVerifyUser(user, setUser);
   const [showNavbar, setShowNavbar] = useState(true);
   const [modal, setModal] = useState(false);
-
-  // useEffect(() => {
-  //   console.log("testlayout");
-  // }, []);
 
   useEffect(() => {
     if (!loading) {
@@ -67,33 +64,35 @@ const AppLayout = ({ children }: Props) => {
         </div>
       ) : (
         <>
-          <StaticBackground showNavbar={showNavbar} user={user}>
-            <UpdateAvatarModal modal={modal} setModal={setModal} />
-            {user && !user.username ? (
-              <OAuthSetUsername />
-            ) : (
-              (!user || (user && user.avatar)) && (
-                <div
-                  className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
-                  onClick={() => setNavButtonsVisable(false)}
-                  onDragStart={(e) => e.preventDefault()}
-                >
-                  {showNavbar && !loading && (
-                    <>
-                      {user ? (
-                        user.username && user.avatar && <Navbar />
-                      ) : (
-                        <UnprotectedNavbar />
-                      )}
-                    </>
-                  )}
-                  <div className="absolute top-0 w-full min-h-screen max-h-screen">
-                    {children}
+          <NotificationHandler>
+            <StaticBackground showNavbar={showNavbar}>
+              <UpdateAvatarModal modal={modal} setModal={setModal} />
+              {user && !user.username ? (
+                <OAuthSetUsername />
+              ) : (
+                (!user || (user && user.avatar)) && (
+                  <div
+                    className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
+                    onClick={() => setNavButtonsVisable(false)}
+                    onDragStart={(e) => e.preventDefault()}
+                  >
+                    {showNavbar && !loading && (
+                      <>
+                        {user ? (
+                          user.username && user.avatar && <Navbar />
+                        ) : (
+                          <UnprotectedNavbar />
+                        )}
+                      </>
+                    )}
+                    <div className="absolute top-0 w-full min-h-screen max-h-screen">
+                      {children}
+                    </div>
                   </div>
-                </div>
-              )
-            )}
-          </StaticBackground>
+                )
+              )}
+            </StaticBackground>
+          </NotificationHandler>
         </>
       )}
     </>

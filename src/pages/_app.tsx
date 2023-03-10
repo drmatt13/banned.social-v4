@@ -109,7 +109,7 @@ const MyApp: AppType<{
 
   const route = router.pathname.split("/")[1] || "/";
 
-  return !["login", "signup"].includes(route) ? (
+  return !["login", "signup"].includes(route) && !user ? (
     <>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -143,6 +143,9 @@ const MyApp: AppType<{
     </>
   ) : (
     <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
       <globalContext.Provider
         value={{
           mobile,

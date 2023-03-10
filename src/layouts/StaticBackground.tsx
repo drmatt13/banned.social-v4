@@ -1,7 +1,6 @@
 // context
 import { useState, useEffect } from "react";
 import useGlobalContext from "../context/globalContext";
-import type User from "@/types/user";
 
 // styles
 import darkStatic from "@/styles/darkStatic.module.scss";
@@ -10,11 +9,10 @@ import lightStatic from "@/styles/lightStatic.module.scss";
 interface Props {
   children: React.ReactNode;
   showNavbar?: boolean;
-  user: User | null;
 }
 
-const StaticBackground = ({ children, showNavbar, user }: Props) => {
-  const { darkMode, mobile } = useGlobalContext();
+const StaticBackground = ({ children, showNavbar }: Props) => {
+  const { darkMode, mobile, user } = useGlobalContext();
   const [viewportHeight, setViewportHeight] = useState(
     window.innerHeight + 150 + "px"
   );

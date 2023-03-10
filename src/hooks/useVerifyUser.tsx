@@ -52,7 +52,7 @@ const useVerifyUser = (user: User, setUser: (user: User) => void): boolean => {
     } else {
       setLoading(false);
     }
-  }, [router.pathname, setUser, user]);
+  }, [router.pathname, setFeedCache, setUser, user]);
 
   return loading;
 };
