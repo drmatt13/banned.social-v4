@@ -64,7 +64,7 @@ export default connectDB(
                 Bucket: process.env.AWS_S3_BUCKET || "",
                 Key: `avatars-mini/${avatarName}`,
                 Body: await sharp(Buffer.from(avatar, "base64"))
-                  .resize(40, 40, {
+                  .resize(80, 80, {
                     fit: "cover",
                     position: "center",
                   })

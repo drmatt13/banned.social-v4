@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 // components
 import SelectAvatar from "@/components/modal/avatar/SelectAvatar";
@@ -18,11 +18,58 @@ const UpdateAvatar = () => {
     "select avatar"
   );
   const [avatar, setAvatar] = useState(user?.avatar);
+  const dropRef = useRef<HTMLDivElement>(null);
   const { image, loadImage, loadingImage, removeImage, errorLoadingImage } =
     useImage();
 
+  useEffect(() => {
+    if (image) setTab("upload image");
+  }, [image]);
+
   return (
-    <div className="h-[350px] flex flex-col text-sm">
+    <div
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!loadingImage) dropRef.current!.style.opacity = "1";
+      }}
+      onDragEnter={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!loadingImage) dropRef.current!.style.opacity = "1";
+      }}
+      onDragOverCapture={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!loadingImage) dropRef.current!.style.opacity = "1";
+      }}
+      onDragLeave={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropRef.current!.style.opacity = "0";
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropRef.current!.style.opacity = "0";
+        loadImage(e);
+      }}
+      onDragEnd={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropRef.current!.style.opacity = "0";
+      }}
+      className="relative h-[350px] flex flex-col text-sm"
+    >
+      <div
+        ref={dropRef}
+        className="absolute top-0 left-0 w-full h-full flex justify-center items-center bg-white/75 dark:bg-neutral-400/60 z-10 opacity-0 transition-opacity ease-out pointer-events-none"
+      >
+        <div className="text-xl font-bold text-neutral-600 dark:text-stone-800 pointer-events-none">
+          Drop Photo
+        </div>
+      </div>
+
       <div className="flex-shrink-0 flex h-10 border-b border-black/25 select-none">
         <button
           className={`${

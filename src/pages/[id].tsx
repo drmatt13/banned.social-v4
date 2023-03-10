@@ -85,7 +85,7 @@ const UserProfile = () => {
           <div>
             <div className="w-full flex flex-col items-center">
               <div className="relative select-none">
-                <div className="mb-5 h-40 w-40 rounded-full border-4 border-blue-500 dark:border-dark-secondary cursor-pointer overflow-hidden">
+                <div className="mb-5 h-40 w-40 rounded-full border-4 border-neutral-400 dark:border-dark-secondary cursor-pointer overflow-hidden">
                   <img
                     className="h-full w-full hover:brightness-[98%] object-cover"
                     src={

@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
 
 import Resizer from "react-image-file-resizer";
-// import isBase64 from "is-base64";
+
+// libraries
+import processPngFile from "@/lib/processPngFile";
 
 const isChangeEvent = (
   e: unknown
@@ -23,7 +25,7 @@ const useImage = () => {
   const [image, setImage] = useState<Blob | undefined>(undefined);
   const [errorLoadingImage, setErrorLoadingImage] = useState(false);
 
-  const loadImage = useCallback((e: unknown) => {
+  const loadImage = useCallback(async (e: unknown) => {
     (e as Event).preventDefault();
     setLoadingImage(true);
     setErrorLoadingImage(false);
@@ -32,6 +34,9 @@ const useImage = () => {
     if (isDragEvent(e)) image = e.dataTransfer?.files?.[0];
     if (!image || !isValidImageFile(image)) {
       return setErrorLoadingImage(true);
+    }
+    if (image.type === "image/png") {
+      image = await processPngFile(image);
     }
     const reader = new FileReader();
     reader.onloadend = async (e: ProgressEvent<FileReader>) => {

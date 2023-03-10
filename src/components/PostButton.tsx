@@ -306,6 +306,7 @@ const PostButton = ({ recipient_id }: Props) => {
       recipient_id,
       og: undefined,
     });
+    setModal(false);
   }, [recipient_id, router.asPath]);
 
   const parseHTML = useCallback((html: string) => {
