@@ -60,6 +60,10 @@ const Contacts = () => {
     }
   }, [onlineFriendsScrollPosition]);
 
+  useEffect(() => {
+    addScrollListenerToContentContainer();
+  }, [addScrollListenerToContentContainer]);
+
   return (
     <>
       <div className={`w-full relative flex flex-row-reverse group`}>
