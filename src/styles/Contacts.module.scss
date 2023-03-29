@@ -1,0 +1,81 @@
+/* Contacts.module.css */
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.scroll {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow-y: auto;
+  
+}
+
+.scroll::-webkit-scrollbar {
+  width: 8px;
+  background-color: transparent;
+}
+
+.scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.scroll:hover::-webkit-scrollbar {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.scroll.darkScroll::-webkit-scrollbar-thumb {
+  // background-color: rgba(255, 255, 255, 0.2);
+}
+
+.scroll.darkScroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.scroll.darkScroll:hover::-webkit-scrollbar {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.scroll.lightScrollGray::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.scroll.lightScrollGray:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.scroll.lightScrollGray:hover::-webkit-scrollbar {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.content {
+  padding: 0 8px;
+}
+
+.hovered::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+.hovered::-webkit-scrollbar {
+  opacity: 1;
+}
+
+.dark {
+  background-color: #333333;
+  color: #ffffff;
+}
+
+.light {
+  background-color: #f2f2f2;
+  color: #333333;
+}

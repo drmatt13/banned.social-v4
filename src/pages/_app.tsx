@@ -33,10 +33,7 @@ const MyApp: AppType<{
   const [navContainerVisable, setNavContainerVisable] = useState(true);
   const [navButtonsVisable, setNavButtonsVisable] = useState(false);
   const [feedCache, setFeedCache] = useState<FeedCache>({});
-
-  // useEffect(() => {
-  //   console.log("testapp");
-  // }, []);
+  const [isFirefox, setIsFirefox] = useState(false);
 
   const updateFeedCache = useCallback(async (users: string[]) => {
     const data = await processService("update feed cache", {
@@ -79,6 +76,8 @@ const MyApp: AppType<{
           )
         : false
     );
+
+    setIsFirefox(navigator.userAgent.toLowerCase().indexOf("firefox") !== -1);
   }, []);
 
   const toggleDarkMode = () => {
@@ -133,6 +132,7 @@ const MyApp: AppType<{
             feedCache,
             setFeedCache,
             updateFeedCache,
+            isFirefox,
           }}
         >
           <AppLayout>
@@ -164,6 +164,7 @@ const MyApp: AppType<{
           feedCache,
           setFeedCache,
           updateFeedCache,
+          isFirefox,
         }}
       >
         <AppLayout>

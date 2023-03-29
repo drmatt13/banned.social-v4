@@ -92,7 +92,7 @@ const Post = ({
         }
       `}</style>
       <></>
-      <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-5 w-full border dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
+      <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-5 w-full border border-neutral-300/75 dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
         <div className="mx-4 flex items-start mb-2">
           <UserAvatarMini id={user_id!} user={postUser} />
           <div className="flex-1 flex font-xs font-medium h-10">
@@ -126,7 +126,7 @@ const Post = ({
               </div>
             </div>
             <div className="h-full flex justify-center items-center">
-              <i className="hover:bg-gray-400/20 fa-solid fa-ellipsis flex justify-center items-center h-8 w-8 text-lg rounded-full cursor-pointer transition-colors ease-out" />
+              <i className="hover:bg-gray-400/20 hover:dark:bg-gray-400/25 fa-solid fa-ellipsis flex justify-center items-center h-8 w-8 text-lg rounded-full cursor-pointer transition-colors ease-out" />
             </div>
           </div>
         </div>
@@ -136,7 +136,7 @@ const Post = ({
           <img
             src={image}
             alt={image}
-            className="cursor-pointer select-none min-h-[15rem] max-h-96 w-full object-cover"
+            className="cursor-pointer select-none min-h-[15rem] max-h-[31rem] w-full object-cover"
             loading="lazy"
             onError={(e) => {
               e.currentTarget.style.display = "none";
@@ -158,7 +158,7 @@ const Post = ({
                     }}
                   />
                 )}
-                <div className="flex-1 text-left p-2 overflow-hidden text-xs bg-neutral-300/80 dark:bg-gray-400/20 dark:text-neutral-200 font-normal">
+                <div className="flex-1 text-left p-2 overflow-hidden text-xs bg-gray-400/25 dark:bg-gray-400/20 dark:text-neutral-200 font-normal">
                   {og.siteName && (
                     <p className="w-full h-[1.125rem] truncate">
                       {og.siteName}
@@ -197,15 +197,15 @@ const Post = ({
           </div>
         </div>
         <div className="h-10 flex justify-evenly mx-3 select-none">
-          <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+          <div className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out">
             <i className="fa-solid fa-thumbs-up mr-2" />
             Like
           </div>
-          <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+          <div className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out">
             <i className="fa-solid fa-comment mr-2" />
             Comment
           </div>
-          <div className="m-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-400/20 transition-colors ease-out">
+          <div className="my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out">
             <i className="fa-solid fa-share mr-2" />
             Share
           </div>

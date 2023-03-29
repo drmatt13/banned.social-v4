@@ -7,12 +7,13 @@ import Head from "next/head";
 // components
 import NewsFeed from "@/components/NewsFeed";
 import PostButton from "@/components/PostButton";
+import Contacts from "@/components/Contacts";
 
 // context
 import useGlobalContext from "@/context/globalContext";
 
 const Home: NextPage = () => {
-  const { logout, setUser, user } = useGlobalContext();
+  const { logout, setUser, user, darkMode } = useGlobalContext();
 
   const router = useRouter();
 
@@ -70,18 +71,22 @@ const Home: NextPage = () => {
         }
       `}</style>
       <div className="absolute flex top-0 pt-20 sm:pt-28 w-full min-h-[105vh]">
+        {/* *************************************************************************************************************************************************************** */}
         <div className="select-none container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-1
         </div>
+        {/* *************************************************************************************************************************************************************** */}
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
           <div>
             <PostButton />
             <NewsFeed type="global" />
           </div>
         </div>
-        <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
-          container-3
+        {/* *************************************************************************************************************************************************************** */}
+        <div className="container-3 w-[266px] flex-none lg:flex-1 sticky top-28 select-none mr-2.5 flex">
+          <Contacts />
         </div>
+        {/* *************************************************************************************************************************************************************** */}
       </div>
     </>
   );

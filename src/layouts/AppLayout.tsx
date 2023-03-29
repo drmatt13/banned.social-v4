@@ -9,9 +9,11 @@ import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 
 // context
 import useGlobalContext from "@/context/globalContext";
+import { onlineFriendsContext } from "@/context/onlineFriendsContext";
 
 // hooks
 import useVerifyUser from "@/hooks/useVerifyUser";
+import useOnlineFriends from "@/hooks/useOnlineFriends";
 
 // layouts
 import Navbar from "@/layouts/Navbar";
@@ -27,12 +29,16 @@ const AppLayout = ({ children }: Props) => {
   const router = useRouter();
   const { loggingOut, user, setUser, setNavButtonsVisable } =
     useGlobalContext();
-  const loading = useVerifyUser(user, setUser);
+  const loadingUser = useVerifyUser(user, setUser);
+  const { onlineFriends, setOnlineFriends, loadingOnlineFriends } =
+    useOnlineFriends(user);
   const [showNavbar, setShowNavbar] = useState(true);
   const [modal, setModal] = useState(false);
+  const [onlineFriendsScrollPosition, setOnlineFriendsScrollPosition] =
+    useState(0);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loadingUser) {
       const route = router.pathname.split("/")[1] || "/";
       if (!["login", "signup", "oauth"].includes(route)) {
         setShowNavbar(true);
@@ -40,13 +46,13 @@ const AppLayout = ({ children }: Props) => {
         setShowNavbar(false);
       }
     }
-  }, [router.pathname, loading]);
+  }, [router.pathname, loadingUser]);
 
   useEffect(() => {
-    if (!loading && user?.username && !user?.avatar) {
+    if (!loadingUser && user?.username && !user?.avatar) {
       setModal(true);
     }
-  }, [loading, modal, user]);
+  }, [loadingUser, modal, user]);
 
   return (
     <>
@@ -57,42 +63,52 @@ const AppLayout = ({ children }: Props) => {
           }
         }
       `}</style>
-      {!loading && !user?.avatar && <ToggleDarkModeButton />}
-      {loading || loggingOut ? (
+      {!loadingUser && !user?.avatar && <ToggleDarkModeButton />}
+      {loadingUser || loggingOut ? (
         <div className="h-screen w-screen">
           <Loading />
         </div>
       ) : (
         <>
-          <NotificationHandler>
-            <StaticBackground showNavbar={showNavbar}>
-              <UpdateAvatarModal modal={modal} setModal={setModal} />
-              {user && !user.username ? (
-                <OAuthSetUsername />
-              ) : (
-                (!user || (user && user.avatar)) && (
-                  <div
-                    className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
-                    onClick={() => setNavButtonsVisable(false)}
-                    onDragStart={(e) => e.preventDefault()}
-                  >
-                    {showNavbar && !loading && (
-                      <>
-                        {user ? (
-                          user.username && user.avatar && <Navbar />
-                        ) : (
-                          <UnprotectedNavbar />
-                        )}
-                      </>
-                    )}
-                    <div className="absolute top-0 w-full min-h-screen max-h-screen">
-                      {children}
+          <onlineFriendsContext.Provider
+            value={{
+              onlineFriends,
+              setOnlineFriends,
+              loading: loadingOnlineFriends,
+              onlineFriendsScrollPosition,
+              setOnlineFriendsScrollPosition,
+            }}
+          >
+            <NotificationHandler>
+              <StaticBackground showNavbar={showNavbar}>
+                <UpdateAvatarModal modal={modal} setModal={setModal} />
+                {user && !user.username ? (
+                  <OAuthSetUsername />
+                ) : (
+                  (!user || (user && user.avatar)) && (
+                    <div
+                      className="absolute top-0 left-0 w-full min-h-screen h-full flex justify-center overflow-y-auto dark:[color-scheme:dark]"
+                      onClick={() => setNavButtonsVisable(false)}
+                      onDragStart={(e) => e.preventDefault()}
+                    >
+                      {showNavbar && !loadingUser && (
+                        <>
+                          {user ? (
+                            user.username && user.avatar && <Navbar />
+                          ) : (
+                            <UnprotectedNavbar />
+                          )}
+                        </>
+                      )}
+                      <div className="absolute top-0 w-full min-h-screen max-h-screen">
+                        {children}
+                      </div>
                     </div>
-                  </div>
-                )
-              )}
-            </StaticBackground>
-          </NotificationHandler>
+                  )
+                )}
+              </StaticBackground>
+            </NotificationHandler>
+          </onlineFriendsContext.Provider>
         </>
       )}
     </>

@@ -21,6 +21,7 @@ type GlobalContext = {
   feedCache: FeedCache;
   setFeedCache: Dispatch<SetStateAction<FeedCache>>;
   updateFeedCache: (users: string[]) => Promise<void>;
+  isFirefox: boolean;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -40,6 +41,7 @@ export const globalContext = createContext<GlobalContext>({
   feedCache: {},
   setFeedCache: () => {},
   updateFeedCache: () => Promise.resolve(),
+  isFirefox: false,
 });
 
 const useGlobalContext = () => useContext(globalContext);

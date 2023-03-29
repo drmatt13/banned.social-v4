@@ -6,6 +6,7 @@ import Head from "next/head";
 // components
 import NewsFeed from "@/components/NewsFeed";
 import PostButton from "@/components/PostButton";
+import Contacts from "@/components/Contacts";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -17,7 +18,7 @@ import avatarList from "@/data/avatarList";
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 
 const UserProfile = () => {
-  const { feedCache, mobile, user } = useGlobalContext();
+  const { feedCache, mobile, user, darkMode } = useGlobalContext();
 
   const router = useRouter();
   const { id } = router.query;
@@ -78,14 +79,16 @@ const UserProfile = () => {
         }
       `}</style>
       <div className="absolute flex top-0 pt-20 sm:pt-28 w-full min-h-[105vh]">
+        {/* *************************************************************************************************************************************************************** */}
         <div className="select-none container-1 flex-1 sticky top-28 border-r border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
           container-1
         </div>
+        {/* *************************************************************************************************************************************************************** */}
         <div className="container-2 flex-1 h-full lg:flex-none text-center w-[55%] flex justify-center items-start">
           <div>
             <div className="w-full flex flex-col items-center">
               <div className="relative select-none">
-                <div className="mb-5 h-40 w-40 rounded-full border-4 border-neutral-400 dark:border-dark-secondary cursor-pointer overflow-hidden">
+                <div className="mb-5 h-40 w-40 rounded-full border-2 border-neutral-400 dark:border-dark-secondary cursor-pointer overflow-hidden">
                   <img
                     className="h-full w-full hover:brightness-[98%] object-cover"
                     src={
@@ -98,6 +101,9 @@ const UserProfile = () => {
                     }
                     alt={feedCache[id as string]?.avatar!}
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as any).src = "/images/avatars-full/anon2.jpg";
+                    }}
                   />
                 </div>
 
@@ -138,9 +144,11 @@ const UserProfile = () => {
             <NewsFeed type="user" recipient_id={id as string} />
           </div>
         </div>
-        <div className="select-none container-3 w-[266px] flex-none lg:flex-1 sticky top-28 border-l border-black/20 dark:border-white/25 opacity-50 text-center bg-black/5 dark:bg-white/5">
-          container-3
+        {/* *************************************************************************************************************************************************************** */}
+        <div className="container-3 w-[266px] flex-none lg:flex-1 sticky top-28 select-none mr-2.5 flex">
+          <Contacts />
         </div>
+        {/* *************************************************************************************************************************************************************** */}
       </div>
       {id === user?._id && (
         <UpdateAvatarModal modal={modal} setModal={setModal} />
