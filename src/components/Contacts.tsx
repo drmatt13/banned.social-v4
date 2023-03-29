@@ -79,8 +79,7 @@ const Contacts = () => {
               onMouseEnter={addScrollListenerToScrollContainer}
               onTouchStart={addScrollListenerToScrollContainer}
             >
-              <div ref={scrollChildRef} className="h-screen w-3" />
-              {/* <div> sd</div> */}
+              <div ref={scrollChildRef} className="h-screen /w-3" />
             </div>
           </div>
         )}
