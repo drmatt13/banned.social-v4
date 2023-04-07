@@ -162,7 +162,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   return (
     <>
       {posts &&
-        posts.map((post: IPost) => (
+        posts.map((post: IPost, index) => (
           <Post
             key={post._id}
             _id={post._id}
@@ -175,6 +175,21 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
             createdAt={post.createdAt}
             updatedAt={post.updatedAt}
             aggregatedData={aggregatedData}
+            setAggregatedData={setAggregatedData}
+            updatePost={(() => {
+              return (updatedPost: IPost) => {
+                setPosts((posts) => {
+                  return posts.map((post) => {
+                    if (post._id === post._id) {
+                      return {
+                        ...updatedPost,
+                      };
+                    }
+                    return post;
+                  });
+                });
+              };
+            })()}
           />
         ))}
       {!noMorePosts && (

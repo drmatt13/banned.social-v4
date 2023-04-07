@@ -228,7 +228,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
   ]);
 
   useEffect(() => {
-    textareaRef!.current!.innerHTML = DOMPurify.sanitize(post.content);
+    textareaRef!.current!.innerHTML = DOMPurify.sanitize(post.content || "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -237,7 +237,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
     if (initialLoad) {
       placeCursorAtEnd(textareaRef.current!);
       if (ogStack.length === 0) {
-        const words = post.content.split(/\s+/);
+        const words = post.content ? post.content.split(/\s+/) : [];
         for (let i = words.length - 1; i >= 0; i--) {
           if (validateUrl(words[i] || "")) {
             setLoadingOg(true);
@@ -271,7 +271,7 @@ const PostInput = ({ textareaRef, caretPosition, setCaretPosition }: Props) => {
 
   useEffect(() => {
     let text = post.content;
-    duplicateTextRef.current!.innerHTML = wrapUrlsInSpans(text);
+    duplicateTextRef.current!.innerHTML = wrapUrlsInSpans(text || "");
   }, [post.content, wrapUrlsInSpans]);
 
   return (

@@ -1,22 +1,34 @@
 /* eslint-disable @next/next/no-img-element */
-import { useState, useEffect, useCallback, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  SetStateAction,
+  Dispatch,
+} from "react";
 import Link from "next/link";
+import DOMPurify from "dompurify";
 
 // components
 import UserAvatarMini from "./UserAvatarMini";
 
 // context
 import useGlobalContext from "@/context/globalContext";
+import { commentContext } from "@/context/commentContext";
 
 // libraries
 import validateUrl from "@/lib/validateUrl";
 import formatDate from "@/lib/formatDate";
 
+// modals
+import CommentModal from "@/modals/CommentModal";
+
 // types
 import type IPost from "@/types/post";
 import type FeedUser from "@/types/feedUser";
-import type Og from "@/types/og";
 import type AggregatedData from "@/types/AggregatedData";
+import type Comment from "@/types/comment";
 
 const Post = ({
   _id,
@@ -29,7 +41,13 @@ const Post = ({
   createdAt,
   updatedAt,
   aggregatedData,
-}: IPost & { aggregatedData?: AggregatedData }) => {
+  setAggregatedData,
+  updatePost,
+}: IPost & {
+  aggregatedData?: AggregatedData;
+  setAggregatedData: Dispatch<SetStateAction<AggregatedData>>;
+  updatePost: (post: IPost) => void;
+}) => {
   const { feedCache, user, mobile } = useGlobalContext();
 
   const [PostContentElement, setPostContentElement] = useState(<></>);
@@ -38,11 +56,18 @@ const Post = ({
   const [postRecipient, setPostRecipient] = useState<FeedUser>(undefined);
 
   const likePost = useCallback(() => {}, []);
-  const commentOnPost = useCallback(() => {}, []);
   const sharePost = useCallback(() => {}, []);
 
+  const [commentModal, setCommentModal] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [subComments, setSubComments] = useState<{
+    [comment_id: string]: Comment[];
+  }>({});
+
   useEffect(() => {
-    const words = content.split(/([\s\n]+)/);
+    const words = content
+      ? DOMPurify.sanitize(content.trim())?.split(/([\s\n]+)/) || []
+      : [];
 
     setPostContentElement(
       <p
@@ -197,11 +222,19 @@ const Post = ({
           </div>
         </div>
         <div className="h-10 flex justify-evenly mx-3 select-none">
-          <div className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out">
+          <div
+            className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out"
+            onClick={() => {}}
+          >
             <i className="fa-solid fa-thumbs-up mr-2" />
             Like
           </div>
-          <div className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out">
+          <div
+            className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out"
+            onClick={() => {
+              setCommentModal(true);
+            }}
+          >
             <i className="fa-solid fa-comment mr-2" />
             Comment
           </div>
@@ -211,6 +244,30 @@ const Post = ({
           </div>
         </div>
       </div>
+      <commentContext.Provider
+        value={{
+          post: {
+            _id,
+            user_id,
+            recipient_id,
+            sharedPost_id,
+            content,
+            image,
+            og,
+            createdAt,
+            updatedAt,
+          },
+          comments,
+          setComments,
+          setSubComments,
+          subComments,
+          aggregatedData,
+          setAggregatedData,
+          updatePost,
+        }}
+      >
+        <CommentModal modal={commentModal} setModal={setCommentModal} />
+      </commentContext.Provider>
     </>
   );
 };

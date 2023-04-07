@@ -89,7 +89,7 @@ const avatarOrder = [
   "eth",
   "doge",
   "gun1",
-  "ye_infowars_cartoon",
+  "earth",
   "alien",
 
   "camera",

@@ -97,3 +97,30 @@
     
     }
 }
+
+.darkScrollAlt {
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+    }
+    
+    ::-webkit-scrollbar-track {
+    background: rgba(128, 131, 138, 0.3);
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+    border-radius: 12px;
+    background: rgba(90, 95, 100, 0.85); 
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(110, 115, 120, 0.9); 
+    }
+    ::-webkit-scrollbar-corner {
+    background: none;
+    
+    }
+}

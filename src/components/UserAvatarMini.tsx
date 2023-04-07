@@ -14,12 +14,17 @@ type FeedUser = FeedCache[keyof User] | undefined;
 interface Props {
   id: string;
   user: FeedUser;
+  extraSmall?: boolean;
 }
 
-const UserAvatarMini = ({ id, user }: Props) => {
+const UserAvatarMini = ({ id, user, extraSmall }: Props) => {
   return (
     <>
-      <div className="h-10 w-10 overflow-hidden mr-3 rounded-full border border-light-border dark:border-white/25 cursor-pointer select-none">
+      <div
+        className={`${
+          extraSmall ? "h-8 w-8 mr-2" : "h-10 w-10 mr-3"
+        } overflow-hidden rounded-full border border-light-border dark:border-white/25 cursor-pointer select-none`}
+      >
         <Link href={id}>
           <img
             className="h-full w-full hover:brightness-[98%] object-cover"

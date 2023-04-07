@@ -52,7 +52,7 @@ const useOnlineFriends = (user: User) => {
   const [loadingOnlineFriends, setLoadingOnlineFriends] = useState(true);
 
   useEffect(() => {
-    if (user) {
+    if (user && !onlineFriends.length) {
       const randomAvatar = () => {
         const randomIndex = Math.floor(Math.random() * avatarOrder.length);
         return avatarOrder[randomIndex];
@@ -67,7 +67,7 @@ const useOnlineFriends = (user: User) => {
       console.log(testUsers);
       setOnlineFriends(testUsers as unknown as User[]);
     }
-  }, [user]);
+  }, [onlineFriends.length, user]);
 
   return {
     onlineFriends,

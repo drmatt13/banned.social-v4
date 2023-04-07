@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useRouter } from "next/router";
 import _ from "lodash";
+import DOMPurify from "dompurify";
 
 // components
 import Post from "@/components/Post";
@@ -34,7 +35,7 @@ import PostModal from "@/modals/PostModal";
 // types
 import type Og from "@/types/og";
 import type IPost from "@/types/post";
-// import UrlCache from "@/types/urlCache";
+import type AggregatedData from "@/types/AggregatedData";
 
 function getDomainFromUrl(url: string): string {
   let domain = "";
@@ -115,15 +116,22 @@ const PostButton = ({ recipient_id }: Props) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [posts, setPosts] = useState<Array<IPost>>([]);
+  const [aggregatedData, setAggregatedData] = useState<Array<AggregatedData>>(
+    []
+  );
 
   const submitPost = useCallback(async () => {
     if (!post && !image && loading) return;
     try {
       setLoading(true);
       const base64 = await blobToBase64(image);
+      const content = post.content
+        ? DOMPurify.sanitize(post.content.trim())
+        : undefined;
       const data = await processService("create post", {
         post: {
           ...post,
+          content,
           image: base64,
         },
       });
@@ -384,8 +392,8 @@ const PostButton = ({ recipient_id }: Props) => {
         >
           <div className="absolute h-full w-full top-0 left-0 flex items-center text-gray-600 dark:text-gray-300 group-hover:text-black dark:group-hover:text-white hover:transition-colors hover:duration-200 ease-out truncate">
             <div className="truncate ml-4 mr-4">
-              {parseHTML(post.content).trim() !== ""
-                ? parseHTML(post.content)
+              {parseHTML(post.content || "").trim() !== ""
+                ? parseHTML(post.content || "")
                 : !recipient_id || recipient_id === user?._id
                 ? `What's on your mind, 
             ${user!.username[0] + user!.username!.substring(1)}?`
@@ -401,7 +409,7 @@ const PostButton = ({ recipient_id }: Props) => {
         className="hidden"
       />
       {posts &&
-        posts.map((post: IPost) => (
+        posts.map((post: IPost, index) => (
           <Post
             key={post._id}
             _id={post._id!}
@@ -414,6 +422,23 @@ const PostButton = ({ recipient_id }: Props) => {
             // aggregatedData={aggregatedData}
             createdAt={post.createdAt}
             updatedAt={post.updatedAt}
+            aggregatedData={aggregatedData[index]}
+            updatePost={(() => {
+              return (updatedPost: IPost) => {
+                setPosts((posts) => {
+                  return posts.map((post) => {
+                    if (post._id === post._id) {
+                      return {
+                        ...updatedPost,
+                      };
+                    }
+                    return post;
+                  });
+                });
+              };
+            })()}
+            // FIX LATER
+            setAggregatedData={() => {}}
           />
         ))}
     </>

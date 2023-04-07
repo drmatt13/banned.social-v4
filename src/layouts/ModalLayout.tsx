@@ -8,9 +8,10 @@ import useModalContext from "@/context/modalContext";
 interface Props {
   children: JSX.Element;
   visable?: boolean;
+  styles?: string;
 }
 
-const Modal = ({ children, visable = true }: Props) => {
+const Modal = ({ children, visable = true, styles }: Props) => {
   const { user, navButtonsVisable } = useGlobalContext();
   const { modal, setModal, loading } = useModalContext();
 
@@ -80,7 +81,7 @@ const Modal = ({ children, visable = true }: Props) => {
             } pointer-events-auto overflow-y-hidden flex relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[500px] max-h-[85%]`}
           >
             <div
-              className="w-full max-h-[85%] overflow-y-auto z-50"
+              className={`${styles} w-full max-h-[85%] overflow-y-auto z-50`}
               onClick={(e) => e.stopPropagation()}
             >
               {children}
