@@ -2,8 +2,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
-import TextareaAutosize from "react-textarea-autosize";
-
 // context
 import useGlobalContext from "@/context/globalContext";
 import useModalContext from "@/context/modalContext";
@@ -11,6 +9,8 @@ import useCommentContext from "@/context/commentContext";
 
 // components
 import UserAvatarMini from "@/components/UserAvatarMini";
+import CommentInput from "@/components/modal/comment/CommentInput";
+import Comment from "@/components/modal/comment/Comment";
 
 // types
 import FeedUser from "@/types/feedUser";
@@ -27,13 +27,13 @@ const ElevatedPost = () => {
   const { feedCache, user, mobile, darkMode } = useGlobalContext();
   const { modal, setModal, loading, setLoading } = useModalContext();
   const {
+    post,
     post: {
       _id,
       user_id,
       recipient_id,
       sharedPost_id,
       content,
-      image,
       og,
       createdAt,
       updatedAt,
@@ -45,20 +45,56 @@ const ElevatedPost = () => {
     aggregatedData,
     setAggregatedData,
     updatePost,
+    setFocused,
   } = useCommentContext();
 
   const [postUser, setPostUser] = useState<FeedUser>(undefined);
   const [postRecipient, setPostRecipient] = useState<FeedUser>(undefined);
-
   const [PostContentElement, setPostContentElement] = useState(<></>);
+  const [page, setPage] = useState(1);
+  const [loadingComments, setLoadingComments] = useState(false);
 
-  const [comment, setComment] = useState("");
-  const [focused, setFocused] = useState(false);
-  const [creatingComment, setCreatingComment] = useState(false);
+  const commentInputref = useRef<HTMLDivElement>(null);
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // TEMPORARY
+  const [disable, setDisable] = useState(false);
 
-  const createComment = useCallback(async () => {}, []);
+  const getComments = useCallback(async () => {
+    if (!post?._id || loadingComments) return;
+    setLoadingComments(true);
+    const data = await processService("get comments", {
+      post_id: post._id,
+      page,
+      limit: 15,
+    });
+    const { success, comments, error } = data;
+    if (success && comments) {
+      if (comments.length === 0) setDisable(true);
+      setComments((prev) => {
+        return [...prev, ...comments];
+      });
+      setPage((prev) => prev + 1);
+    } else {
+      // if (error === "Unauthorized") {
+      //   throw new Error("Unauthorized");
+      // } else if (error === "Failed to update user") {
+      //   throw new Error("Failed to update user");
+      // } else if (error === "Failed to upload image") {
+      //   throw new Error("Failed to upload image");
+      // } else {
+      //   throw new Error("Server error");
+      // }
+    }
+    setLoadingComments(false);
+  }, [loadingComments, page, post._id, setComments]);
+
+  useEffect(() => {
+    if (comments.length === 0 && !disable) getComments();
+  }, [comments.length, disable, getComments]);
+
+  useEffect(() => {
+    console.log(comments);
+  }, [comments]);
 
   useEffect(() => {
     const words = content?.split(/([\s\n]+)/) || [];
@@ -98,12 +134,14 @@ const ElevatedPost = () => {
     if (recipient_id && feedCache[recipient_id]) {
       setPostRecipient(feedCache[recipient_id]);
     }
-    textareaRef.current?.focus();
-  }, [feedCache, image, recipient_id, user, user_id]);
+  }, [feedCache, post.image, recipient_id, user, user_id]);
 
   return (
     <>
-      <div className="relative text-sm pt-3 rounded-lg w-full flex-1 overflow-y-auto">
+      <div
+        className="relative text-sm pt-3 rounded-lg w-full flex-1 overflow-y-auto"
+        onClick={() => setFocused(undefined)}
+      >
         <div className="mx-4 flex items-start mb-2">
           <UserAvatarMini id={user_id!} user={postUser} />
           <div className="flex-1 flex font-xs font-medium h-10">
@@ -143,10 +181,10 @@ const ElevatedPost = () => {
         </div>
         {PostContentElement}
         {/* <div> */}
-        {typeof image === "string" && (
+        {typeof post.image === "string" && (
           <img
-            src={image}
-            alt={image}
+            src={post.image}
+            alt={post.image}
             className="cursor-pointer select-none min-h-[10rem] h-[15rem] max-h-[30vh] w-full object-cover"
             loading="lazy"
             onError={(e) => {
@@ -154,14 +192,14 @@ const ElevatedPost = () => {
             }}
           />
         )}
-        {!image && og?.url && (
+        {!post.image && og?.url && (
           <>
             <Link href={og.url}>
               <>
                 {og.image?.url && (
                   <img
                     src={og.image.url}
-                    alt={image}
+                    alt={post.image}
                     className="cursor-pointer select-none min-h-[10rem] h-[15rem] max-h-[30vh] w-full object-cover"
                     loading="lazy"
                     onError={(e) => {
@@ -198,7 +236,7 @@ const ElevatedPost = () => {
         {/* </div> */}
         <div
           className={`${
-            image || og ? "h-10" : "pb-2.5"
+            post.image || og ? "h-10" : "pb-2.5"
           } flex justify-between mx-3 border-b border-black/25 select-none opacity-75`}
         >
           <div className="flex items-center">xxx likes</div>
@@ -216,7 +254,10 @@ const ElevatedPost = () => {
             Like
           </div>
           <div
-            onClick={() => textareaRef.current?.focus()}
+            onClick={(e) => {
+              e.stopPropagation();
+              (commentInputref.current?.firstChild as HTMLInputElement).click();
+            }}
             className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-black/10 transition-colors ease-out"
           >
             <i className="fa-solid fa-comment mr-2" />
@@ -228,65 +269,26 @@ const ElevatedPost = () => {
           </div>
         </div>
         {/* Comment section */}
-        <div className="h-32">comments</div>
-        {/* Comment section */}
-      </div>
-      <div
-        className={`${
-          darkMode ? styles.darkScroll : styles.lightScroll
-        } my-3 w-full px-3 flex`}
-      >
-        <UserAvatarMini id={user_id!} user={user} extraSmall={true} />
-        <div
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-          onClick={() => textareaRef.current?.focus()}
-          className="relative flex-1 min-h-8 rounded-2xl bg-light-primary border border-neutral-600/60 cursor-text pl-3 pr-1.5 flex flex-col justify-center text-black/80 overflow-hidden"
-        >
-          <TextareaAutosize
-            ref={textareaRef}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            minRows={1}
-            maxRows={7}
-            placeholder="Write a comment..."
-            className={`
-            
-            ${
-              // if it is scrollable
-              (textareaRef.current?.scrollHeight || 0) > 140 &&
-              (textareaRef.current?.scrollHeight || 0) >
-                (textareaRef.current?.clientHeight || 0)
-                ? "overflow-y-scroll"
-                : "overflow-hidden"
-            }
-            ${(focused || textareaRef.current?.value) && "mt-1"}
-            ${
-              loading ? "animate-pulse" : ""
-            } outline-none h-full resize-none decoration-none bg-transparent w-full text-sm`}
-            style={{
-              lineHeight: "1.45rem",
-            }}
-          />
-          <div
-            className={`${
-              focused || textareaRef.current?.value
-                ? "h-7 opacity-100"
-                : "h-0 opacity-0"
-            } transition-all ease-out duration-300 flex flex-row-reverse w-full items-center`}
-          >
-            <i
-              className={`${
-                focused || textareaRef.current?.value ? "scale-100" : "scale-0"
-              } ${
-                textareaRef.current?.value
-                  ? "text-blue-600 hover:text-blue-500 cursor-pointer"
-                  : "text-black/50 cursor-not-allowed"
-              } fa-solid fa-share transition-all ease-out duration-300`}
-            ></i>
-          </div>
+        <div className="pt-2">
+          {comments.length > 0 &&
+            comments.map((comment) => (
+              <div key={comment._id}>
+                <Comment comment={comment} />
+              </div>
+            ))}
+          {!loadingComments && (
+            <>
+              <div
+                className="py-[.2rem] w-max cursor-pointer hover:underline mx-3 text-[.7rem] font-semibold text-black/90 hover:text-black"
+                onClick={getComments}
+              >
+                View more comments
+              </div>
+            </>
+          )}
         </div>
       </div>
+      <CommentInput type="primary comment" commentInputref={commentInputref} />
     </>
   );
 };

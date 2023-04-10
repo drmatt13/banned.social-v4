@@ -116,7 +116,7 @@ const eventbus = async (
         break;
 
       // Update user feed cache
-      // returns partial users for thr cache
+      // returns partial users for the cache
       // { users: users[] }
       case "update feed cache":
         protectedRoute();
@@ -141,6 +141,26 @@ const eventbus = async (
       case "get posts":
         protectedRoute();
         req = await axios.post(`${URL}/post/get_posts`, body);
+        break;
+
+      // *****************************
+      // *******  Comment DB  ***********
+      // *****************************
+
+      // Creates a new comment
+      // returns created comment
+      // { content?, image?, post_id, og? }
+      case "create comment":
+        protectedRoute();
+        req = await axios.post(`${URL}/comment/create_comment`, body);
+        break;
+
+      // Get comments
+      // returns comments
+      // { post_id, limit, page }
+      case "get comments":
+        protectedRoute();
+        req = await axios.post(`${URL}/comment/get_comments`, body);
         break;
 
       // *****************************

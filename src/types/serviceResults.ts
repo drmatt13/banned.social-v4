@@ -4,6 +4,7 @@ import { serviceError } from "@/lib/processService";
 import type User from "@/types/user";
 import type Og from "@/types/og";
 import type Post from "@/types/post";
+import type Comment from "@/types/comment";
 
 type UniversalTypeError =
   | typeof serviceError.Unauthorized
@@ -89,6 +90,24 @@ type Type<T> =
         error?:
           | typeof serviceError.FailedToGetPosts
           | typeof serviceError.NoMorePosts
+          | typeof serviceError.InvalidRequest
+          | UniversalTypeError;
+      }
+    : // comment_db
+    T extends "create comment"
+    ? {
+        comment: Comment;
+        error?:
+          | typeof serviceError.FailedToCreateComment
+          | typeof serviceError.FailedToUploadImage
+          | UniversalTypeError;
+      }
+    : T extends "get comments"
+    ? {
+        comments?: Comment[];
+        error?:
+          | typeof serviceError.FailedToGetComments
+          | typeof serviceError.NoMoreComments
           | typeof serviceError.InvalidRequest
           | UniversalTypeError;
       }

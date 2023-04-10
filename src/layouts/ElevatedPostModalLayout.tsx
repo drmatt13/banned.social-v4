@@ -81,7 +81,7 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               user?.avatar
                 ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
                 : "bg-white/75 dark:bg-white/50"
-            } pointer-events-auto overflow-y-hidden flex relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[500px] max-h-[85%]`}
+            } pointer-events-auto overflow-y-hidden flex relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[550px] max-h-[85%]`}
           >
             <div
               className={`w-full max-h-[85%] z-50 flex flex-col`}

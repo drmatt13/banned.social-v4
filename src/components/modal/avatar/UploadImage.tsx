@@ -38,7 +38,6 @@ const UploadImage = ({
     async (currentUser: User) => {
       try {
         setLoading(true);
-
         const base64 = await blobToBase64(image);
         if (!base64) return;
         const data = await processService("update avatar", {

@@ -16,6 +16,8 @@ export type CommentContext = {
   aggregatedData?: AggregatedData;
   setAggregatedData: Dispatch<SetStateAction<AggregatedData>>;
   updatePost: (post: Post) => void;
+  focused: string | undefined;
+  setFocused: Dispatch<SetStateAction<string | undefined>>;
 };
 
 export const commentContext = createContext<CommentContext>({
@@ -27,6 +29,8 @@ export const commentContext = createContext<CommentContext>({
   aggregatedData: undefined,
   setAggregatedData: () => {},
   updatePost: () => {},
+  focused: undefined,
+  setFocused: () => {},
 });
 
 const useCommentContext = () => useContext(commentContext);

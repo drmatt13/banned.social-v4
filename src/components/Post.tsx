@@ -63,6 +63,7 @@ const Post = ({
   const [subComments, setSubComments] = useState<{
     [comment_id: string]: Comment[];
   }>({});
+  const [focused, setFocused] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const words = content
@@ -264,6 +265,8 @@ const Post = ({
           aggregatedData,
           setAggregatedData,
           updatePost,
+          focused,
+          setFocused,
         }}
       >
         <CommentModal modal={commentModal} setModal={setCommentModal} />

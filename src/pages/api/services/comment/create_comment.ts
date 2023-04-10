@@ -7,18 +7,22 @@ import AWS from "aws-sdk";
 
 // mongoose
 import connectDB from "@/lib/connectDB";
-import PostModel, { IPostModel } from "@/models/PostModel";
+import CommentModel, { ICommentModel } from "@/models/CommentModel";
 
 export default connectDB(
-  async (req: ServiceRequest<"create post">, res: NextApiResponse) => {
+  async (req: ServiceRequest<"create comment">, res: NextApiResponse) => {
     try {
-      let { _id, eventbusSecret, post } = req.body;
+      let { _id, eventbusSecret, content, image, post_id, og } = req.body;
 
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }
 
-      if (post?.image && post.image) {
+      if (!_id || !post_id || !(content || image)) {
+        throw new Error(serviceError.MissingRequiredFields);
+      }
+
+      if (image) {
         try {
           AWS.config.update({ region: "us-east-1", apiVersion: "2006-03-01" });
 
@@ -29,29 +33,28 @@ export default connectDB(
 
           const params = {
             Bucket: process.env.AWS_S3_BUCKET || "",
-            Key: `post-images/${Date.now() + Math.random()}.jpg`,
-            Body: Buffer.from(post.image, "base64"),
+            Key: `comment-images/${Date.now() + Math.random()}.jpg`,
+            Body: Buffer.from(image, "base64"),
             ContentType: "image/jpeg",
           };
 
           const upload = await s3.upload(params).promise();
-          post.image = upload.Location;
+          image = upload.Location;
         } catch (error) {
           throw new Error(serviceError.FailedToUploadImage);
         }
       }
-      const newPost: IPostModel | null = await PostModel.create({
-        content: post?.content,
+      const comment: ICommentModel | null = await CommentModel.create({
         user_id: _id,
-        recipient_id: post?.recipient_id,
-        sharedPost_id: post?.sharedPost_id,
-        image: post?.image,
-        og: post?.og,
+        post_id,
+        content,
+        image,
+        og,
       });
-      if (newPost) {
-        return res.json({ success: true, post: newPost });
+      if (comment) {
+        return res.json({ success: true, comment });
       } else {
-        throw new Error(serviceError.FailedToCreatePost);
+        throw new Error(serviceError.FailedToUpdateUser);
       }
     } catch (error) {
       res.json({ error: (error as any).message, success: false });

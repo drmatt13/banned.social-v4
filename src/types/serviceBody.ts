@@ -1,4 +1,5 @@
 import type FeedUser from "./feedUser";
+import Og from "./og";
 import type Post from "./post";
 
 type _Overwrite<T, U> = U extends object
@@ -68,6 +69,20 @@ interface GetPosts {
   type: "global" | "friends" | "user";
 }
 
+// coments_db
+interface CreateComment {
+  post_id: string;
+  content?: string;
+  image?: string;
+  og?: Og;
+}
+
+interface GetComments {
+  post_id: string;
+  page: number;
+  limit: number;
+}
+
 type ServiceBody<T> =
   // no_db
   T extends "get og"
@@ -92,6 +107,11 @@ type ServiceBody<T> =
     ? CreatePost
     : T extends "get posts"
     ? GetPosts
+    : // comments_db
+    T extends "create comment"
+    ? CreateComment
+    : T extends "get comments"
+    ? GetComments
     : never;
 
 export default ServiceBody;
