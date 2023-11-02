@@ -44,8 +44,9 @@ interface Props {
 
 const CommentInput = ({ type, comment, commentInputref }: Props) => {
   const { feedCache, user, mobile, darkMode } = useGlobalContext();
-  const { loading, setLoading } = useModalContext();
-  const { post, focused, setFocused } = useCommentContext();
+  const { loading, setLoading, setModal } = useModalContext();
+  const { post, focused, setFocused, setComments, setAggregatedData } =
+    useCommentContext();
 
   const {
     image,
@@ -74,19 +75,19 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
       const { comment, success, error } = data;
       if (success && comment) {
         console.log(comment);
-        //   setComments((prev) => {
-        //     return [commentData, ...prev];
-        //   });
-        //   setAggregatedData((prev) => {
-        //     return {
-        //       ...prev,
-        //       comments: prev.comments + 1,
-        //     };
-        //   });
-        //   setComment("");
-        //   setLoading(false);
-        //   setModal(false);
-        // console.log(comment);
+        setComments((prev) => {
+          return [comment, ...prev];
+        });
+        setAggregatedData((prev) => {
+          return {
+            ...prev,
+            comments: prev.comments + 1,
+          };
+        });
+        setCommentContent("");
+        setLoading(false);
+        removeImage();
+        console.log(comment);
       } else {
         // if (error === "Unauthorized") {
         //   throw new Error("Unauthorized");

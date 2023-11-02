@@ -59,7 +59,6 @@ const eventbus = async (
       // *****************************
       case "get og":
         req = await axios.post(`${URL}/no_db/get_og`, body);
-        // console.log(req);
         break;
 
       // *****************************
