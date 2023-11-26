@@ -142,9 +142,9 @@ const eventbus = async (
         req = await axios.post(`${URL}/post/get_posts`, body);
         break;
 
-      // *****************************
+      // ********************************
       // *******  Comment DB  ***********
-      // *****************************
+      // ********************************
 
       // Creates a new comment
       // returns created comment
@@ -160,6 +160,46 @@ const eventbus = async (
       case "get comments":
         protectedRoute();
         req = await axios.post(`${URL}/comment/get_comments`, body);
+        break;
+
+      // ************************************
+      // *******  Sub Comment DB  ***********
+      // ************************************
+
+      // Creates a new comment
+      // returns created comment
+      // { content?, image?, post_id, og? }
+      case "create subcomment":
+        protectedRoute();
+        req = await axios.post(`${URL}/subcomment/create_subcomment`, body);
+        break;
+
+      // Get comments
+      // returns comments
+      // { post_id, limit, page }
+      case "get subcomments":
+        protectedRoute();
+        req = await axios.post(`${URL}/subcomment/get_subcomments`, body);
+        break;
+
+      // *****************************
+      // *******  Like DB  ***********
+      // *****************************
+
+      // Creates a new like
+      // returns { success: boolean }
+      // { user_id, post_id?, comment_id, subcomment_id? }
+      case "create like":
+        protectedRoute();
+        req = await axios.post(`${URL}/like/create_like`, body);
+        break;
+
+      // Deletes a like
+      // returns { success: boolean }
+      // { user_id, post_id?, comment_id, subcomment_id? }
+      case "delete like":
+        protectedRoute();
+        req = await axios.post(`${URL}/like/delete_like`, body);
         break;
 
       // *****************************

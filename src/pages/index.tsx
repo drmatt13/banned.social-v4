@@ -57,7 +57,15 @@ const Home: NextPage = () => {
             max-width: 100%;
           }
         }
+        @media (min-width: 1100px) {
+          .min-h-\[105vh\] {
+            padding-left: 26px;
+          }
+        }
         @media (max-width: 900px) {
+          .min-h-\[105vh\] {
+            padding-left: 16px;
+          }
           .flex {
             justify-content: center;
           }
@@ -67,6 +75,11 @@ const Home: NextPage = () => {
           }
           .container-3 {
             display: none;
+          }
+        }
+        @media (max-width: 550px) {
+          .min-h-\[105vh\] {
+            padding-left: 0px;
           }
         }
       `}</style>

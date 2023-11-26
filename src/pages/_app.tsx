@@ -34,6 +34,7 @@ const MyApp: AppType<{
   const [navButtonsVisable, setNavButtonsVisable] = useState(false);
   const [feedCache, setFeedCache] = useState<FeedCache>({});
   const [isFirefox, setIsFirefox] = useState(false);
+  const [bigImage, setBigImage] = useState("");
 
   const updateFeedCache = useCallback(async (users: string[]) => {
     const data = await processService("update feed cache", {
@@ -133,6 +134,8 @@ const MyApp: AppType<{
             setFeedCache,
             updateFeedCache,
             isFirefox,
+            bigImage,
+            setBigImage,
           }}
         >
           <AppLayout>
@@ -165,6 +168,8 @@ const MyApp: AppType<{
           setFeedCache,
           updateFeedCache,
           isFirefox,
+          bigImage,
+          setBigImage,
         }}
       >
         <AppLayout>

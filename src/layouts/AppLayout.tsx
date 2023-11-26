@@ -6,6 +6,7 @@ import Loading from "@/components/Loading";
 import ToggleDarkModeButton from "@/components/ToggleDarkModeButton";
 import OAuthSetUsername from "@/components/OAuthSetUsername";
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
+import BigImage from "@/components/BigImage";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -100,12 +101,14 @@ const AppLayout = ({ children }: Props) => {
                           )}
                         </>
                       )}
+
                       <div className="absolute top-0 w-full min-h-screen max-h-screen">
                         {children}
                       </div>
                     </div>
                   )
                 )}
+                <BigImage />
               </StaticBackground>
             </NotificationHandler>
           </onlineFriendsContext.Provider>

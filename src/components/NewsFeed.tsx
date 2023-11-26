@@ -39,11 +39,6 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
   const [initialLoad, setInitialLoad] = useState(true);
   const [noMorePosts, setNoMorePosts] = useState(false);
   const [page, setPage] = useState(1);
-  const [aggregatedData, setAggregatedData] = useState<AggregatedData>({
-    likes: 0,
-    comments: 0,
-    shares: 0,
-  });
 
   const getPosts = useCallback(async () => {
     if (loading || (initialLoad && page > 1)) return;
@@ -56,6 +51,7 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
         type: type,
         recipient_id,
       });
+      console.log(data);
       const { success, error } = data;
       if (!success || !data.posts) {
         if (error === "Failed to get posts") {
@@ -87,12 +83,6 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
       if (users.length > 0) {
         await updateFeedCache(users);
       }
-      // get aggregated data for posts { likes, comments, shares }
-      //
-      //
-      //
-      //
-      //
       if (data.posts.length < 15) {
         setNoMorePosts(true);
         return;
@@ -113,6 +103,19 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
     type,
     updateFeedCache,
   ]);
+
+  const updatePost = useCallback((post: IPost) => {
+    setPosts((posts) => {
+      const index = posts.findIndex((p) => p._id === post._id);
+      if (index >= 0) {
+        const newPosts = [...posts];
+        newPosts[index] = post;
+        return newPosts;
+      } else {
+        return posts;
+      }
+    });
+  }, []);
 
   useEffect(() => {
     setPage(1);
@@ -174,22 +177,11 @@ const NewsFeed = ({ type, recipient_id }: Props) => {
             og={post.og}
             createdAt={post.createdAt}
             updatedAt={post.updatedAt}
-            aggregatedData={aggregatedData}
-            setAggregatedData={setAggregatedData}
-            updatePost={(() => {
-              return (updatedPost: IPost) => {
-                setPosts((posts) => {
-                  return posts.map((post) => {
-                    if (post._id === post._id) {
-                      return {
-                        ...updatedPost,
-                      };
-                    }
-                    return post;
-                  });
-                });
-              };
-            })()}
+            likedByUser={post.likedByUser}
+            likeCount={post.likeCount}
+            commentCount={post.commentCount}
+            sharedCount={post.sharedCount}
+            updatePost={updatePost}
           />
         ))}
       {!noMorePosts && (

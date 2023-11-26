@@ -22,6 +22,8 @@ type GlobalContext = {
   setFeedCache: Dispatch<SetStateAction<FeedCache>>;
   updateFeedCache: (users: string[]) => Promise<void>;
   isFirefox: boolean;
+  bigImage: string;
+  setBigImage: Dispatch<SetStateAction<string>>;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -42,6 +44,8 @@ export const globalContext = createContext<GlobalContext>({
   setFeedCache: () => {},
   updateFeedCache: () => Promise.resolve(),
   isFirefox: false,
+  bigImage: "",
+  setBigImage: () => {},
 });
 
 const useGlobalContext = () => useContext(globalContext);

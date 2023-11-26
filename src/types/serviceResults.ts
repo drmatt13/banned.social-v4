@@ -5,6 +5,7 @@ import type User from "@/types/user";
 import type Og from "@/types/og";
 import type Post from "@/types/post";
 import type Comment from "@/types/comment";
+import type SubComment from "@/types/subcomment";
 
 type UniversalTypeError =
   | typeof serviceError.Unauthorized
@@ -108,6 +109,41 @@ type Type<T> =
         error?:
           | typeof serviceError.FailedToGetComments
           | typeof serviceError.NoMoreComments
+          | typeof serviceError.InvalidRequest
+          | UniversalTypeError;
+      }
+    : // subcomment_db
+    T extends "create subcomment"
+    ? {
+        subcomment: SubComment;
+        error?:
+          | typeof serviceError.FailedToCreateSubComment
+          | typeof serviceError.FailedToUploadImage
+          | UniversalTypeError;
+      }
+    : T extends "get subcomments"
+    ? {
+        subcomments?: SubComment[];
+        error?:
+          | typeof serviceError.FailedToGetSubComments
+          | typeof serviceError.NoMoreSubComments
+          | typeof serviceError.InvalidRequest
+          | UniversalTypeError;
+      }
+    : // like_db
+    T extends "create like"
+    ? {
+        success: boolean;
+        error?:
+          | typeof serviceError.FailedToLikeContent
+          | typeof serviceError.InvalidRequest
+          | UniversalTypeError;
+      }
+    : T extends "delete like"
+    ? {
+        success: boolean;
+        error?:
+          | typeof serviceError.FailedToUnlikeContent
           | typeof serviceError.InvalidRequest
           | UniversalTypeError;
       }

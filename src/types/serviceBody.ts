@@ -69,7 +69,7 @@ interface GetPosts {
   type: "global" | "friends" | "user";
 }
 
-// coments_db
+// comments_db
 interface CreateComment {
   post_id: string;
   content?: string;
@@ -81,6 +81,33 @@ interface GetComments {
   post_id: string;
   page: number;
   limit: number;
+}
+
+// subcomments_db
+interface CreateSubComment {
+  comment_id: string;
+  content?: string;
+  image?: string;
+  og?: Og;
+}
+
+interface GetSubComments {
+  comment_id: string;
+  // page: number;
+  // limit: number;
+}
+
+// likes_db
+interface CreateLike {
+  post_id?: string;
+  comment_id?: string;
+  subcomment_id?: string;
+}
+
+interface DelectLike {
+  post_id?: string;
+  comment_id?: string;
+  subcomment_id?: string;
 }
 
 type ServiceBody<T> =
@@ -112,6 +139,16 @@ type ServiceBody<T> =
     ? CreateComment
     : T extends "get comments"
     ? GetComments
+    : // subcomments_db
+    T extends "create subcomment"
+    ? CreateSubComment
+    : T extends "get subcomments"
+    ? GetSubComments
+    : // likes_db
+    T extends "create like"
+    ? CreateLike
+    : T extends "delete like"
+    ? DelectLike
     : never;
 
 export default ServiceBody;

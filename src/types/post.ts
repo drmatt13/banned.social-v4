@@ -10,6 +10,10 @@ interface Post {
   og?: Og;
   createdAt?: Date;
   updatedAt?: Date;
+  likeCount?: number;
+  commentCount?: number;
+  sharedCount?: number;
+  likedByUser?: boolean;
 }
 
 export default Post;

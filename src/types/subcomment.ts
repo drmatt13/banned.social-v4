@@ -1,17 +1,16 @@
 import Og from "@/types/og";
 
-interface Comment {
+interface SubComment {
   _id: string;
   user_id: string;
-  post_id: string;
+  comment_id?: string;
   content: string;
   og?: Og;
   image?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
   likeCount?: number;
-  subCommentCount?: number;
   likedByUser?: boolean;
 }
 
-export default Comment;
+export default SubComment;

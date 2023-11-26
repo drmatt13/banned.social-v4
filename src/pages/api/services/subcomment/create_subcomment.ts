@@ -7,18 +7,18 @@ import AWS from "aws-sdk";
 
 // mongoose
 import connectDB from "@/lib/connectDB";
-import CommentModel, { ICommentModel } from "@/models/CommentModel";
+import SubCommentModel, { ISubCommentModel } from "@/models/SubCommentModel";
 
 export default connectDB(
-  async (req: ServiceRequest<"create comment">, res: NextApiResponse) => {
+  async (req: ServiceRequest<"create subcomment">, res: NextApiResponse) => {
     try {
-      let { _id, eventbusSecret, content, image, post_id, og } = req.body;
+      let { _id, eventbusSecret, content, image, comment_id, og } = req.body;
 
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
       }
 
-      if (!_id || !post_id || !(content || image)) {
+      if (!_id || !comment_id || !(content || image)) {
         throw new Error(serviceError.MissingRequiredFields);
       }
 
@@ -44,20 +44,19 @@ export default connectDB(
           throw new Error(serviceError.FailedToUploadImage);
         }
       }
-      const comment: ICommentModel | null = await CommentModel.create({
+      const subcomment: ISubCommentModel | null = await SubCommentModel.create({
         user_id: _id,
-        post_id,
+        comment_id,
         content,
         image,
         og,
       });
-      if (comment) {
-        return res.json({ success: true, comment });
+      if (subcomment) {
+        return res.json({ success: true, subcomment });
       } else {
-        throw new Error(serviceError.FailedToCreateComment);
+        throw new Error(serviceError.FailedToCreateSubComment);
       }
     } catch (error) {
-      console.log(error);
       res.json({ error: (error as any).message, success: false });
     }
   }

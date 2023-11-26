@@ -18,7 +18,7 @@ import avatarList from "@/data/avatarList";
 import UpdateAvatarModal from "@/modals/UpdateAvatarModal";
 
 const UserProfile = () => {
-  const { feedCache, mobile, user, darkMode } = useGlobalContext();
+  const { feedCache, mobile, user, darkMode, setBigImage } = useGlobalContext();
 
   const router = useRouter();
   const { id } = router.query;
@@ -65,7 +65,15 @@ const UserProfile = () => {
             max-width: 100%;
           }
         }
+        @media (min-width: 1100px) {
+          .min-h-\[105vh\] {
+            padding-left: 26px;
+          }
+        }
         @media (max-width: 900px) {
+          .min-h-\[105vh\] {
+            padding-left: 16px;
+          }
           .flex {
             justify-content: center;
           }
@@ -75,6 +83,11 @@ const UserProfile = () => {
           }
           .container-3 {
             display: none;
+          }
+        }
+        @media (max-width: 550px) {
+          .min-h-\[105vh\] {
+            padding-left: 0px;
           }
         }
       `}</style>
@@ -103,6 +116,16 @@ const UserProfile = () => {
                     loading="lazy"
                     onError={(e) => {
                       (e.target as any).src = "/images/avatars-full/anon2.jpg";
+                    }}
+                    onClick={() => {
+                      setBigImage(
+                        avatarList[feedCache[id as string]?.avatar!]
+                          ? `/images/avatars-full/${feedCache[id as string]
+                              ?.avatar!}.jpg`
+                          : `https://social-media-8434-1348-6435.s3.us-east-1.amazonaws.com/avatars/${feedCache[
+                              id as string
+                            ]?.avatar!}`
+                      );
                     }}
                   />
                 </div>

@@ -9,7 +9,7 @@ import CommentModel, { ICommentModel } from "@/models/CommentModel";
 export default connectDB(
   async (req: ServiceRequest<"get comments">, res: NextApiResponse) => {
     try {
-      let { eventbusSecret, page, limit, post_id } = req.body;
+      let { eventbusSecret, page, limit, post_id, _id } = req.body;
 
       if (eventbusSecret !== process.env.EVENTBUS_SECRET) {
         throw new Error(serviceError.Unauthorized);
@@ -21,12 +21,140 @@ export default connectDB(
 
       let comments: ICommentModel[] = [];
 
-      comments = await CommentModel.find({
-        post_id,
-      })
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit);
+      const userId = _id; // Replace with the actual user ID
+
+      comments = await CommentModel.aggregate([
+        {
+          $match: {
+            post_id,
+          },
+        },
+        {
+          $sort: { createdAt: -1 },
+        },
+        {
+          $skip: (page - 1) * limit,
+        },
+        {
+          $limit: limit,
+        },
+        {
+          $lookup: {
+            from: "subcomments",
+            let: {
+              commentId: {
+                $toString: "$_id",
+              },
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$comment_id", "$$commentId"],
+                  },
+                },
+              },
+              {
+                $count: "count",
+              },
+            ],
+            as: "subCommentCount",
+          },
+        },
+        {
+          $unwind: {
+            path: "$subCommentCount",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $addFields: {
+            subCommentCount: {
+              $ifNull: ["$subCommentCount.count", 0],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "likes",
+            let: {
+              commentId: {
+                $toString: "$_id",
+              },
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $eq: ["$comment_id", "$$commentId"],
+                  },
+                },
+              },
+              {
+                $count: "count",
+              },
+            ],
+            as: "likeCount",
+          },
+        },
+        {
+          $unwind: {
+            path: "$likeCount",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $addFields: {
+            likeCount: {
+              $ifNull: ["$likeCount.count", 0],
+            },
+          },
+        },
+        {
+          $lookup: {
+            from: "likes",
+            let: {
+              commentId: {
+                $toString: "$_id",
+              },
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {
+                        $eq: ["$comment_id", "$$commentId"],
+                      },
+                      {
+                        $eq: ["$user_id", _id],
+                      },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "userLike",
+          },
+        },
+        {
+          $addFields: {
+            likedByUser: {
+              $gt: [
+                {
+                  $size: "$userLike",
+                },
+                0,
+              ],
+            },
+          },
+        },
+        {
+          $project: {
+            userLike: 0,
+          },
+        },
+      ]);
 
       return res.json({ comments, success: true });
     } catch (error) {

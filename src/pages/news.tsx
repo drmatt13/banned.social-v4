@@ -41,6 +41,9 @@ const News: NextPage = () => {
           margin-right: auto;
         }
         @media (min-width: 1100px) {
+          .min-h-\[105vh\] {
+            padding-left: 26px;
+          }
           .news-container {
             flex: 3.48;
             margin-left: 0;
@@ -52,6 +55,9 @@ const News: NextPage = () => {
           }
         }
         @media (max-width: 900px) {
+          .min-h-\[105vh\] {
+            padding-left: 16px;
+          }
           .contacts {
             display: none;
           }
@@ -63,6 +69,11 @@ const News: NextPage = () => {
             width: 100%;
             // margin-left: 0;
             // margin-right: 0;
+          }
+        }
+        @media (max-width: 550px) {
+          .min-h-\[105vh\] {
+            padding-left: 0px;
           }
         }
       `}</style>

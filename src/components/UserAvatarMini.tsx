@@ -15,14 +15,19 @@ interface Props {
   id: string;
   user: FeedUser;
   extraSmall?: boolean;
+  superSmall?: boolean;
 }
 
-const UserAvatarMini = ({ id, user, extraSmall }: Props) => {
+const UserAvatarMini = ({ id, user, extraSmall, superSmall }: Props) => {
   return (
     <>
       <div
         className={`${
-          extraSmall ? "h-8 w-8 mr-2" : "h-10 w-10 mr-3"
+          superSmall
+            ? "h-7 w-7"
+            : extraSmall
+            ? "h-8 w-8 mr-2"
+            : "h-10 w-10 mr-3"
         } overflow-hidden rounded-full border border-light-border dark:border-white/25 cursor-pointer select-none`}
       >
         <Link href={id}>

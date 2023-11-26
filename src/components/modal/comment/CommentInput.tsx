@@ -8,7 +8,6 @@ import {
   useCallback,
   RefObject,
 } from "react";
-import Link from "next/link";
 
 import TextareaAutosize from "react-textarea-autosize";
 
@@ -23,15 +22,13 @@ import UserAvatarMini from "@/components/UserAvatarMini";
 // hooks
 import useImage from "@/hooks/useImage";
 
-// types
-import FeedUser from "@/types/feedUser";
-
 // libraries
 import blobToBase64 from "@/lib/blobToBase64";
 import processService from "@/lib/processService";
 
 // types
 import Comment from "@/types/comment";
+import SubComment from "@/types/subcomment";
 
 // styles
 import styles from "@/styles/scrollbar.module.scss";
@@ -40,13 +37,30 @@ interface Props {
   type: "primary comment" | "sub comment";
   comment?: Comment;
   commentInputref?: RefObject<HTMLDivElement>;
+  setReplying?: Dispatch<SetStateAction<boolean>>;
+  appendedReplies?: SubComment[];
+  setAppendedReplies?: Dispatch<SetStateAction<SubComment[]>>;
 }
 
-const CommentInput = ({ type, comment, commentInputref }: Props) => {
+const CommentInput = ({
+  type,
+  comment,
+  commentInputref,
+  setReplying,
+  appendedReplies,
+  setAppendedReplies,
+}: Props) => {
   const { feedCache, user, mobile, darkMode } = useGlobalContext();
   const { loading, setLoading, setModal } = useModalContext();
-  const { post, focused, setFocused, setComments, setAggregatedData } =
-    useCommentContext();
+  const {
+    post,
+    focused,
+    setFocused,
+    setComments,
+    updatePost,
+    subComments,
+    setSubComments,
+  } = useCommentContext();
 
   const {
     image,
@@ -58,6 +72,7 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
   } = useImage();
 
   const [commentContent, setCommentContent] = useState("");
+  const [initalLoad, setInitialLoad] = useState(type === "primary comment");
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -78,35 +93,86 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
         setComments((prev) => {
           return [comment, ...prev];
         });
-        setAggregatedData((prev) => {
-          return {
-            ...prev,
-            comments: prev.comments + 1,
-          };
-        });
         setCommentContent("");
-        setLoading(false);
         removeImage();
-        console.log(comment);
+        updatePost({
+          ...post,
+          commentCount: (post.commentCount || 0) + 1,
+        });
       } else {
-        // if (error === "Unauthorized") {
-        //   throw new Error("Unauthorized");
-        // } else if (error === "Failed to update user") {
-        //   throw new Error("Failed to update user");
-        // } else if (error === "Failed to upload image") {
-        //   throw new Error("Failed to upload image");
-        // } else {
-        //   throw new Error("Server error");
-        // }
+        if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Failed to create comment") {
+          throw new Error("Failed to update user");
+        } else if (error === "Failed to upload image") {
+          throw new Error("Failed to upload image");
+        } else {
+          throw new Error("Server error");
+        }
       }
     } catch (error) {
       // alert("Upload error, please try again or a different image :(");
       // setLoading(false);
     }
     setLoading(false);
-  }, [commentContent, image, post._id, setLoading]);
+  }, [
+    commentContent,
+    image,
+    post,
+    removeImage,
+    setComments,
+    setLoading,
+    updatePost,
+  ]);
 
-  const createSubComment = useCallback(async () => {}, []);
+  const createSubComment = useCallback(async () => {
+    setLoading(true);
+    try {
+      const base64 = await blobToBase64(image);
+      if (!comment?._id) return;
+      const data = await processService("create subcomment", {
+        comment_id: comment._id,
+        content: commentContent,
+        image: base64,
+      });
+      const { subcomment, success, error } = data;
+      if (success && subcomment) {
+        // console.log(subcomment);
+        if (!subComments.comment_id) subComments.comment_id = [];
+        setAppendedReplies!([...appendedReplies!, subcomment]);
+        setCommentContent("");
+        removeImage();
+        setFocused(undefined);
+        setReplying && setReplying(false);
+      } else {
+        if (error === "Unauthorized") {
+          throw new Error("Unauthorized");
+        } else if (error === "Failed to create subcomment") {
+          throw new Error("Failed to update user");
+        } else if (error === "Failed to upload image") {
+          throw new Error("Failed to upload image");
+        } else {
+          throw new Error("Server error");
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      // alert("Upload error, please try again or a different image :(");
+      // setLoading(false);
+    }
+    setLoading(false);
+  }, [
+    appendedReplies,
+    comment,
+    commentContent,
+    image,
+    removeImage,
+    setAppendedReplies,
+    setFocused,
+    setLoading,
+    setReplying,
+    subComments,
+  ]);
 
   const createComment = useCallback(async () => {
     if (!post._id || loading || (!commentContent && !image)) return;
@@ -137,7 +203,11 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
 
   useEffect(() => {
     textareaRef.current?.focus();
-  }, []);
+    setInitialLoad(false);
+    // return () => {
+    //   setFocused(undefined);
+    // };
+  }, [setFocused]);
 
   return (
     <>
@@ -153,7 +223,7 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
       <div
         className={`${
           darkMode ? styles.darkScroll : styles.lightScroll
-        } py-3 w-full pr-3 flex flex-col`}
+        } py-3 w-full pr-3 flex flex-col mb-2`}
       >
         <div className="flex">
           <div className="w-3 h-8 pr-[3px]">
@@ -181,7 +251,7 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
                 : focused === comment?._id) || textareaRef.current?.value
                 ? "bg-white"
                 : "bg-gray-50"
-            } relative flex-1 min-h-8 rounded-2xl border border-neutral-600/60 cursor-text pl-3 pr-1.5 flex flex-col text-black/80 overflow-hidden transition-all`}
+            } relative flex-1 min-h-8 rounded-2xl border border-neutral-600/60 cursor-text pl-3 pr-1.5 flex flex-col text-black overflow-hidden transition-all`}
           >
             <TextareaAutosize
               ref={textareaRef}
@@ -221,17 +291,22 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
               className={`${
                 (type === "primary comment"
                   ? focused === post._id
-                  : focused === comment?._id) || textareaRef.current?.value
+                  : focused === comment?._id) ||
+                textareaRef.current?.value ||
+                initalLoad === true
                   ? "h-6 opacity-100"
                   : "h-0 opacity-0"
-              } transition-all ease-out duration-300 flex flex-row-reverse w-full items-center`}
+              }               
+              transition-all ease-out duration-300 flex flex-row-reverse w-full items-center`}
             >
               <i
                 onClick={createComment}
                 className={`${
                   (type === "primary comment"
                     ? focused === post._id
-                    : focused === comment?._id) || textareaRef.current?.value
+                    : focused === comment?._id) ||
+                  textareaRef.current?.value ||
+                  initalLoad === true
                     ? "scale-100"
                     : "scale-0"
                 } ${
@@ -249,7 +324,9 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
                 className={`${
                   (type === "primary comment"
                     ? focused === post._id
-                    : focused === comment?._id) || textareaRef.current?.value
+                    : focused === comment?._id) ||
+                  textareaRef.current?.value ||
+                  initalLoad === true
                     ? "scale-100"
                     : "scale-0"
                 } 
@@ -286,7 +363,7 @@ const CommentInput = ({ type, comment, commentInputref }: Props) => {
                 removeImage();
                 focused !== comment?._id && setFocused(undefined);
               }}
-              className="cursor-pointer absolute -top-2 -right-1.5 h-[1.3rem] w-[1.3rem] bg-white border border-black/30 hover:border-black/50 rounded-full flex justify-center items-center text-[.7rem] text-black/80 hover:text-black  transition-all ease-out duration-300"
+              className="cursor-pointer absolute -top-2 -right-1.5 h-[1.3rem] w-[1.3rem] bg-white border border-black/30 hover:border-black/50 rounded-full flex justify-center items-center text-[.7rem] text-black hover:text-black  transition-all ease-out duration-300"
             >
               <i className="fa-solid fa-times" />
             </div>

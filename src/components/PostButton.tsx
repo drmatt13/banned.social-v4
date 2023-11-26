@@ -116,9 +116,6 @@ const PostButton = ({ recipient_id }: Props) => {
   const imageInputRef = useRef<HTMLInputElement>(null);
 
   const [posts, setPosts] = useState<Array<IPost>>([]);
-  const [aggregatedData, setAggregatedData] = useState<Array<AggregatedData>>(
-    []
-  );
 
   const submitPost = useCallback(async () => {
     if (!post && !image && loading) return;
@@ -137,6 +134,10 @@ const PostButton = ({ recipient_id }: Props) => {
       });
       const { success, error } = data;
       if (success && data.post) {
+        data.post.likedByUser = false;
+        data.post.likeCount = 0;
+        data.post.commentCount = 0;
+        data.post.sharedCount = 0;
         setPosts([data.post, ...posts]);
         setPost({ content: "", recipient_id, og: undefined });
         removeImage();
@@ -210,6 +211,19 @@ const PostButton = ({ recipient_id }: Props) => {
     },
     [ogStack]
   );
+
+  const updatePost = useCallback((post: IPost) => {
+    setPosts((posts) => {
+      const index = posts.findIndex((p) => p._id === post._id);
+      if (index >= 0) {
+        const newPosts = [...posts];
+        newPosts[index] = post;
+        return newPosts;
+      } else {
+        return posts;
+      }
+    });
+  }, []);
 
   const getOgData = useCallback(
     async (url: string) => {
@@ -327,25 +341,25 @@ const PostButton = ({ recipient_id }: Props) => {
     );
   }, []);
 
-  useEffect(() => {
-    // if user tries to leave page with unsaved changes, prompt them
-    let flag = false;
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if ((post.content === "" && !image) || flag) {
-        e.preventDefault();
-        return;
-      }
-      flag = true;
-      e.returnValue = "Changes you made may not be saved.";
-      setTimeout(() => {
-        flag = false;
-      }, 100);
-    };
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-    };
-  }, [image, post.content]);
+  // useEffect(() => {
+  //   // if user tries to leave page with unsaved changes, prompt them
+  //   let flag = false;
+  //   const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+  //     if ((post.content === "" && !image) || flag) {
+  //       e.preventDefault();
+  //       return;
+  //     }
+  //     flag = true;
+  //     e.returnValue = "Changes you made may not be saved.";
+  //     setTimeout(() => {
+  //       flag = false;
+  //     }, 100);
+  //   };
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // }, [image, post.content]);
 
   return (
     <>
@@ -419,26 +433,12 @@ const PostButton = ({ recipient_id }: Props) => {
             content={post.content}
             image={post.image}
             og={post.og}
-            // aggregatedData={aggregatedData}
+            commentCount={post.commentCount}
+            likeCount={post.likeCount}
+            likedByUser={post.likedByUser}
             createdAt={post.createdAt}
             updatedAt={post.updatedAt}
-            aggregatedData={aggregatedData[index]}
-            updatePost={(() => {
-              return (updatedPost: IPost) => {
-                setPosts((posts) => {
-                  return posts.map((post) => {
-                    if (post._id === post._id) {
-                      return {
-                        ...updatedPost,
-                      };
-                    }
-                    return post;
-                  });
-                });
-              };
-            })()}
-            // FIX LATER
-            setAggregatedData={() => {}}
+            updatePost={updatePost}
           />
         ))}
     </>

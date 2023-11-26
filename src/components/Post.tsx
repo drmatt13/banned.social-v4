@@ -1,17 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  SetStateAction,
-  Dispatch,
-} from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import DOMPurify from "dompurify";
 
 // components
 import UserAvatarMini from "./UserAvatarMini";
+// import LoadingPosts from "@/components/LoadingPosts";
 
 // context
 import useGlobalContext from "@/context/globalContext";
@@ -20,6 +14,7 @@ import { commentContext } from "@/context/commentContext";
 // libraries
 import validateUrl from "@/lib/validateUrl";
 import formatDate from "@/lib/formatDate";
+import processService from "@/lib/processService";
 
 // modals
 import CommentModal from "@/modals/CommentModal";
@@ -27,8 +22,8 @@ import CommentModal from "@/modals/CommentModal";
 // types
 import type IPost from "@/types/post";
 import type FeedUser from "@/types/feedUser";
-import type AggregatedData from "@/types/AggregatedData";
 import type Comment from "@/types/comment";
+import type SubComment from "@/types/subcomment";
 
 const Post = ({
   _id,
@@ -40,30 +35,116 @@ const Post = ({
   og,
   createdAt,
   updatedAt,
-  aggregatedData,
-  setAggregatedData,
   updatePost,
+  likedByUser,
+  likeCount,
+  commentCount,
+  sharedCount,
 }: IPost & {
-  aggregatedData?: AggregatedData;
-  setAggregatedData: Dispatch<SetStateAction<AggregatedData>>;
   updatePost: (post: IPost) => void;
 }) => {
-  const { feedCache, user, mobile } = useGlobalContext();
+  const { feedCache, user, mobile, setBigImage } = useGlobalContext();
 
   const [PostContentElement, setPostContentElement] = useState(<></>);
 
   const [postUser, setPostUser] = useState<FeedUser>(undefined);
   const [postRecipient, setPostRecipient] = useState<FeedUser>(undefined);
-
-  const likePost = useCallback(() => {}, []);
-  const sharePost = useCallback(() => {}, []);
+  const [processingLike, setProcessingLike] = useState(false);
 
   const [commentModal, setCommentModal] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [subComments, setSubComments] = useState<{
-    [comment_id: string]: Comment[];
+    [comment_id: string]: SubComment[];
   }>({});
   const [focused, setFocused] = useState<string | undefined>(undefined);
+
+  const likePost = useCallback(async () => {
+    if (!_id) return;
+    try {
+      setProcessingLike(true);
+      const data = await processService("create like", { post_id: _id });
+      const { success, error } = data;
+      if (success) {
+        updatePost({
+          _id,
+          user_id,
+          recipient_id,
+          sharedPost_id,
+          content,
+          image,
+          og,
+          createdAt,
+          updatedAt,
+          likedByUser: true,
+          likeCount: (likeCount || 0) + 1,
+          commentCount,
+          sharedCount,
+        });
+      } else {
+        console.log(error);
+      }
+    } catch (error) {}
+    setProcessingLike(false);
+  }, [
+    _id,
+    commentCount,
+    content,
+    createdAt,
+    image,
+    likeCount,
+    og,
+    recipient_id,
+    sharedCount,
+    sharedPost_id,
+    updatePost,
+    updatedAt,
+    user_id,
+  ]);
+
+  const unlikePost = useCallback(async () => {
+    if (!_id) return;
+    try {
+      setProcessingLike(true);
+      const data = await processService("delete like", { post_id: _id });
+      const { success, error } = data;
+      if (success) {
+        updatePost({
+          _id,
+          user_id,
+          recipient_id,
+          sharedPost_id,
+          content,
+          image,
+          og,
+          createdAt,
+          updatedAt,
+          likedByUser: false,
+          likeCount: (likeCount || 0) - 1,
+          commentCount,
+          sharedCount,
+        });
+      } else {
+        console.log(error);
+      }
+    } catch (error) {}
+    setProcessingLike(false);
+  }, [
+    _id,
+    commentCount,
+    content,
+    createdAt,
+    image,
+    likeCount,
+    og,
+    recipient_id,
+    sharedCount,
+    sharedPost_id,
+    updatePost,
+    updatedAt,
+    user_id,
+  ]);
+
+  const sharePost = useCallback(() => {}, []);
 
   useEffect(() => {
     const words = content
@@ -117,7 +198,7 @@ const Post = ({
           border-radius: 0;
         }
       `}</style>
-      <></>
+      {/* <LoadingPosts /> */}
       <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-5 w-full border border-neutral-300/75 dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
         <div className="mx-4 flex items-start mb-2">
           <UserAvatarMini id={user_id!} user={postUser} />
@@ -167,65 +248,93 @@ const Post = ({
             onError={(e) => {
               e.currentTarget.style.display = "none";
             }}
+            onClick={() => setBigImage(image)}
           />
         )}
         {!image && og?.url && (
           <>
-            <Link href={og.url}>
-              <>
-                {og.image?.url && (
-                  <img
-                    src={og.image.url}
-                    alt={image}
-                    className="cursor-pointer select-none min-h-[15rem] max-h-96 w-full object-cover"
-                    loading="lazy"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
+            <div
+              onClick={() =>
+                window.open(og.url, "_blank", "noopener,noreferrer")
+              }
+            >
+              {og.image?.url && (
+                <img
+                  src={og.image.url}
+                  alt={image}
+                  className="cursor-pointer select-none min-h-[15rem] max-h-96 w-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              )}
+              <div className="flex-1 text-left p-2 overflow-hidden text-xs bg-gray-400/25 dark:bg-gray-400/20 dark:text-neutral-200 font-normal">
+                {og.siteName && (
+                  <p className="w-full h-[1.125rem] truncate">{og.siteName}</p>
                 )}
-                <div className="flex-1 text-left p-2 overflow-hidden text-xs bg-gray-400/25 dark:bg-gray-400/20 dark:text-neutral-200 font-normal">
-                  {og.siteName && (
-                    <p className="w-full h-[1.125rem] truncate">
-                      {og.siteName}
-                    </p>
-                  )}
-                  {og.title && (
-                    <p className="w-full h-[1.125rem] font-bold truncate">
-                      {og.title}
-                    </p>
-                  )}
-                  {og.description && (
-                    <p className="w-full h-[1.125rem] truncate">
-                      {og.description}
-                    </p>
-                  )}
-                  {og.url && !og.siteName && (
-                    <p className="w-full h-[1.125rem] truncate">
-                      {decodeURI(og.url || "")}
-                    </p>
-                  )}
-                </div>
-              </>
-            </Link>
+                {og.title && (
+                  <p className="w-full h-[1.125rem] font-bold truncate">
+                    {og.title}
+                  </p>
+                )}
+                {og.description && (
+                  <p className="w-full h-[1.125rem] truncate">
+                    {og.description}
+                  </p>
+                )}
+                {og.url && !og.siteName && (
+                  <p className="w-full h-[1.125rem] truncate">
+                    {decodeURI(og.url || "")}
+                  </p>
+                )}
+              </div>
+            </div>
           </>
         )}
         {/* </div> */}
-        <div
-          className={`${
-            image || og ? "h-10" : "pb-2.5"
-          } flex justify-between mx-3 border-b border-black/25 dark:border-white/25 select-none opacity-75`}
-        >
-          <div className="flex items-center">xxx likes</div>
-          <div className="flex items-center">
-            <div className="pr-3">xxx comments</div>
-            <div>xxx shares</div>
+        {likeCount || commentCount || sharedCount ? (
+          <div
+            className={`${image || og ? "h-10" : "pb-2.5"} flex ${
+              likeCount ? "justify-between" : "justify-end"
+            } mx-3 border-b border-black/25 dark:border-white/25 select-none opacity-75`}
+          >
+            {likeCount ? (
+              <div className="flex items-center">
+                {likeCount} like{likeCount > 1 ? "s" : ""}
+              </div>
+            ) : null}
+            <div className="flex items-center">
+              {commentCount ? (
+                <div
+                  className={`${
+                    sharedCount && "pr-3"
+                  } hover:underline cursor-pointer`}
+                  onClick={() => setCommentModal(true)}
+                >
+                  {commentCount} comments
+                </div>
+              ) : null}
+              {sharedCount ? <div>xxx shares</div> : null}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div
+            className={`${
+              og
+                ? ""
+                : "pb-2.5 flex justify-between mx-3 border-b border-black/25 dark:border-white/25 select-none opacity-75"
+            } `}
+          />
+        )}
         <div className="h-10 flex justify-evenly mx-3 select-none">
           <div
-            className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out"
-            onClick={() => {}}
+            className={`${
+              likedByUser && "text-blue-500 dark:text-blue-400"
+            } mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-gray-300/50 hover:dark:bg-gray-400/25 transition-colors ease-out`}
+            onClick={
+              processingLike ? () => {} : likedByUser ? unlikePost : likePost
+            }
           >
             <i className="fa-solid fa-thumbs-up mr-2" />
             Like
@@ -257,13 +366,15 @@ const Post = ({
             og,
             createdAt,
             updatedAt,
+            likedByUser,
+            likeCount,
+            commentCount,
+            sharedCount,
           },
           comments,
           setComments,
           setSubComments,
           subComments,
-          aggregatedData,
-          setAggregatedData,
           updatePost,
           focused,
           setFocused,
