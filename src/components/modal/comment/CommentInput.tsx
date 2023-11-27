@@ -212,7 +212,6 @@ const CommentInput = ({
   }, [initalLoad, mobile, mobileModal, type]);
 
   useEffect(() => {
-    console.log(focused, comment);
     if (mobile && comment && focused === comment._id) {
       setHidePrimaryCommentInput(true);
     }
@@ -310,7 +309,7 @@ const CommentInput = ({
                   ? focused === post._id
                   : focused === comment?._id) ||
                 textareaRef.current?.value ||
-                initalLoad === true
+                (initalLoad === true && !mobile)
                   ? "h-6 opacity-100"
                   : "h-0 opacity-0"
               }               

@@ -17,7 +17,7 @@ interface Props {
 const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
   const { user, navButtonsVisable, darkMode, mobileModal } = useGlobalContext();
   const { modal, setModal, loading } = useModalContext();
-  const { hidePrimaryCommentInput } = useCommentContext();
+  const { setFocused } = useCommentContext();
 
   const keydownCallback = useCallback(
     (e: KeyboardEvent) => {
@@ -68,16 +68,19 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
             user?.avatar
               ? "bg-black/20 dark:bg-black/40"
               : "bg-black/[15%] dark:bg-transparent"
-          } ${
-                !navButtonsVisable && "z-50"
-              } fixed flex justify-center items-center h-[100dvh] overflow-y-visible w-screen top-0 left-0 text-black`}
+          } ${!navButtonsVisable && "z-50"} ${
+                mobileModal ? "items-start" : "items-center"
+              } fixed flex justify-center h-[100dvh] overflow-y-visible w-screen top-0 left-0 text-black`}
             >
               {mobileModal && (
                 <div className="absolute bg-light-secondary dark:bg-dark-secondary top-0 w-full h-screen" />
               )}
               <div
                 className="absolute top-0 h-[100dvh] w-full"
-                onClick={() => user?.avatar && !loading && setModal(false)}
+                onClick={() => {
+                  user?.avatar && !loading && !mobileModal && setModal(false);
+                  setFocused(undefined);
+                }}
                 onDragStart={(e) => e.preventDefault()}
                 onDragCapture={(e) => e.preventDefault()}
                 onDropCapture={(e) => e.preventDefault()}
@@ -88,7 +91,7 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
                   mobileModal && darkMode && "dark:[color-scheme:dark]"
                 } ${
                   mobileModal
-                    ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100dvh]"
+                    ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full max-h-[100dvh]"
                     : `${
                         user?.avatar
                           ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
@@ -97,8 +100,8 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
                 } pointer-events-auto overflow-y-hidden flex relative`}
               >
                 <div
-                  className={`${!mobileModal && "max-h-[85%]"} ${
-                    hidePrimaryCommentInput && "mb-4"
+                  className={`${
+                    !mobileModal && "max-h-[85%]"
                   } w-full z-50 flex flex-col`}
                   onClick={(e) => e.stopPropagation()}
                 >

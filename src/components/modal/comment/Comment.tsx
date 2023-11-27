@@ -52,7 +52,7 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
     updateFeedCache,
     mobileModal,
   } = useGlobalContext();
-  const { loading, setLoading } = useModalContext();
+  const { loading, setLoading, modal } = useModalContext();
   const {
     post,
     focused,
@@ -71,6 +71,7 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
   const [replying, setReplying] = useState(false);
 
   const commentInputref = useRef<HTMLDivElement>(null);
+  const isMounted = useRef(true);
 
   const likeComment = useCallback(
     async (e: any) => {
@@ -176,18 +177,16 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
   }, [comment._id, feedCache, setSubComments, subComments, updateFeedCache]);
 
   const hideSubComments = useCallback(() => {
+    if (!comment._id || !showReplies) return;
     setShowReplies(false);
-    // transfer appended replies to subcomments when hiding and clear appended replies, push them to the end of subcomments in order to preserve order
     if (appendedReplies.length > 0) {
       if (!subComments[comment._id]) subComments[comment._id] = [];
       setSubComments((prev) => {
         return {
           ...prev,
-          [comment._id!]: [...subComments[comment._id]!, ...appendedReplies],
+          [comment._id]: [...subComments[comment._id]!, ...appendedReplies],
         };
       });
-      setAppendedReplies([]);
-      // increase subcomment count
       setComments((prev) => {
         return prev.map((prevComment) => {
           if (prevComment._id === comment._id) {
@@ -199,36 +198,32 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
           } else return prevComment;
         });
       });
+      setAppendedReplies([]);
     }
-  }, [appendedReplies, comment._id, setComments, setSubComments, subComments]);
+  }, [
+    appendedReplies,
+    comment._id,
+    setComments,
+    setSubComments,
+    showReplies,
+    subComments,
+  ]);
 
   useEffect(() => {
-    // // transfer appended replies to subcomments when hiding and clear appended replies, push them to the end of subcomments in order to preserve order (this is for when the user clicks on a comment that has replies, then clicks on another comment that has replies, then clicks back on the first comment, the replies will be appended to the end of the subcomments array)
+    isMounted.current = true;
     return () => {
-      if (appendedReplies.length > 0) {
-        if (!subComments[comment._id]) subComments[comment._id] = [];
-        setSubComments((prev) => {
-          return {
-            ...prev,
-            [comment._id!]: [...subComments[comment._id]!, ...appendedReplies],
-          };
-        });
-        setAppendedReplies([]);
-        // increase subcomment count
-        setComments((prev) => {
-          return prev.map((prevComment) => {
-            if (prevComment._id === comment._id) {
-              return {
-                ...prevComment,
-                subCommentCount:
-                  prevComment.subCommentCount! + appendedReplies.length,
-              };
-            } else return prevComment;
-          });
-        });
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (!isMounted.current) {
+        console.log("Component is unmounting");
+        hideSubComments();
       }
     };
-  }, [appendedReplies, comment._id, setComments, setSubComments, subComments]);
+  }, [hideSubComments]);
 
   return (
     <>
@@ -515,17 +510,14 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
                         appendedReplies.length > 0 &&
                         comment.subCommentCount === 0) ? (
                         <>Hide replies</>
+                      ) : appendedReplies.length > 0 ? (
+                        <>View more replies</>
+                      ) : comment.subCommentCount === 1 ? (
+                        <>View reply</>
                       ) : (
-                        <>View replies</>
+                        <>View all {comment.subCommentCount} replies</>
                       )}
-
-                      {/* <>View more replies</>
-                      <>View reply</>
-                      <>View all {comment.subCommentCount} replies</> */}
                     </div>
-                    {/* <div className="pl-2.5 group-hover:underline">
-                      Hide replies
-                    </div> */}
                   </div>
                 </div>
               </div>

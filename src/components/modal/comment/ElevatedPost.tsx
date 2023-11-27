@@ -392,7 +392,7 @@ const ElevatedPost = () => {
           </div>
         </div>
         {/* Comment section */}
-        <div className="pt-2">
+        <div className={`${hidePrimaryCommentInput && "mb-4"} pt-2`}>
           {comments.length > 0 &&
             comments.map((comment, i) => (
               <div key={comment._id}>
