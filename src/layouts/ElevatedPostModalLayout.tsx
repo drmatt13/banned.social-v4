@@ -66,22 +66,15 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               : "bg-black/[15%] dark:bg-transparent"
           } ${
             !navButtonsVisable && "z-50"
-          } fixed flex justify-center items-center h-[100lvh] overflow-y-auto w-screen top-0 left-0 text-black`}
+          } fixed flex justify-center items-center h-[100dvh] overflow-y-auto w-screen top-0 left-0 text-black`}
         >
           <div
-            className="absolute top-0 h-[100lvh] w-full"
+            className="absolute top-0 h-[100dvh] w-full"
             onClick={() => user?.avatar && !loading && setModal(false)}
             onDragStart={(e) => e.preventDefault()}
             onDragCapture={(e) => e.preventDefault()}
             onDropCapture={(e) => e.preventDefault()}
             onDragOverCapture={(e) => e.preventDefault()}
-          />
-          <div
-            className={`${
-              !mobileModal
-                ? "hidden"
-                : "absolute top-0 bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100lvh]"
-            } pointer-events-none`}
           />
 
           <div
