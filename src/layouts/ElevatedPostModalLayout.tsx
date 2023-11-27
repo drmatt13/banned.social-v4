@@ -66,8 +66,11 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               : "bg-black/[15%] dark:bg-transparent"
           } ${
             !navButtonsVisable && "z-50"
-          } fixed flex justify-center items-center h-[100dvh] overflow-y-auto w-screen top-0 left-0 text-black`}
+          } fixed flex justify-center items-center h-[100dvh] overflow-y-visible w-screen top-0 left-0 text-black`}
         >
+          <div className="absolute bg-light-secondary dark:bg-dark-secondary top-0 w-full h-screen">
+            dfdsf
+          </div>
           <div
             className="absolute top-0 h-[100dvh] w-full"
             onClick={() => user?.avatar && !loading && setModal(false)}

@@ -199,11 +199,11 @@ const Post = ({
         }
       `}</style>
       {/* <LoadingPosts /> */}
-      {commentModal && (
+      {/* {commentModal && (
         <div
-          className={`fixed top-0 h-[200vh] w-[200vw] bg-light-secondary dark:bg-dark-secondary z-50`}
+          className={`fixed top-0 h-[200vh] w-[200vw] bg-light-secondary dark:bg-dark-secondary z-[1000]`}
         />
-      )}
+      )} */}
       <div className="relative text-sm bg-light-secondary dark:bg-dark-secondary pt-3 rounded-lg mb-5 w-full border border-neutral-300/75 dark:border-dark-border shadow dark:shadow-dark-border overflow-hidden">
         <div className="mx-4 flex items-start mb-2">
           <UserAvatarMini id={user_id!} user={postUser} />
