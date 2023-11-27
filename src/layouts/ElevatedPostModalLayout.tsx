@@ -81,7 +81,7 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               mobileModal && darkMode && "dark:[color-scheme:dark]"
             } ${
               mobileModal
-                ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100lvh]"
+                ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100dvh]"
                 : `${
                     user?.avatar
                       ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"

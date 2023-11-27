@@ -112,16 +112,16 @@ const MyApp: AppType<{
     }
   };
 
-  useEffect(() => {
-    // on keypress toggle dark mode if ctrl + d is pressed
-    const keydownCallback = (e: KeyboardEvent) => {
-      if (e.key === "d" && e.ctrlKey) {
-        e.preventDefault();
-        toggleDarkMode();
-      }
-    };
-    window.addEventListener("keydown", keydownCallback);
-  }, []);
+  // useEffect(() => {
+  //   // on keypress toggle dark mode if ctrl + d is pressed
+  //   const keydownCallback = (e: KeyboardEvent) => {
+  //     if (e.key === "d" && e.ctrlKey) {
+  //       e.preventDefault();
+  //       toggleDarkMode();
+  //     }
+  //   };
+  //   window.addEventListener("keydown", keydownCallback);
+  // }, []);
 
   const logout = async (): Promise<void> => {
     setLoggingOut(true);
