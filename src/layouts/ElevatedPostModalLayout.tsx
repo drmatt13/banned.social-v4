@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
-  const { user, navButtonsVisable } = useGlobalContext();
+  const { user, navButtonsVisable, darkMode, mobileModal } = useGlobalContext();
   const { modal, setModal, loading } = useModalContext();
 
   const keydownCallback = useCallback(
@@ -78,13 +78,21 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
           />
           <div
             className={`${
-              user?.avatar
-                ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
-                : "bg-white/75 dark:bg-white/50"
-            } pointer-events-auto overflow-y-hidden flex relative border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[550px] max-h-[85%]`}
+              mobileModal && darkMode && "dark:[color-scheme:dark]"
+            } ${
+              mobileModal
+                ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-full"
+                : `${
+                    user?.avatar
+                      ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
+                      : "bg-white/75 dark:bg-white/50"
+                  } border border-gray-300 dark:border-gray-500 shadow-lg rounded-xl w-[95%] max-w-[550px] max-h-[85%]`
+            } pointer-events-auto overflow-y-hidden flex relative`}
           >
             <div
-              className={`w-full max-h-[85%] z-50 flex flex-col`}
+              className={`${
+                !mobileModal && "max-h-[85%]"
+              } w-full z-50 flex flex-col`}
               onClick={(e) => e.stopPropagation()}
             >
               {children}

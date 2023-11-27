@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
 
 // components
 import ElevatedPost from "@/components/modal/comment/ElevatedPost";
@@ -16,6 +16,7 @@ interface Props {
 
 const CommentModal = ({ modal, setModal }: Props) => {
   const [loading, setLoading] = useState(false);
+
   return (
     <modalContext.Provider value={{ modal, setModal, loading, setLoading }}>
       <ElevatedPostModalLayout>

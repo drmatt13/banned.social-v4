@@ -30,7 +30,8 @@ const Reply = ({
   setReplying,
   commentInputref,
 }: Props) => {
-  const { feedCache, user, mobile, darkMode, setBigImage } = useGlobalContext();
+  const { feedCache, user, mobile, darkMode, setBigImage, mobileModal } =
+    useGlobalContext();
   const {
     post,
     focused,
@@ -48,19 +49,43 @@ const Reply = ({
           <div className="w-10 max-h-max shrink-0">
             <div className="w-8 h-full flex flex-row-reverse relative">
               <div className="absolute w-full h-full">
-                <div className="w-4 h-5 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] dark:border-stone-400 rounded-bl-lg"></div>
+                <div
+                  className={`w-4 h-5 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] ${
+                    mobileModal
+                      ? "dark:border-stone-600"
+                      : "dark:border-stone-400"
+                  } rounded-bl-lg`}
+                />
               </div>
               <div className="absolute right-0 translate-x-full w-2 h-full">
-                <div className="h-5 w-2 border-b-2 border-[#bdbdbd] dark:border-stone-400" />
+                <div
+                  className={`h-5 w-2 border-b-2 border-[#bdbdbd] ${
+                    mobileModal
+                      ? "dark:border-stone-600"
+                      : "dark:border-stone-400"
+                  }`}
+                />
               </div>
               <>
-                <div className="w-4 border-l-2 border-[#bdbdbd] dark:border-stone-400" />
+                <div
+                  className={`w-4 border-l-2 border-[#bdbdbd] ${
+                    mobileModal
+                      ? "dark:border-stone-600"
+                      : "dark:border-stone-400"
+                  }`}
+                />
               </>
             </div>
           </div>
           <div className="flex flex-col w-full">
             <div className="flex w-full">
-              <div className="h-5 w-2.5 border-b-2 border-[#bdbdbd] dark:border-stone-400" />
+              <div
+                className={`h-5 w-2.5 border-b-2 border-[#bdbdbd] ${
+                  mobileModal
+                    ? "dark:border-stone-600"
+                    : "dark:border-stone-400"
+                }`}
+              />
               <div
                 className={`${
                   lastReply ? "" : "mb-2"
@@ -75,7 +100,11 @@ const Reply = ({
                 <div className="flex flex-col w-full pl-2">
                   <div
                     className={`${
-                      subComment.content && "bg-neutral-500/20"
+                      subComment.content
+                        ? mobileModal && darkMode
+                          ? "bg-white/10"
+                          : "bg-neutral-500/[17.5%] dark:bg-neutral-500/20"
+                        : ""
                     } w-[97.5%] rounded-xl flex flex-col px-2 py-1.5`}
                   >
                     <div
@@ -102,12 +131,28 @@ const Reply = ({
                       />
                     </div>
                   )}
-                  <div className="h-6 flex text-xs items-center text-black/90 font-semibold pl-4 gap-4">
-                    <div className="cursor-pointer hover:underline hover:text-black">
+                  <div className="h-6 flex text-xs items-center font-semibold pl-4 gap-4">
+                    <div
+                      className={`${
+                        subComment.likedByUser
+                          ? `text-blue-500 ${
+                              darkMode && mobileModal
+                                ? "hover:text-blue-400"
+                                : "hover:text-blue-600"
+                            }`
+                          : darkMode && mobileModal
+                          ? "text-white/80 hover:text-white"
+                          : "text-black/80 hover:text-black"
+                      } cursor-pointer hover:underline`}
+                    >
                       Like
                     </div>
                     <div
-                      className="cursor-pointer hover:underline hover:text-black"
+                      className={`${
+                        darkMode && mobileModal
+                          ? "text-white/80 hover:text-white"
+                          : "text-black/80 hover:text-black"
+                      } cursor-pointer hover:underline`}
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
@@ -122,7 +167,13 @@ const Reply = ({
                     >
                       Reply
                     </div>
-                    <div className="cursor-pointer hover:underline text-black/75 hover:text-black">
+                    <div
+                      className={`${
+                        darkMode && mobileModal
+                          ? "text-white/80"
+                          : "text-black/80"
+                      }`}
+                    >
                       {formatRelativeTime(
                         subComment.updatedAt as unknown as string
                       )}

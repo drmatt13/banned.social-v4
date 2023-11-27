@@ -35,6 +35,21 @@ const MyApp: AppType<{
   const [feedCache, setFeedCache] = useState<FeedCache>({});
   const [isFirefox, setIsFirefox] = useState(false);
   const [bigImage, setBigImage] = useState("");
+  const [mobileModal, setMobileModal] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 600) setMobileModal(true);
+      else setMobileModal(false);
+    };
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    console.log(mobileModal);
+  }, [mobileModal]);
 
   const updateFeedCache = useCallback(async (users: string[]) => {
     const data = await processService("update feed cache", {
@@ -97,6 +112,17 @@ const MyApp: AppType<{
     }
   };
 
+  useEffect(() => {
+    // on keypress toggle dark mode if ctrl + d is pressed
+    const keydownCallback = (e: KeyboardEvent) => {
+      if (e.key === "d" && e.ctrlKey) {
+        e.preventDefault();
+        toggleDarkMode();
+      }
+    };
+    window.addEventListener("keydown", keydownCallback);
+  }, []);
+
   const logout = async (): Promise<void> => {
     setLoggingOut(true);
     Cookie.remove("token");
@@ -136,6 +162,7 @@ const MyApp: AppType<{
             isFirefox,
             bigImage,
             setBigImage,
+            mobileModal,
           }}
         >
           <AppLayout>
@@ -170,6 +197,7 @@ const MyApp: AppType<{
           isFirefox,
           bigImage,
           setBigImage,
+          mobileModal,
         }}
       >
         <AppLayout>

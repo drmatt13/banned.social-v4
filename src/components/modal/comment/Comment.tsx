@@ -43,8 +43,15 @@ interface Props {
 }
 
 const Comment = ({ comment, type, lastOfType }: Props) => {
-  const { feedCache, user, mobile, darkMode, setBigImage, updateFeedCache } =
-    useGlobalContext();
+  const {
+    feedCache,
+    user,
+    mobile,
+    darkMode,
+    setBigImage,
+    updateFeedCache,
+    mobileModal,
+  } = useGlobalContext();
   const { loading, setLoading } = useModalContext();
   const {
     post,
@@ -205,26 +212,31 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
   }, [subComments]);
 
   useEffect(() => {
-    // unshift appended replies to subcomments when component unmounts
-    // return () => {
-    //   if (appendedReplies.length > 0) {
-    //     if (!subComments[comment._id]) subComments[comment._id] = [];
-    //     subComments[comment._id]!.unshift(...appendedReplies);
-    //     setSubComments(subComments);
-    //     // increase subcomment count
-    //     setComments((prev) => {
-    //       return prev.map((prevComment) => {
-    //         if (prevComment._id === comment._id) {
-    //           return {
-    //             ...prevComment,
-    //             subCommentCount:
-    //               prevComment.subCommentCount! + appendedReplies.length,
-    //           };
-    //         } else return prevComment;
-    //       });
-    //     });
-    //   }
-    // };
+    // // transfer appended replies to subcomments when hiding and clear appended replies, push them to the end of subcomments in order to preserve order (this is for when the user clicks on a comment that has replies, then clicks on another comment that has replies, then clicks back on the first comment, the replies will be appended to the end of the subcomments array)
+    return () => {
+      if (appendedReplies.length > 0) {
+        if (!subComments[comment._id]) subComments[comment._id] = [];
+        setSubComments((prev) => {
+          return {
+            ...prev,
+            [comment._id!]: [...subComments[comment._id]!, ...appendedReplies],
+          };
+        });
+        setAppendedReplies([]);
+        // increase subcomment count
+        setComments((prev) => {
+          return prev.map((prevComment) => {
+            if (prevComment._id === comment._id) {
+              return {
+                ...prevComment,
+                subCommentCount:
+                  prevComment.subCommentCount! + appendedReplies.length,
+              };
+            } else return prevComment;
+          });
+        });
+      }
+    };
   }, [appendedReplies, comment._id, setComments, setSubComments, subComments]);
 
   return (
@@ -264,7 +276,13 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
                   (comment.subCommentCount || 0) > 0 ||
                   appendedReplies.length > 0) && (
                   <>
-                    <div className="w-4 border-l-2 border-[#bdbdbd] dark:border-stone-400" />
+                    <div
+                      className={`w-4 border-l-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      }`}
+                    />
                   </>
                 )}
               </div>
@@ -275,8 +293,14 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               className={`${
                 comment.content &&
                 (focused === comment?._id
-                  ? "bg-blue-500/25 dark:bg-indigo-800/30"
-                  : "bg-neutral-500/20")
+                  ? `${
+                      mobileModal
+                        ? "dark:bg-indigo-400/30"
+                        : "dark:bg-indigo-800/30"
+                    } bg-blue-500/25`
+                  : mobileModal && darkMode
+                  ? "bg-white/10"
+                  : "bg-neutral-500/[17.5%] dark:bg-neutral-500/20")
               } w-[97.5%] rounded-xl flex flex-col px-2 py-1.5`}
               onClick={(e) => {
                 if (
@@ -321,11 +345,19 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
                 !appendedReplies.length &&
                 !lastOfType &&
                 "mb-2"
-              } h-6 flex text-xs items-center text-black/90 hover:text-black font-semibold pl-4 gap-4`}
+              } h-6 flex text-xs items-center font-semibold pl-4 gap-4`}
             >
               <div
                 className={`${
-                  comment.likedByUser && "text-blue-500"
+                  comment.likedByUser
+                    ? `text-blue-500 ${
+                        darkMode && mobileModal
+                          ? "hover:text-blue-400"
+                          : "hover:text-blue-600"
+                      }`
+                    : darkMode && mobileModal
+                    ? "text-white/80 hover:text-white"
+                    : "text-black/80 hover:text-black"
                 } cursor-pointer hover:underline`}
                 onClick={
                   processingLike
@@ -338,7 +370,11 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
                 Like
               </div>
               <div
-                className="cursor-pointer hover:underline hover:text-black"
+                className={`${
+                  darkMode && mobileModal
+                    ? "text-white/80 hover:text-white"
+                    : "text-black/80 hover:text-black"
+                } cursor-pointer hover:underline`}
                 onClick={(e) => {
                   e.stopPropagation();
                   e.preventDefault();
@@ -352,7 +388,11 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               >
                 Reply
               </div>
-              <div className="cursor-pointer hover:underline text-black/75 hover:text-black">
+              <div
+                className={`${
+                  darkMode && mobileModal ? "text-white/80" : "text-black/80"
+                }`}
+              >
                 {formatRelativeTime(comment.updatedAt as unknown as string)}
               </div>
             </div>
@@ -366,7 +406,13 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               <div className="flex-1">
                 <div className="w-8 h-2 flex flex-row-reverse">
                   <>
-                    <div className="w-4 border-l-2 border-[#bdbdbd] dark:border-stone-400" />
+                    <div
+                      className={`w-4 border-l-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      }`}
+                    />
                   </>
                 </div>
               </div>
@@ -414,14 +460,32 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               <div className="w-10 max-h-max shrink-0">
                 <div className="w-8 h-full flex flex-row-reverse relative">
                   <div className="absolute w-full h-full">
-                    <div className="w-4 h-7 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] dark:border-stone-400 rounded-bl-lg"></div>
+                    <div
+                      className={`w-4 h-7 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      } rounded-bl-lg`}
+                    />
                   </div>
                   <div className="absolute right-0 translate-x-full w-2 h-full">
-                    <div className="h-7 w-2 border-b-2 border-[#bdbdbd] dark:border-stone-400" />
+                    <div
+                      className={`h-7 w-2 border-b-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      }`}
+                    />
                   </div>
                   {replying && (
                     <>
-                      <div className="w-4 border-l-2 border-[#bdbdbd] dark:border-stone-400" />
+                      <div
+                        className={`w-4 border-l-2 border-[#bdbdbd] ${
+                          mobileModal
+                            ? "dark:border-stone-600"
+                            : "dark:border-stone-400"
+                        }`}
+                      />
                     </>
                   )}
                 </div>
@@ -429,7 +493,13 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               {/* <div className={!lastOfType ? mb-2" : ""} /> */}
               <div className="flex flex-col">
                 <div className={`${!replying && "pb-2"} flex`}>
-                  <div className="h-7 w-2.5 border-b-2 border-[#bdbdbd] dark:border-stone-400" />
+                  <div
+                    className={`h-7 w-2.5 border-b-2 border-[#bdbdbd] ${
+                      mobileModal
+                        ? "dark:border-stone-600"
+                        : "dark:border-stone-400"
+                    }`}
+                  />
                   <div className="ml-2.5 flex items-center mt-4 mb-2 group hover:cursor-pointer">
                     <i
                       className={`${
@@ -479,15 +549,33 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
               <div className="w-10 max-h-max shrink-0">
                 <div className="h-3">
                   <div className="w-8 h-full flex flex-row-reverse">
-                    <div className="w-4 border-l-2 border-[#bdbdbd] dark:border-stone-400" />
+                    <div
+                      className={`w-4 border-l-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      }`}
+                    />
                   </div>
                 </div>
                 <div className="h-8 relative flex">
                   <div className="relative w-8">
-                    <div className="w-4 h-4 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] dark:border-stone-400 rounded-bl-lg"></div>
+                    <div
+                      className={`w-4 h-4 absolute top-0 right-0 border-b-2 border-l-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      } rounded-bl-lg`}
+                    />
                   </div>
                   <div className="flex-1">
-                    <div className="h-4 w-full border-b-2 border-[#bdbdbd] dark:border-stone-400" />
+                    <div
+                      className={`h-4 w-full border-b-2 border-[#bdbdbd] ${
+                        mobileModal
+                          ? "dark:border-stone-600"
+                          : "dark:border-stone-400"
+                      }`}
+                    />
                   </div>
                 </div>
               </div>

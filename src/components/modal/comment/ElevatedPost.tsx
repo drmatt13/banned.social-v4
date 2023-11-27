@@ -25,8 +25,15 @@ import processService from "@/lib/processService";
 import styles from "@/styles/scrollbar.module.scss";
 
 const ElevatedPost = () => {
-  const { feedCache, user, mobile, darkMode, setBigImage, updateFeedCache } =
-    useGlobalContext();
+  const {
+    feedCache,
+    user,
+    mobile,
+    darkMode,
+    setBigImage,
+    updateFeedCache,
+    mobileModal,
+  } = useGlobalContext();
   const { modal, setModal, loading, setLoading } = useModalContext();
   const {
     post,
@@ -247,7 +254,11 @@ const ElevatedPost = () => {
             </div>
             <div className="h-full flex justify-center items-center">
               <i
-                className="hover:bg-black/10 fa-solid fa-times flex justify-center items-center h-8 w-8 text-lg rounded-full cursor-pointer transition-colors ease-out"
+                className={`${
+                  darkMode && mobileModal
+                    ? "hover:bg-white/10"
+                    : "hover:bg-black/10"
+                } fa-solid fa-times flex justify-center items-center h-8 w-8 text-lg rounded-full cursor-pointer transition-colors ease-out`}
                 onClick={() => setModal(false)}
               />
             </div>
@@ -335,8 +346,17 @@ const ElevatedPost = () => {
         <div className="h-10 flex justify-evenly mx-3 select-none">
           <div
             className={`${
-              likedByUser && "text-blue-500"
-            } mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-black/10 transition-colors ease-out`}
+              likedByUser &&
+              `text-blue-500 ${
+                darkMode && mobileModal
+                  ? "hover:text-blue-400"
+                  : "hover:text-blue-600"
+              }`
+            } ${
+              mobileModal && darkMode
+                ? "hover:bg-white/10"
+                : "hover:bg-black/10"
+            } mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer transition-colors ease-out`}
             onClick={
               processingLike ? () => {} : likedByUser ? unlikePost : likePost
             }
@@ -349,12 +369,22 @@ const ElevatedPost = () => {
               e.stopPropagation();
               (commentInputref.current?.firstChild as HTMLInputElement).click();
             }}
-            className="mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-black/10 transition-colors ease-out"
+            className={`${
+              mobileModal && darkMode
+                ? "hover:bg-white/10"
+                : "hover:bg-black/10"
+            } mr-2 my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer transition-colors ease-out`}
           >
             <i className="fa-solid fa-comment mr-2" />
             Comment
           </div>
-          <div className="my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-black/10 transition-colors ease-out">
+          <div
+            className={`${
+              mobileModal && darkMode
+                ? "hover:bg-white/10"
+                : "hover:bg-black/10"
+            } my-1 flex-1 flex justify-center items-center rounded-md hover:cursor-pointer transition-colors ease-out`}
+          >
             <i className="fa-solid fa-share mr-2" />
             Share
           </div>

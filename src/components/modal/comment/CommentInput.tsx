@@ -50,7 +50,7 @@ const CommentInput = ({
   appendedReplies,
   setAppendedReplies,
 }: Props) => {
-  const { feedCache, user, mobile, darkMode } = useGlobalContext();
+  const { feedCache, user, mobile, darkMode, mobileModal } = useGlobalContext();
   const { loading, setLoading, setModal } = useModalContext();
   const {
     post,
@@ -228,7 +228,13 @@ const CommentInput = ({
         <div className="flex">
           <div className="w-3 h-8 pr-[3px]">
             {type !== "primary comment" && (
-              <div className="h-4 w-full border-b-2 border-black/30 animate-fade-in-fast" />
+              <div
+                className={`h-4 w-full border-b-2 border-[#bdbdbd] ${
+                  mobileModal
+                    ? "dark:border-stone-600"
+                    : "dark:border-stone-400"
+                } animate-fade-in-fast`}
+              />
             )}
           </div>
           <UserAvatarMini id={post.user_id!} user={user} extraSmall={true} />
@@ -297,7 +303,7 @@ const CommentInput = ({
                   ? "h-6 opacity-100"
                   : "h-0 opacity-0"
               }               
-              transition-all ease-out duration-300 flex flex-row-reverse w-full items-center`}
+              transition-all ease-out duration-150 flex flex-row-reverse w-full items-center`}
             >
               <i
                 onClick={createComment}
@@ -313,7 +319,7 @@ const CommentInput = ({
                   textareaRef.current?.value || image
                     ? "text-blue-600 hover:text-blue-500 cursor-pointer"
                     : "text-neutral-600 cursor-not-allowed"
-                } ml-2.5 fa-solid fa-share transition-all ease-out duration-200`}
+                } ml-2.5 fa-solid fa-share transition-all ease-out duration-150`}
               />
               <i
                 onClick={(e) => {
@@ -330,7 +336,7 @@ const CommentInput = ({
                     ? "scale-100"
                     : "scale-0"
                 } 
-          text-black/75 hover:text-blue-500 cursor-pointer fa-solid fa-image transition-all ease-out duration-200`}
+          text-black/75 hover:text-blue-500 cursor-pointer fa-solid fa-image transition-all ease-out duration-150`}
               />
             </div>
           </div>
@@ -348,8 +354,14 @@ const CommentInput = ({
                   : "opacity-100 ml-2"
               } 
         ${
-          image ? "fa-share text-blue-600" : "fa-image text-black/75"
-        } hover:text-blue-500 cursor-pointer fa-solid transition-all ease-out duration-300`}
+          image
+            ? "fa-share text-blue-600"
+            : `fa-image ${
+                darkMode && mobileModal
+                  ? "text-white/75 hover:text-blue-400"
+                  : "text-black/75 hover:text-blue-500"
+              }`
+        } cursor-pointer fa-solid transition-all ease-out duration-150`}
             />
           </div>
         </div>
@@ -363,7 +375,7 @@ const CommentInput = ({
                 removeImage();
                 focused !== comment?._id && setFocused(undefined);
               }}
-              className="cursor-pointer absolute -top-2 -right-1.5 h-[1.3rem] w-[1.3rem] bg-white border border-black/30 hover:border-black/50 rounded-full flex justify-center items-center text-[.7rem] text-black hover:text-black  transition-all ease-out duration-300"
+              className="cursor-pointer absolute -top-2 -right-1.5 h-[1.3rem] w-[1.3rem] bg-white border border-black/30 hover:border-black/50 rounded-full flex justify-center items-center text-[.7rem] text-black hover:text-black  transition-all ease-out duration-150"
             >
               <i className="fa-solid fa-times" />
             </div>

@@ -24,6 +24,7 @@ type GlobalContext = {
   isFirefox: boolean;
   bigImage: string;
   setBigImage: Dispatch<SetStateAction<string>>;
+  mobileModal: boolean;
 };
 
 export const globalContext = createContext<GlobalContext>({
@@ -46,6 +47,7 @@ export const globalContext = createContext<GlobalContext>({
   isFirefox: false,
   bigImage: "",
   setBigImage: () => {},
+  mobileModal: false,
 });
 
 const useGlobalContext = () => useContext(globalContext);
