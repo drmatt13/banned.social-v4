@@ -202,12 +202,11 @@ const CommentInput = ({
   }, [image]);
 
   useEffect(() => {
-    textareaRef.current?.focus();
-    setInitialLoad(false);
-    // return () => {
-    //   setFocused(undefined);
-    // };
-  }, [setFocused]);
+    if (!mobile) {
+      textareaRef.current?.focus();
+      setInitialLoad(false);
+    }
+  }, [mobile]);
 
   return (
     <>
