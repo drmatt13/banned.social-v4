@@ -133,7 +133,6 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
   );
 
   const getSubComments = useCallback(async () => {
-    console.log("show");
     if (!comment._id) return;
     if (subComments[comment._id]) {
       setShowReplies(true);
@@ -202,14 +201,6 @@ const Comment = ({ comment, type, lastOfType }: Props) => {
       });
     }
   }, [appendedReplies, comment._id, setComments, setSubComments, subComments]);
-
-  useEffect(() => {
-    console.log(appendedReplies);
-  }, [appendedReplies]);
-
-  useEffect(() => {
-    console.log(subComments);
-  }, [subComments]);
 
   useEffect(() => {
     // // transfer appended replies to subcomments when hiding and clear appended replies, push them to the end of subcomments in order to preserve order (this is for when the user clicks on a comment that has replies, then clicks on another comment that has replies, then clicks back on the first comment, the replies will be appended to the end of the subcomments array)

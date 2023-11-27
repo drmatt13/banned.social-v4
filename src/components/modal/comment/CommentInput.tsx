@@ -60,6 +60,8 @@ const CommentInput = ({
     updatePost,
     subComments,
     setSubComments,
+    hidePrimaryCommentInput,
+    setHidePrimaryCommentInput,
   } = useCommentContext();
 
   const {
@@ -202,11 +204,19 @@ const CommentInput = ({
   }, [image]);
 
   useEffect(() => {
-    if (!mobile && !mobileModal) {
+    if (!mobile) {
       textareaRef.current?.focus();
     }
+    if (mobile && type !== "primary comment") textareaRef.current?.focus();
     setInitialLoad(false);
-  }, [mobile, mobileModal]);
+  }, [initalLoad, mobile, mobileModal, type]);
+
+  useEffect(() => {
+    console.log(focused, comment);
+    if (mobile && comment && focused === comment._id) {
+      setHidePrimaryCommentInput(true);
+    }
+  }, [comment, focused, mobile, setHidePrimaryCommentInput]);
 
   return (
     <>
@@ -220,9 +230,11 @@ const CommentInput = ({
         className="hidden"
       />
       <div
-        className={`${
-          darkMode ? styles.darkScroll : styles.lightScroll
-        } py-3 w-full pr-3 flex flex-col mb-2`}
+        className={`${darkMode ? styles.darkScroll : styles.lightScroll} ${
+          type === "primary comment" && hidePrimaryCommentInput
+            ? "hidden"
+            : "flex"
+        } py-3 w-full pr-3 flex-col mb-2`}
       >
         <div className="flex">
           <div className="w-3 h-8 pr-[3px]">

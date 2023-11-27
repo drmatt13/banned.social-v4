@@ -18,6 +18,8 @@ export type CommentContext = {
   updatePost: (post: Post) => void;
   focused: string | undefined;
   setFocused: Dispatch<SetStateAction<string | undefined>>;
+  hidePrimaryCommentInput: boolean;
+  setHidePrimaryCommentInput: Dispatch<SetStateAction<boolean>>;
 };
 
 export const commentContext = createContext<CommentContext>({
@@ -29,6 +31,8 @@ export const commentContext = createContext<CommentContext>({
   updatePost: () => {},
   focused: undefined,
   setFocused: () => {},
+  hidePrimaryCommentInput: false,
+  setHidePrimaryCommentInput: () => {},
 });
 
 const useCommentContext = () => useContext(commentContext);

@@ -56,7 +56,9 @@ const ElevatedPost = () => {
     subComments,
     setSubComments,
     updatePost,
+    focused,
     setFocused,
+    hidePrimaryCommentInput,
   } = useCommentContext();
 
   const [postUser, setPostUser] = useState<FeedUser>(undefined);
@@ -424,6 +426,7 @@ const ElevatedPost = () => {
           )}
         </div>
       </div>
+
       <CommentInput type="primary comment" commentInputref={commentInputref} />
     </>
   );

@@ -57,6 +57,7 @@ const Post = ({
     [comment_id: string]: SubComment[];
   }>({});
   const [focused, setFocused] = useState<string | undefined>(undefined);
+  const [hidePrimaryCommentInput, setHidePrimaryCommentInput] = useState(false);
 
   const likePost = useCallback(async () => {
     if (!_id) return;
@@ -187,6 +188,10 @@ const Post = ({
       setPostRecipient(feedCache[recipient_id]);
     }
   }, [feedCache, image, recipient_id, user, user_id]);
+
+  useEffect(() => {
+    if (focused === undefined) setHidePrimaryCommentInput(false);
+  }, [focused]);
 
   return !postUser ? (
     <></>
@@ -383,6 +388,8 @@ const Post = ({
           updatePost,
           focused,
           setFocused,
+          hidePrimaryCommentInput,
+          setHidePrimaryCommentInput,
         }}
       >
         <CommentModal modal={commentModal} setModal={setCommentModal} />
