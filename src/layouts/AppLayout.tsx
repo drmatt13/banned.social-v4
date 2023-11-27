@@ -102,6 +102,7 @@ const AppLayout = ({ children }: Props) => {
                         </>
                       )}
 
+                      {/* {mobile <div className={`fixed top-0 h-[200vh] w-[200vw] bg-light-secondary dark:bg-dark-secondary z-10`} />} */}
                       <div className="absolute top-0 w-full min-h-screen max-h-screen">
                         {children}
                       </div>
