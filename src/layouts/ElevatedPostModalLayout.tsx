@@ -66,10 +66,10 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               : "bg-black/[15%] dark:bg-transparent"
           } ${
             !navButtonsVisable && "z-50"
-          } fixed flex justify-center items-center h-screen overflow-y-auto w-screen top-0 left-0 text-black`}
+          } fixed flex justify-center items-center h-[100dvh] overflow-y-auto w-screen top-0 left-0 text-black`}
         >
           <div
-            className="absolute top-0 h-full w-full"
+            className="absolute top-0 h-[100dvh] w-full"
             onClick={() => user?.avatar && !loading && setModal(false)}
             onDragStart={(e) => e.preventDefault()}
             onDragCapture={(e) => e.preventDefault()}
@@ -81,7 +81,7 @@ const ElevatedPostModalLayout = ({ children, visable = true }: Props) => {
               mobileModal && darkMode && "dark:[color-scheme:dark]"
             } ${
               mobileModal
-                ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100vh]"
+                ? "bg-light-secondary dark:bg-dark-secondary dark:text-white/90 w-full h-[100dvh]"
                 : `${
                     user?.avatar
                       ? "bg-white/[85%] dark:bg-white/75 backdrop-blur"
